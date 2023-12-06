@@ -1,5 +1,10 @@
+"use client";
 import SessionCard from "@/components/SessionCard";
 import { StateEnum } from "@/enums";
+import useSWR from "swr";
+
+const fetcher = (...args) =>
+  fetch(...args, { method: "POST" }).then((res) => res.json());
 
 type Session = {
   session_id: string;
@@ -20,8 +25,9 @@ type Session = {
   rating_key: string;
 };
 
-export default async function Tautulli() {
-  let sessions: Array<Session> = [];
+export default function Tautulli() {
+  {
+    /*
   try {
     const response = await fetch(
       "http://192.168.1.93:8181/api/v2?apikey=f62d7595f52a47a99cd0216057b47016&cmd=get_activity",
@@ -35,33 +41,58 @@ export default async function Tautulli() {
   } catch (error) {
     console.error("Error fetching data:", error);
   }
+  */
+  }
+
+  const {
+    data: sessions,
+    error,
+    isLoading,
+  } = useSWR("/api/sessions", fetcher, {
+    refreshInterval: 5000,
+  });
+
+  console.log(new Date().toLocaleTimeString());
+
   return (
     <div className="flex h-full flex-col gap-4 bg-zinc-800/30 rounded-lg border-neutral-800 items-center w-full p-4 border overflow-auto">
       <>
         <div className="flex gap-2 w-full justify-between items-center">
           <p className="font-bold text-xl">Streams</p>
-          <p className="text-xs">27.1 TB used of 28 TB</p>
+          {isLoading ? (
+            <p className="text-xs">Loading...</p>
+          ) : (
+            <p className="text-xs">
+              {sessions.length} active stream
+              {sessions.length != 1 && "s"}
+            </p>
+          )}
         </div>
-        {sessions.map((session) => (
-          <SessionCard
-            key={session.session_id}
-            thumb={session.thumb}
-            parent_thumb={session.parent_thumb}
-            grandparent_thumb={session.grandparent_thumb}
-            art={session.art}
-            title={session.title}
-            grandparent_title={session.grandparent_title}
-            media_index={session.media_index}
-            parent_media_index={session.parent_media_index}
-            year={session.year}
-            user={session.user}
-            state={session.state}
-            progress_percent={session.progress_percent}
-            transcode_progress={session.transcode_progress}
-            duration={session.duration}
-            rating_key={session.rating_key}
-          />
-        ))}
+
+        {!isLoading && (
+          <>
+            {sessions.map((session: Session) => (
+              <SessionCard
+                key={session.session_id}
+                thumb={session.thumb}
+                parent_thumb={session.parent_thumb}
+                grandparent_thumb={session.grandparent_thumb}
+                art={session.art}
+                title={session.title}
+                grandparent_title={session.grandparent_title}
+                media_index={session.media_index}
+                parent_media_index={session.parent_media_index}
+                year={session.year}
+                user={session.user}
+                state={session.state}
+                progress_percent={session.progress_percent}
+                transcode_progress={session.transcode_progress}
+                duration={session.duration}
+                rating_key={session.rating_key}
+              />
+            ))}
+          </>
+        )}
       </>
     </div>
   );

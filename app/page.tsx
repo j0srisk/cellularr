@@ -12,48 +12,8 @@ export default function Home() {
         Get started by editing&nbsp;
         <code className="font-mono font-bold">app/page.tsx</code>
       </p>
-      <div className="w-2/3 flex flex-col gap-2">
-        <Downloads />
-        <div className="w-full flex gap-2">
-          <div className="w-1/2">
-            <Array />
-          </div>
-          <div className="w-1/2"></div>
-        </div>
-      </div>
-      <div className="w-1/3 flex flex-col h-full gap-2">
+      <div className="flex flex-col gap-4 w-full lg:flex-row lg:gap-8">
         <Tautulli />
-        <div className="flex gap-2">
-          <App
-            icon={
-              "https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg"
-            }
-            url={"https://app.plex.tv/desktop"}
-            name={"Plex"}
-          />
-          <App
-            icon={
-              "https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/sonarr.svg"
-            }
-            url={"https://tautulli.walkxcode.dev"}
-            name={"Sonarr"}
-          />
-          <App
-            icon={
-              "https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/radarr.svg"
-            }
-            url={"https://tautulli.walkxcode.dev"}
-            name={"Radarr"}
-          />
-
-          <App
-            icon={
-              "https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/overseerr.svg"
-            }
-            url={"https://tautulli.walkxcode.dev"}
-            name={"Overseerr"}
-          />
-        </div>
       </div>
     </main>
   );

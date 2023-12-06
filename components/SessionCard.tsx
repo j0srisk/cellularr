@@ -13,7 +13,7 @@ function formatDuration(milliseconds: number) {
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
-export default async function SessionCard({
+export default function SessionCard({
   thumb,
   parent_thumb,
   grandparent_thumb,
@@ -49,6 +49,7 @@ export default async function SessionCard({
   let thumbUrl = "";
 
   //displays tv series thumb if available
+  //TODO: proxy images through nextjs to not expose api key in client
   if (grandparent_thumb) {
     thumbUrl =
       "http://192.168.1.93:8181/api/v2?apikey=f62d7595f52a47a99cd0216057b47016&cmd=pms_image_proxy&img=" +
@@ -81,11 +82,13 @@ export default async function SessionCard({
               {grandparent_title}
             </p>
             <p className="text-center text-white truncate">{title}</p>
-            <p className="text-center text-white">{year}</p>
-            {media_index && (
+
+            {media_index ? (
               <p className="text-center text-white">
                 S{media_index} - E{parent_media_index}
               </p>
+            ) : (
+              <p className="text-center text-white">{year}</p>
             )}
             <p className="text-center text-white">{user}</p>
           </div>
