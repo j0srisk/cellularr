@@ -71,26 +71,32 @@ export default function SessionCard({
           "--image-url": `url(${artUrl})`,
         } as React.CSSProperties
       }
-      className="w-full rounded-lg bg-cover bg-center bg-[image:var(--image-url)]"
+      className="w-full rounded-xl bg-cover bg-center bg-[image:var(--image-url)] overflow-hidden"
     >
-      <div className="flex flex-col p-2 w-full h-full rounded-md gap-2 backdrop-blur-2xl">
-        <div className="w-full flex gap-4 ">
-          <img src={thumbUrl} alt={title} className="h-24 rounded-md" />
+      <div className="flex flex-col p-4 w-full h-full gap-4 backdrop-blur-2xl">
+        <div className="w-full flex gap-4">
+          <img src={thumbUrl} alt={title} className="h-20 rounded-md" />
 
           <div className="flex flex-col justify-center items-start truncate">
-            <p className="text-center text-white truncate">
+            <p className="text-center text-white font-semibold truncate">
               {grandparent_title}
             </p>
-            <p className="text-center text-white truncate">{title}</p>
+            <p className="text-center font-semibold opacity-60 text-xs text-white truncate">
+              {title}
+            </p>
 
             {media_index ? (
-              <p className="text-center text-white">
+              <p className="text-center text-xs font-semibold opacity-60 text-white">
                 S{media_index} - E{parent_media_index}
               </p>
             ) : (
-              <p className="text-center text-white">{year}</p>
+              <p className="text-center text-xs font-semibold opacity-60 text-white">
+                {year}
+              </p>
             )}
-            <p className="text-center text-white">{user}</p>
+            <p className="text-center text-xs font-semibold opacity-60 text-white">
+              {user}
+            </p>
           </div>
         </div>
         <div className="w-full relative flex h-6 bg-neutral-800 rounded-md items-center px-1 justify-between overflow-hidden text-white ">
@@ -116,12 +122,12 @@ export default function SessionCard({
             )}
           </svg>
 
-          <div className="flex gap-1 z-20 items-center">
-            <p className="text-white text-xs">
+          <div className="flex gap-1 z-20 items-center text-white text-xs pr-1 font-semibold">
+            <p className="">
               {formatDuration(duration * (progress_percent * 0.01))}
             </p>
-            <p className="text-white text-xs">/</p>
-            <p className="text-white text-xs">{formatDuration(duration)}</p>
+            <p className="">/</p>
+            <p className="">{formatDuration(duration)}</p>
           </div>
 
           <div

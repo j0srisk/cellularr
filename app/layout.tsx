@@ -23,10 +23,10 @@ export default function RootLayout({
           {children}
         </div>
 
-        <nav className="flex items-center justify-between flex-wrap bg-neutral-900 h-24">
+        <nav className="flex justify-between flex-wrap items-center h-16">
           <Link
             href="/sessions"
-            className="flex-1 h-full flex items-center justify-center"
+            className="flex-1 h-full flex pt-3 justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -36,20 +36,20 @@ export default function RootLayout({
             >
               <path
                 fillRule="evenodd"
-                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm14.024-.983a1.125 1.125 0 010 1.966l-5.603 3.113A1.125 1.125 0 019 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113z"
+                d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
                 clipRule="evenodd"
               />
             </svg>
           </Link>
           <Link
             href="/search"
-            className="flex-1 h-full flex items-center justify-center"
+            className="flex-1 h-full flex pt-3 justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 opacity-60"
             >
               <path
                 fillRule="evenodd"
@@ -60,13 +60,13 @@ export default function RootLayout({
           </Link>
           <Link
             href="/array"
-            className="flex-1 h-full flex items-center justify-center"
+            className="flex-1 h-full flex pt-3 justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 opacity-60"
             >
               <path
                 fillRule="evenodd"
@@ -77,13 +77,13 @@ export default function RootLayout({
           </Link>
           <Link
             href="/downloads"
-            className="flex-1 h-full flex items-center justify-center"
+            className="flex-1 h-full flex pt-3 justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-6 opacity-60"
             >
               <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375z" />
               <path
@@ -95,13 +95,13 @@ export default function RootLayout({
           </Link>
           <Link
             href="/containers"
-            className="flex-1 h-full flex items-center justify-center"
+            className="flex-1 h-full flex pt-3 justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-6 opacity-60"
             >
               <path d="M21 6.375c0 2.692-4.03 4.875-9 4.875S3 9.067 3 6.375 7.03 1.5 12 1.5s9 2.183 9 4.875z" />
               <path d="M12 12.75c2.685 0 5.19-.586 7.078-1.609a8.283 8.283 0 001.897-1.384c.016.121.025.244.025.368C21 12.817 16.97 15 12 15s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.285 8.285 0 001.897 1.384C6.809 12.164 9.315 12.75 12 12.75z" />

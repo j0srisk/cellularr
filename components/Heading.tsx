@@ -9,7 +9,7 @@ export default function Heading({
     <div className="flex flex-col w-full justify-between items-center pb-2">
       <p className="font-bold text-xl">{heading}</p>
 
-      <p className="text-xs">{subheading}</p>
+      <p className="text-xs font-semibold opacity-60">{subheading}</p>
     </div>
   );
 }
