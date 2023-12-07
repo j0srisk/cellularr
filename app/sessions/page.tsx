@@ -49,7 +49,7 @@ export default function Page() {
   return (
     <>
       <Heading heading="Now Playing" subheading={subheading} />
-      <div className="flex flex-col gap-4 h-full w-full justify-between overflow-scroll">
+      <div className="flex flex-col gap-4 h-full w-full justify-between overflow-auto">
         {!isLoading && (
           <>
             {sessions.length === 0 && (

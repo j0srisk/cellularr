@@ -10,7 +10,7 @@ async function fetchData(
   language: string = "en"
 ) {
   const response = await fetch(
-    "http://localhost:3000/api/overseerr/search?query=" +
+    "/api/overseerr/search?query=" +
       query +
       "&language=" +
       language +
@@ -88,12 +88,13 @@ export default function Page() {
           type="text"
           placeholder="Search..."
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => {
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              setQuery(search);
+              (e.target as HTMLInputElement).blur();
             }
           }}
+          //triggers search when input is blurred (enter key)
           onBlur={() => setQuery(search)}
           className="bg-transparent text-white w-full p-2 outline-none placeholder-white/60"
         />

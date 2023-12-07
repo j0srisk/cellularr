@@ -4,6 +4,8 @@ export async function GET(request: Request) {
   const page = url.searchParams.get("page");
   const language = url.searchParams.get("language");
 
+  console.log("query", query);
+
   let overseerrUrl = "http://192.168.1.93:5055/api/v1/search?";
   if (query) {
     overseerrUrl += `query=${query}`;

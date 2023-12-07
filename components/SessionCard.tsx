@@ -73,7 +73,7 @@ export default function SessionCard({
       }
       className="w-full rounded-xl bg-cover bg-center bg-[image:var(--image-url)] overflow-hidden"
     >
-      <div className="flex flex-col p-4 w-full h-full gap-4 backdrop-blur-2xl">
+      <div className="flex flex-col p-4 w-full h-full gap-4 backdrop-blur-xl bg-black bg-opacity-25">
         <div className="w-full flex gap-4">
           <img src={thumbUrl} alt={title} className="h-20 rounded-md" />
 
