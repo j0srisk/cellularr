@@ -4,7 +4,7 @@ import Heading from "@/components/Heading";
 import { useState, useEffect, useRef } from "react";
 import MediaCard from "@/components/MediaCard";
 import Backdrop from "@/components/Backdrop";
-import { Media } from "@/app/types";
+import { Result } from "@/app/types";
 import { ConvertStatus } from "@/app/utils";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,7 @@ import { useSearchParams } from "next/navigation";
 export default function Page() {
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Media[]>([]);
+  const [results, setResults] = useState<Result[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
@@ -44,7 +44,7 @@ export default function Page() {
         results[key].mediaType === "movie" ||
         results[key].mediaType === "tv"
       ) {
-        const media: Media = {
+        const result: Result = {
           title:
             results[key].mediaType === "movie"
               ? results[key].title
@@ -62,17 +62,12 @@ export default function Page() {
             ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${results[key].backdropPath}`
             : null,
           mediaType: results[key].mediaType,
-          overview: results[key].overview,
+
           status: results[key].mediaInfo
             ? ConvertStatus(results[key].mediaInfo)
             : null,
-          url:
-            results[key].mediaType === "movie"
-              ? "/movie/" + results[key].id
-              : "/tv/" + results[key].id,
-          runtime: results[key].runtime,
         };
-        setResults((results) => [...results, media]);
+        setResults((results) => [...results, result]);
       }
     }
   }
@@ -174,8 +169,8 @@ export default function Page() {
         className="flex flex-col gap-2 h-full w-full justify-start overflow-auto pb-2"
       >
         {results.length != 0 &&
-          results.map((media: Media) => (
-            <MediaCard key={media.id} media={media} />
+          results.map((result: Result) => (
+            <MediaCard key={result.id} result={result} />
           ))}
       </div>
     </div>

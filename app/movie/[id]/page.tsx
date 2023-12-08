@@ -6,29 +6,49 @@ import Link from "next/link";
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
 
-  const response = await fetch(
+  const overseerrResponse = await fetch(
     "http://localhost:3000/api/overseerr/movie/" + id
   );
 
-  const data = await response.json();
+  const overseerrData = await overseerrResponse.json();
 
+  let tautulliData = null;
+
+  if (overseerrData.mediaInfo) {
+    const tautulliResponse = await fetch(
+      "http://localhost:3000/api/tautulli/metadata/" +
+        overseerrData.mediaInfo.ratingKey
+    );
+
+    tautulliData = await tautulliResponse.json();
+  }
   const media: Media = {
-    title: data.title,
-    year: data.releaseDate.split("-")[0],
-    id: data.id,
-    posterUrl: data.posterPath
-      ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${data.posterPath}`
+    title: overseerrData.title,
+    year: overseerrData.releaseDate.split("-")[0],
+    id: overseerrData.id,
+    posterUrl: overseerrData.posterPath
+      ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${overseerrData.posterPath}`
       : null,
-    backdropUrl: data.backdropPath
-      ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${data.backdropPath}`
+    backdropUrl: overseerrData.backdropPath
+      ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${overseerrData.backdropPath}`
       : null,
     mediaType: "movie",
-    overview: data.overview,
-    status: data.mediaInfo ? ConvertStatus(data.mediaInfo) : null,
-    url: "/movie/" + data.id,
-    runtime: data.runtime,
-    iOSPlexUrl: data.mediaInfo ? data.mediaInfo.iOSPlexUrl : null,
-    plexUrl: data.mediaInfo ? data.mediaInfo.plexUrl : null,
+    overview: overseerrData.overview,
+    status: overseerrData.mediaInfo
+      ? ConvertStatus(overseerrData.mediaInfo)
+      : null,
+    runtime: overseerrData.runtime,
+    iOSPlexUrl: overseerrData.mediaInfo
+      ? overseerrData.mediaInfo.iOSPlexUrl
+      : null,
+    plexUrl: overseerrData.mediaInfo ? overseerrData.mediaInfo.plexUrl : null,
+    //only available if media exists in plex
+    resolution: tautulliData
+      ? tautulliData.response.data.media_info[0].video_full_resolution
+      : null,
+    codec: tautulliData
+      ? tautulliData.response.data.media_info[0].video_codec
+      : null,
   };
 
   const link = media.iOSPlexUrl
@@ -54,41 +74,51 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
         <div className="flex flex-col gap-4 w-full h-3/5 justify-between ">
           {media.status ? (
-            <Link
-              href={link}
-              className="border border-amber-400 bg-amber-500 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                />
-              </svg>
-              Play on Plex
-            </Link>
+            <>
+              {media.status === "available" ? (
+                <Link
+                  href={link}
+                  className="border border-amber-400 bg-amber-500 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                  </svg>
+                  Play on Plex
+                </Link>
+              ) : (
+                <div className="capitalize	border border-indigo-500 bg-indigo-600 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path d="M4.632 3.533A2 2 0 016.577 2h6.846a2 2 0 011.945 1.533l1.976 8.234A3.489 3.489 0 0016 11.5H4c-.476 0-.93.095-1.344.267l1.976-8.234z" />
+                    <path
+                      fillRule="evenodd"
+                      d="M4 13a2 2 0 100 4h12a2 2 0 100-4H4zm11.24 2a.75.75 0 01.75-.75H16a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75h-.01a.75.75 0 01-.75-.75V15zm-2.25-.75a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75H13a.75.75 0 00.75-.75V15a.75.75 0 00-.75-.75h-.01z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {media.status}
+                </div>
+              )}
+            </>
           ) : (
             <button className=" border border-indigo-500 bg-indigo-600 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
+                viewBox="0 0 20 20"
+                fill="currentColor"
                 className="w-4 h-4"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-                />
+                <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
+                <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
               </svg>
               Request
             </button>
@@ -143,6 +173,8 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="flex gap-2 items-center w-full justify-center font-semibold text-white opacity-60">
             <p className=" text-xs px-1 rounded-md border-2 font-bold ">PG</p>
             <p className=" text-sm ">{media.runtime} minutes</p>
+            <p className=" text-sm ">{media.resolution}</p>
+            <p className=" text-sm ">{media.codec}</p>
           </div>
         </div>
       </div>
