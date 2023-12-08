@@ -2,6 +2,7 @@ import Heading from "@/components/Heading";
 import Poster from "@/components/Poster";
 import { Media } from "@/app/types";
 import { ConvertStatus } from "@/app/utils";
+import Link from "next/link";
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
 
@@ -26,7 +27,13 @@ export default async function Page({ params }: { params: { id: string } }) {
     status: data.mediaInfo ? ConvertStatus(data.mediaInfo) : null,
     url: "/movie/" + data.id,
     runtime: data.runtime,
+    iOSPlexUrl: data.mediaInfo ? data.mediaInfo.iOSPlexUrl : null,
+    plexUrl: data.mediaInfo ? data.mediaInfo.plexUrl : null,
   };
+
+  const link = media.iOSPlexUrl
+    ? media.iOSPlexUrl
+    : "https://app.plex.tv/desktop/#!/";
 
   return (
     <>
@@ -47,7 +54,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
         <div className="flex flex-col gap-4 w-full h-3/5 justify-between ">
           {media.status ? (
-            <button className="border border-amber-400 bg-amber-500 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2">
+            <Link
+              href={link}
+              className="border border-amber-400 bg-amber-500 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -63,7 +73,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 />
               </svg>
               Play on Plex
-            </button>
+            </Link>
           ) : (
             <button className=" border border-indigo-500 bg-indigo-600 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2">
               <svg
@@ -116,9 +126,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                     y2="40.76"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop offset="0" stop-color="#90cea1"></stop>
-                    <stop offset="0.56" stop-color="#3cbec9"></stop>
-                    <stop offset="1" stop-color="#00b3e5"></stop>
+                    <stop offset="0" stopColor="#90cea1"></stop>
+                    <stop offset="0.56" stopColor="#3cbec9"></stop>
+                    <stop offset="1" stopColor="#00b3e5"></stop>
                   </linearGradient>
                 </defs>
                 <path

@@ -6,6 +6,9 @@ import MediaCard from "@/components/MediaCard";
 import Backdrop from "@/components/Backdrop";
 import { Media } from "@/app/types";
 import { ConvertStatus } from "@/app/utils";
+import { useRouter } from "next/navigation";
+
+import { useSearchParams } from "next/navigation";
 
 export default function Page() {
   const [search, setSearch] = useState("");
@@ -14,12 +17,18 @@ export default function Page() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const searchQuery = searchParams.get("query");
+
+  console.log("searchQuery: " + searchQuery);
 
   //get search results from overseerr and add to results state
   async function fetchData(page: number = 1, language: string = "en") {
     const response = await fetch(
       "/api/overseerr/search?query=" +
-        query +
+        searchQuery +
         "&language=" +
         language +
         "&page=" +
@@ -63,19 +72,32 @@ export default function Page() {
               : "/tv/" + results[key].id,
           runtime: results[key].runtime,
         };
-        console.log(media.status);
         setResults((results) => [...results, media]);
       }
     }
   }
 
+  const updateQuery = (search) => {
+    router.push("/search?query=" + search);
+  };
+
   useEffect(() => {
-    console.log("query changed: " + query);
+    if (searchQuery) {
+      setResults([]);
+      setSearch(searchQuery);
+      fetchData(1);
+    }
+  }, [searchQuery]);
+
+  //fetch search results when query changes
+
+  {
+    /*
+  useEffect(() => {
     setResults([]);
-    console.log("results cleared");
+
     (async () => {
       if (query === "") {
-        console.log("query is empty");
         return;
       }
 
@@ -110,6 +132,8 @@ export default function Page() {
       resultsContainer.removeEventListener("scroll", handleScroll);
     };
   }, [query, page, totalPages]);
+    */
+  }
 
   return (
     <div className="flex flex-col h-full w-full px-4">
@@ -130,23 +154,24 @@ export default function Page() {
         <input
           type="text"
           placeholder="Search..."
+          value={search}
           onChange={(e) => {
-            setQuery(e.target.value);
+            setSearch(e.target.value);
           }}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              //(e.target as HTMLInputElement).blur();
+              (e.target as HTMLInputElement).blur();
             }
           }}
           //triggers search when input is blurred (enter key)
-          //onBlur={() => setQuery(search)}
+          onBlur={() => updateQuery(search)}
           className="bg-transparent text-white w-full p-2 outline-none placeholder-white/60"
         />
       </div>
       <div
         ref={resultsContainerRef}
-        className="flex flex-col gap-2 h-full w-full justify-between overflow-auto pb-2"
+        className="flex flex-col gap-2 h-full w-full justify-start overflow-auto pb-2"
       >
         {results.length != 0 &&
           results.map((media: Media) => (

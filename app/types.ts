@@ -18,4 +18,6 @@ export type Media = {
   status: status | null;
   url: string;
   runtime: number | null;
+  iOSPlexUrl: string | null;
+  plexUrl: string | null;
 };
