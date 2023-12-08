@@ -19,9 +19,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} max-h-[100dvh] h-[100dvh] flex flex-col`}
       >
-        <div className="flex-1 flex flex-col px-4 overflow-auto">
-          {children}
-        </div>
+        <div className="flex-1 flex flex-col overflow-auto">{children}</div>
 
         <nav className="flex justify-between flex-wrap items-center h-16">
           <Link

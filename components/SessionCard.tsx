@@ -69,7 +69,9 @@ export default function SessionCard({
   return (
     <Backdrop url={artUrl}>
       <div className="w-full flex gap-4">
-        <Poster url={thumbUrl} alt={title} />
+        <div className="h-24 aspect-[2/3]">
+          <Poster url={thumbUrl} alt={title} />
+        </div>
 
         <div className="flex flex-col justify-center items-start truncate">
           <p className="text-center text-white font-semibold truncate">

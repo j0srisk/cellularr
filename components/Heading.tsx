@@ -3,13 +3,17 @@ export default function Heading({
   subheading,
 }: {
   heading: string;
-  subheading: string | JSX.Element;
+  subheading: string | number;
 }) {
   return (
-    <div className="flex flex-col w-full justify-between items-center pb-2">
-      <p className="font-bold text-xl">{heading}</p>
+    <div className="flex w-full justify-center px-4">
+      <div className="flex flex-col max-w-screen pb-2 truncate">
+        <p className="font-bold text-xl text-center truncate">{heading}</p>
 
-      <p className="text-xs font-semibold opacity-60">{subheading}</p>
+        <p className="text-xs text-center font-semibold opacity-60">
+          {subheading}
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,10 @@
-export default function Poster({ url, alt }: { url: string; alt: string }) {
+export default function Poster({
+  url,
+  alt,
+}: {
+  url: string | null;
+  alt: string;
+}) {
   let posterUrl = "";
 
   if (!url) {
@@ -7,7 +13,5 @@ export default function Poster({ url, alt }: { url: string; alt: string }) {
     posterUrl = url;
   }
 
-  return (
-    <img src={posterUrl} alt={alt} className="h-20 rounded-md shadow-md" />
-  );
+  return <img src={posterUrl} alt={alt} className="rounded-md shadow-md" />;
 }
