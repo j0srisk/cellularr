@@ -26,3 +26,8 @@ export type Media = Result & {
   codec: string | null;
   downloadProgress: number | null;
 };
+
+export type File = {
+  size: number;
+  resolution: string;
+};

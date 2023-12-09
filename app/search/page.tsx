@@ -45,10 +45,8 @@ export default function Page() {
     const results = data.results;
 
     for (let key in results) {
-      if (
-        results[key].mediaType === "movie" ||
-        results[key].mediaType === "tv"
-      ) {
+      //only add movies to results
+      if (results[key].mediaType === "movie") {
         const result: Result = {
           title:
             results[key].mediaType === "movie"
