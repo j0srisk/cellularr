@@ -3,6 +3,7 @@
 import Heading from "@/components/Heading";
 import { useState, useEffect, useRef } from "react";
 import MediaCard from "@/components/MediaCard";
+import MediaSkeleton from "@/components/MediaSkeleton";
 import Backdrop from "@/components/Backdrop";
 import { Result } from "@/app/types";
 import { ConvertStatus } from "@/app/utils";
@@ -11,30 +12,34 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
 export default function Page() {
-  const [search, setSearch] = useState("");
-  const [query, setQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const searchQuery = searchParams.get("query");
 
-  console.log("searchQuery: " + searchQuery);
+  const [search, setSearch] = useState<string | "">(searchQuery || "");
 
   //get search results from overseerr and add to results state
-  async function fetchData(page: number = 1, language: string = "en") {
+  async function fetchData(
+    query: string,
+    page: number = 1,
+    language: string = "en"
+  ) {
     const response = await fetch(
       "/api/overseerr/search?query=" +
-        searchQuery +
+        query +
         "&language=" +
         language +
         "&page=" +
         page
     );
 
+    setIsLoading(true);
     const data = await response.json();
     setTotalPages(data.totalPages);
     const results = data.results;
@@ -67,68 +72,20 @@ export default function Page() {
             ? ConvertStatus(results[key].mediaInfo)
             : null,
         };
+
         setResults((results) => [...results, result]);
       }
     }
+    setIsLoading(false);
   }
 
-  const updateQuery = (search) => {
-    router.push("/search?query=" + search);
-  };
-
-  useEffect(() => {
-    if (searchQuery) {
-      setResults([]);
-      setSearch(searchQuery);
-      fetchData(1);
-    }
-  }, [searchQuery]);
-
-  //fetch search results when query changes
-
-  {
-    /*
   useEffect(() => {
     setResults([]);
-
-    (async () => {
-      if (query === "") {
-        return;
-      }
-
-      setTotalPages(0);
-      const data = await fetchData(1);
-    })();
-  }, [query]);
-
-  const handleScroll = async () => {
-    const resultsContainer = resultsContainerRef.current;
-    if (!resultsContainer) return;
-
-    const scrollTop = resultsContainer.scrollTop;
-    const scrollHeight = resultsContainer.scrollHeight;
-    const clientHeight = resultsContainer.clientHeight;
-
-    if (scrollTop + clientHeight >= scrollHeight) {
-      const nextPage = page + 1;
-
-      if (nextPage > totalPages) return;
-      const data = await fetchData(nextPage);
-      setPage(nextPage);
+    if (searchQuery) {
+      fetchData(searchQuery);
     }
-  };
-
-  useEffect(() => {
-    const resultsContainer = resultsContainerRef.current;
-    if (!resultsContainer) return;
-
-    resultsContainer.addEventListener("scroll", handleScroll);
-    return () => {
-      resultsContainer.removeEventListener("scroll", handleScroll);
-    };
-  }, [query, page, totalPages]);
-    */
-  }
+    setSearch(searchQuery || "");
+  }, [searchQuery]);
 
   return (
     <div className="flex flex-col h-full w-full px-4">
@@ -152,6 +109,8 @@ export default function Page() {
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
+            //setResults([]);
+            //fetchData(e.target.value);
           }}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") {
@@ -159,19 +118,50 @@ export default function Page() {
               (e.target as HTMLInputElement).blur();
             }
           }}
-          //triggers search when input is blurred (enter key)
-          onBlur={() => updateQuery(search)}
+          onBlur={() => {
+            router.push("/search?query=" + search);
+          }}
           className="bg-transparent text-white w-full p-2 outline-none placeholder-white/60"
         />
+        {search && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className="w-8 h-8"
+            onClick={() => {
+              router.push("/search");
+              setSearch("");
+              setResults([]);
+            }}
+          >
+            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+          </svg>
+        )}
       </div>
       <div
         ref={resultsContainerRef}
         className="flex flex-col gap-2 h-full w-full justify-start overflow-auto pb-2"
       >
-        {results.length != 0 &&
-          results.map((result: Result) => (
-            <MediaCard key={result.id} result={result} />
-          ))}
+        {isLoading ? (
+          <div className="h-full w-full items-center justify-center flex flex-col gap-2">
+            <p className="font-semibold">Loading...</p>
+          </div>
+        ) : (
+          <>
+            {results.length === 0 && search ? (
+              <div className="h-full w-full items-center justify-center flex flex-col gap-2">
+                <p className="font-semibold">No results found</p>
+              </div>
+            ) : (
+              <>
+                {results.map((result: Result) => (
+                  <MediaCard key={result.id} result={result} />
+                ))}
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

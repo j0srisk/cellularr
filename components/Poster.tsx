@@ -13,5 +13,11 @@ export default function Poster({
     posterUrl = url;
   }
 
-  return <img src={posterUrl} alt={alt} className="rounded-md shadow-md" />;
+  return (
+    <img
+      src={posterUrl}
+      alt={alt}
+      className="rounded-md shadow-md bg-gray-900 h-full w-full"
+    />
+  );
 }

@@ -20,8 +20,8 @@ export default function MediaCard({ result }: { result: Result }) {
             <p className="text-left w-full text-xs font-semibold text-white truncate">
               {result.year}
             </p>
-            {status && (
-              <p className="text-xs font-bold uppercase text-black bg-white p-.5 px-1 rounded-sm">
+            {result.status && (
+              <p className="text-[.5rem] font-bold uppercase border border-white p-.5 px-1 rounded-sm">
                 {result.status}
               </p>
             )}
