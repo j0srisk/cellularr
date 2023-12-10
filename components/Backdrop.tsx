@@ -1,22 +1,16 @@
-export default function Backdrop({
-  url,
-  children,
-}: {
-  url?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      style={
-        {
-          "--image-url": `url(${url})`,
-        } as React.CSSProperties
-      }
-      className="w-full h-fit rounded-2xl bg-cover bg-center bg-[image:var(--image-url)] bg-zinc-500/30 overflow-hidden shrink-0"
-    >
-      <div className="flex flex-col p-4 w-full h-full gap-4 backdrop-blur-xl bg-black bg-opacity-25">
-        {children}
-      </div>
-    </div>
-  );
+export default function Backdrop({ url, children }: { url?: string; children: React.ReactNode }) {
+	return (
+		<div
+			style={
+				{
+					'--image-url': `url(${url})`,
+				} as React.CSSProperties
+			}
+			className="h-fit w-full shrink-0 overflow-hidden rounded-2xl bg-zinc-500/30 bg-[image:var(--image-url)] bg-cover bg-center"
+		>
+			<div className="flex h-full w-full flex-col gap-4 bg-black bg-opacity-25 p-4 backdrop-blur-xl">
+				{children}
+			</div>
+		</div>
+	);
 }

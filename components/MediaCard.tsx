@@ -1,43 +1,34 @@
-import Link from "next/link";
-import Poster from "@/components/Poster";
-import { MediaStatus } from "@/app/types";
-import { CreatePosterUrl } from "@/app/utils";
-import { MovieDetails } from "@/app/types";
-export default function MediaCard({
-  movieDetails,
-}: {
-  movieDetails: MovieDetails;
-}) {
-  return (
-    <Link
-      className="group"
-      href={"/" + movieDetails.mediaType + "/" + movieDetails.id}
-    >
-      <div className="w-full flex gap-4 items-center">
-        <div className="h-20 aspect-[2/3]">
-          <Poster
-            url={CreatePosterUrl(movieDetails.posterPath)}
-            alt={movieDetails.title}
-          />
-        </div>
+import { MediaStatus } from '@/app/types';
+import { MovieDetails } from '@/app/types';
+import { CreatePosterUrl } from '@/app/utils';
+import Poster from '@/components/Poster';
+import Link from 'next/link';
 
-        <div className="flex flex-col justify-center items-start w-full truncate">
-          <p className="text-left text-white w-full font-semibold truncate text-lg">
-            {movieDetails.title}
-          </p>
+export default function MediaCard({ movieDetails }: { movieDetails: MovieDetails }) {
+	return (
+		<Link className="group" href={'/' + movieDetails.mediaType + '/' + movieDetails.id}>
+			<div className="flex w-full items-center gap-4">
+				<div className="aspect-[2/3] h-20">
+					<Poster url={CreatePosterUrl(movieDetails.posterPath)} alt={movieDetails.title} />
+				</div>
 
-          <div className="flex flex-row gap-2 items-center opacity-60">
-            <p className="text-left w-full text-xs font-semibold text-white truncate">
-              {movieDetails.releaseDate?.split("-")[0]}
-            </p>
-            {movieDetails.mediaInfo?.status && (
-              <p className="text-[.5rem] font-bold uppercase border border-white p-.5 px-1 rounded-sm">
-                {MediaStatus[movieDetails.mediaInfo.status]}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
+				<div className="flex w-full flex-col items-start justify-center truncate">
+					<p className="w-full truncate text-left text-lg font-semibold text-white">
+						{movieDetails.title}
+					</p>
+
+					<div className="flex flex-row items-center gap-2 opacity-60">
+						<p className="w-full truncate text-left text-xs font-semibold text-white">
+							{movieDetails.releaseDate?.split('-')[0]}
+						</p>
+						{movieDetails.mediaInfo?.status && (
+							<p className="p-.5 rounded-sm border border-white px-1 text-[.5rem] font-bold uppercase">
+								{MediaStatus[movieDetails.mediaInfo.status]}
+							</p>
+						)}
+					</div>
+				</div>
+			</div>
+		</Link>
+	);
 }
