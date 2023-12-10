@@ -1,11 +1,13 @@
 import Heading from "@/components/Heading";
 import Poster from "@/components/Poster";
-import { Media, File } from "@/app/types";
+import { MovieDetails } from "@/app/types";
 import RequestButton from "@/components/RequestButton";
-import { ConvertStatus } from "@/app/utils";
-import Link from "next/link";
+
 import ProcessingButton from "@/components/ProcessingButton";
 import PlayButton from "@/components/PlayButton";
+import { MediaStatus } from "@/app/types";
+import { CreatePosterUrl, CreateBackdropUrl } from "@/app/utils";
+
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const overseerrResponse = await fetch(
@@ -17,88 +19,50 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const overseerrData = await overseerrResponse.json();
 
-  const media: Media = {
-    title: overseerrData.title,
-    year: overseerrData.releaseDate.split("-")[0],
-    id: overseerrData.id,
-    posterUrl: overseerrData.posterPath
-      ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${overseerrData.posterPath}`
-      : null,
-    backdropUrl: overseerrData.backdropPath
-      ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${overseerrData.backdropPath}`
-      : null,
-    mediaType: "movie",
-    overview: overseerrData.overview,
-    tagline: overseerrData.tagline,
-    status: overseerrData.mediaInfo
-      ? ConvertStatus(overseerrData.mediaInfo)
-      : null,
-    runtime: overseerrData.runtime,
-
-    iOSPlexUrl:
-      overseerrData.mediaInfo && overseerrData.mediaInfo.iOSPlexUrl
-        ? overseerrData.mediaInfo.iOSPlexUrl
-        : null,
-    plexUrl:
-      overseerrData.mediaInfo && overseerrData.mediaInfo.plexUrl
-        ? overseerrData.mediaInfo.plexUrl
-        : null,
-    downloadProgress:
-      overseerrData.mediaInfo &&
-      overseerrData.mediaInfo.downloadStatus[0] &&
-      overseerrData.mediaInfo.downloadStatus[0].sizeLeft &&
-      overseerrData.mediaInfo.downloadStatus[0].size
-        ? 1 -
-          overseerrData.mediaInfo.downloadStatus[0].sizeLeft /
-            overseerrData.mediaInfo.downloadStatus[0].size
-        : null,
-  };
-
-  let tautulliData = null;
-
-  if (overseerrData.mediaInfo) {
-    const tautulliResponse = await fetch(
-      "http://localhost:3000/api/tautulli/metadata/" +
-        overseerrData.mediaInfo.ratingKey
-    );
-
-    tautulliData = await tautulliResponse.json();
-
-    console.log(tautulliData.response.data.media_info[0]);
-  }
+  const movieDetails: MovieDetails = overseerrData;
 
   return (
     <>
-      <Heading heading={media.title} subheading={media.year} />
+      <Heading
+        heading={movieDetails.title}
+        subheading={movieDetails.releaseDate?.split("-")[0]}
+      />
       <div className="flex flex-col h-full overflow-y-scroll">
-        <div className="h-1/3 flex flex-shrink-0 w-full -mb-16 ">
+        <div className="h-1/3 flex flex-shrink-0 w-full -mb-14">
           <img
-            src={media.backdropUrl}
-            alt=""
+            src={CreateBackdropUrl(movieDetails.backdropPath)}
+            alt={movieDetails.title}
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="flex flex-col gap-4 mb-4 px-4">
+        <div className="flex flex-col gap-8 mb-4 px-4">
           <div className="flex gap-4 justify-start items-end ">
             <div className="flex flex-col justify-center items-center gap-4">
               <div className="h-56 aspect-[2/3]">
-                <Poster url={media.posterUrl} alt={media.title} />
+                <Poster
+                  url={CreatePosterUrl(movieDetails.posterPath)}
+                  alt={movieDetails.title}
+                />
               </div>
             </div>
-            <div className="flex flex-col gap-4 w-full h-3/5 justify-between ">
-              {!media.status && <RequestButton media={media} />}
-              {media.status && media.status === "available" && (
-                <PlayButton media={media} />
+            <div className="flex flex-col gap-4 w-full h-3/4 justify-between py-4">
+              {!movieDetails.mediaInfo && (
+                <RequestButton moviedetails={movieDetails} />
               )}
-              {media.status && media.status === "processing" && (
-                <ProcessingButton media={media} />
+              {movieDetails.mediaInfo?.status === MediaStatus.UNKNOWN && (
+                <RequestButton moviedetails={movieDetails} />
               )}
-              {media.status &&
-                (media.status === "unknown" || media.status === "pending") && (
-                  <button className=" border border-indigo-500 bg-indigo-600 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2">
-                    <p className="capitalize">{media.status}</p>
-                  </button>
-                )}
+              {movieDetails.mediaInfo?.status === MediaStatus.PROCESSING ||
+                (movieDetails.mediaInfo?.status === MediaStatus.PENDING && (
+                  <ProcessingButton movieDetails={movieDetails} />
+                ))}
+              {movieDetails.mediaInfo?.status ===
+                MediaStatus.PARTIALLY_AVAILABLE && (
+                <PlayButton movieDetails={movieDetails} />
+              )}
+              {movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE && (
+                <PlayButton movieDetails={movieDetails} />
+              )}
 
               <div className="flex gap-2 items-center w-full justify-around font-semibold">
                 <div className="flex gap-2 items-center">
@@ -146,21 +110,25 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
               </div>
 
-              <div className="flex gap-2 items-center w-full justify-center font-semibold text-white opacity-60">
-                <p className="text-xs px-1 rounded-md border-2 font-bold ">
+              <div className="flex gap-2 items-center w-full justify-center font-semibold text-white">
+                <p className="hidden text-xs px-1 rounded-md border-2 font-bold ">
                   PG
                 </p>
-                <p className=" text-sm ">{media.runtime} minutes</p>
+                <p className=" text-sm">{movieDetails.runtime} minutes</p>
               </div>
             </div>
           </div>
           <div className="flex flex-col gap-4 justify-start">
-            <p className="text-white opacity-60 text-3xl italic">
-              {media.tagline}
-            </p>
+            {movieDetails.tagline && (
+              <p className="text-white opacity-60 text-xl text-center w-full italic">
+                {movieDetails.tagline}
+              </p>
+            )}
             <div className="flex flex-col gap-2 w-full justify-between">
               <p className="text-white text-xl font-bold">Overview</p>
-              <p className="text-white opacity-60 text-sm">{media.overview}</p>
+              <p className="text-white opacity-60 text-sm">
+                {movieDetails.overview}
+              </p>
             </div>
           </div>
         </div>

@@ -2,8 +2,8 @@ export default function Heading({
   heading,
   subheading,
 }: {
-  heading: string;
-  subheading: string | number;
+  heading: any;
+  subheading: any;
 }) {
   return (
     <div className="flex w-full justify-center px-4">

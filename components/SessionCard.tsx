@@ -67,7 +67,7 @@ export default function SessionCard({
     art;
 
   return (
-    <Backdrop url={artUrl}>
+    <Backdrop url={thumbUrl}>
       <div className="w-full flex gap-4">
         <div className="h-24 aspect-[2/3]">
           <Poster url={thumbUrl} alt={title} />
@@ -118,7 +118,7 @@ export default function SessionCard({
           )}
         </svg>
 
-        <div className="flex gap-1 z-20 items-center text-white text-xs pr-1 font-semibold">
+        <div className="flex gap-1 z-20 items-center text-white text-xs pr-1 font-semibold ">
           <p className="">
             {formatDuration(duration * (progress_percent * 0.01))}
           </p>

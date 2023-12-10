@@ -1,5 +1,3 @@
-import { Media } from "@/app/types";
-
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }

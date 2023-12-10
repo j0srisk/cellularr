@@ -2,7 +2,7 @@ export default function Poster({
   url,
   alt,
 }: {
-  url: string | null;
+  url: string | null | undefined;
   alt: string;
 }) {
   let posterUrl = "";

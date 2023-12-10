@@ -1,24 +1,27 @@
 "use client";
 
-import { Media } from "@/app/types";
+import { MovieDetails, MediaStatus } from "@/app/types";
 import { useState } from "react";
 import useSWR from "swr";
-import { ConvertStatus } from "@/app/utils";
 import { useRouter } from "next/navigation";
 
-export default function ProcessingButton({ media }: { media: Media }) {
+export default function ProcessingButton({
+  movieDetails,
+}: {
+  movieDetails: MovieDetails;
+}) {
   const [isDownloading, setIsDownloading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState(null);
+  const [downloadProgress, setDownloadProgress] = useState("");
 
   const Router = useRouter();
 
-  const fetcher = (...args) =>
+  const fetcher = (...args: any[]) =>
     fetch(...args, { method: "GET", cache: "no-store" }).then((res) =>
       res.json()
     );
 
   const { error } = useSWR(
-    "/api/overseerr/" + media.mediaType + "/" + media.id,
+    "/api/overseerr/" + movieDetails.mediaType + "/" + movieDetails.id,
     fetcher,
     {
       refreshInterval: 5000,
@@ -44,7 +47,7 @@ export default function ProcessingButton({ media }: { media: Media }) {
             console.log("completed");
           }
           //movie is available
-        } else if (ConvertStatus(data.mediaInfo) === "available") {
+        } else if (data.mediaInfo.status === MediaStatus.AVAILABLE) {
           console.log("available");
           Router.refresh();
         } else {

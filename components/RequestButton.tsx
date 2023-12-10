@@ -1,12 +1,14 @@
 "use client";
 
-import { Media } from "@/app/types";
-import Link from "next/link";
+import { MovieDetails } from "@/app/types";
 
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
-export default function RequestButton({ media }: { media: Media }) {
+export default function RequestButton({
+  moviedetails,
+}: {
+  moviedetails: MovieDetails;
+}) {
   const router = useRouter();
 
   const handleRequest = async () => {
@@ -14,8 +16,8 @@ export default function RequestButton({ media }: { media: Media }) {
     const response = await fetch("/api/overseerr/request", {
       method: "POST",
       body: JSON.stringify({
-        mediaType: media.mediaType,
-        mediaId: media.id,
+        mediaType: moviedetails.mediaType,
+        mediaId: moviedetails.id,
       }),
     });
     const data = await response.json();

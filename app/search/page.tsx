@@ -3,18 +3,15 @@
 import Heading from "@/components/Heading";
 import { useState, useEffect, useRef } from "react";
 import MediaCard from "@/components/MediaCard";
-import MediaSkeleton from "@/components/MediaSkeleton";
-import Backdrop from "@/components/Backdrop";
-import { Result } from "@/app/types";
-import { ConvertStatus } from "@/app/utils";
+
+import { MovieDetails } from "@/app/types";
 import { useRouter } from "next/navigation";
 
 import { useSearchParams } from "next/navigation";
 
 export default function Page() {
-  const [results, setResults] = useState<Result[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [results, setResults] = useState<MovieDetails[]>([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -41,37 +38,14 @@ export default function Page() {
 
     setIsLoading(true);
     const data = await response.json();
-    setTotalPages(data.totalPages);
+
     const results = data.results;
 
     for (let key in results) {
       //only add movies to results
       if (results[key].mediaType === "movie") {
-        const result: Result = {
-          title:
-            results[key].mediaType === "movie"
-              ? results[key].title
-              : results[key].name,
-          year: results[key].releaseDate
-            ? results[key].releaseDate.split("-")[0]
-            : results[key].firstAirDate
-            ? results[key].firstAirDate.split("-")[0]
-            : null,
-          id: results[key].id,
-          posterUrl: results[key].posterPath
-            ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${results[key].posterPath}`
-            : null,
-          backdropUrl: results[key].backdropPath
-            ? `https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${results[key].backdropPath}`
-            : null,
-          mediaType: results[key].mediaType,
-
-          status: results[key].mediaInfo
-            ? ConvertStatus(results[key].mediaInfo)
-            : null,
-        };
-
-        setResults((results) => [...results, result]);
+        const movieDetails: MovieDetails = results[key];
+        setResults((results) => [...results, movieDetails]);
       }
     }
     setIsLoading(false);
@@ -147,17 +121,9 @@ export default function Page() {
           </div>
         ) : (
           <>
-            {results.length === 0 && search ? (
-              <div className="h-full w-full items-center justify-center flex flex-col gap-2">
-                <p className="font-semibold">No results found</p>
-              </div>
-            ) : (
-              <>
-                {results.map((result: Result) => (
-                  <MediaCard key={result.id} result={result} />
-                ))}
-              </>
-            )}
+            {results.map((movieDetails: MovieDetails) => (
+              <MediaCard key={movieDetails.id} movieDetails={movieDetails} />
+            ))}
           </>
         )}
       </div>

@@ -1,6 +1,4 @@
 export async function POST(request: Request) {
-  let downloads: Array<Download> = [];
-
   const response = await fetch(
     "http://192.168.1.93:8181/api/v2?apikey=f62d7595f52a47a99cd0216057b47016&cmd=get_activity"
   );

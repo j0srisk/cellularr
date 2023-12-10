@@ -4,7 +4,7 @@ import { StateEnum } from "@/enums";
 import Heading from "@/components/Heading";
 import useSWR from "swr";
 
-const fetcher = (...args) =>
+const fetcher = (...args: any) =>
   fetch(...args, { method: "POST" }).then((res) => res.json());
 
 type Session = {

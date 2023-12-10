@@ -1,10 +1,18 @@
 import Link from "next/link";
-import { Media } from "@/app/types";
+import { MovieDetails } from "@/app/types";
 
-export default function PlayButton({ media }: { media: Media }) {
+export default function PlayButton({
+  movieDetails,
+}: {
+  movieDetails: MovieDetails;
+}) {
   return (
     <Link
-      href={media.iOSPlexUrl ? media.iOSPlexUrl : "https://app.plex.tv"}
+      href={
+        movieDetails.mediaInfo?.iOSPlexUrl
+          ? movieDetails.mediaInfo?.iOSPlexUrl
+          : "https://app.plex.tv"
+      }
       className="border border-amber-400 bg-amber-500 flex  py-2 justify-center w-full rounded-lg font-semibold h-fit items-center gap-2"
     >
       <svg
