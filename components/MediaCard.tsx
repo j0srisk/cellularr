@@ -5,7 +5,6 @@ import Poster from '@/components/Poster';
 import Link from 'next/link';
 
 export default function MediaCard({ movieDetails }: { movieDetails: MovieDetails }) {
-	console.log(movieDetails.mediaType);
 	return (
 		<Link className="group" href={'/' + movieDetails.mediaType + '/' + movieDetails.id}>
 			<div className="flex w-full items-center gap-4 px-2">

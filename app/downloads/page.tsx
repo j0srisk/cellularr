@@ -2,6 +2,7 @@
 
 import { Download } from '@/app/types';
 import DownloadCard from '@/components/DownloadCard';
+import Heading from '@/components/Heading';
 import { useState } from 'react';
 import useSWR from 'swr';
 
@@ -18,13 +19,15 @@ export default function Page() {
 	});
 
 	return (
-		<div>
-			<p>Downloads</p>
-			{downloads.map((download) => (
-				<div key={download.name}>
-					<DownloadCard key={download.id} download={download} />
-				</div>
-			))}
+		<div className="flex h-full w-full flex-col px-4">
+			<Heading heading="Downloads" subheading={downloads.length + ' Downloads'} />
+			<div className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
+				{downloads.map((download) => (
+					<div key={download.name}>
+						<DownloadCard key={download.id} download={download} />
+					</div>
+				))}
+			</div>
 		</div>
 	);
 }
