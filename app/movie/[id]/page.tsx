@@ -1,11 +1,11 @@
-import { MovieDetails } from '@/app/types';
-import { MediaStatus } from '@/app/types';
+import { MovieDetails, MediaStatus, MediaType } from '@/app/types';
 import { CreatePosterUrl, CreateBackdropUrl } from '@/app/utils';
 import Heading from '@/components/Heading';
 import PlayButton from '@/components/PlayButton';
 import Poster from '@/components/Poster';
 import ProcessingButton from '@/components/ProcessingButton';
 import RequestButton from '@/components/RequestButton';
+import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 
 export default async function Page({ params }: { params: { id: string } }) {
 	const id = params.id;
@@ -13,12 +13,16 @@ export default async function Page({ params }: { params: { id: string } }) {
 		cache: 'no-cache',
 	});
 
-	const overseerrData = await overseerrResponse.json();
+	const movieDetails: MovieDetails = await overseerrResponse.json();
 
-	const movieDetails: MovieDetails = overseerrData;
+	//set the mediaType to movie because MovieDetails doesn't return a mediaType
+	movieDetails.mediaType = MediaType.MOVIE;
+
+	console.log(movieDetails.mediaInfo?.status);
 
 	return (
 		<>
+			<SaveToRecentSearches movieDetails={movieDetails} />
 			<Heading heading={movieDetails.title} subheading={movieDetails.releaseDate?.split('-')[0]} />
 			<div className="flex h-full flex-col overflow-y-scroll">
 				<div className="-mb-14 flex h-1/3 w-full flex-shrink-0">
@@ -40,10 +44,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 							{movieDetails.mediaInfo?.status === MediaStatus.UNKNOWN && (
 								<RequestButton moviedetails={movieDetails} />
 							)}
-							{movieDetails.mediaInfo?.status === MediaStatus.PROCESSING ||
-								(movieDetails.mediaInfo?.status === MediaStatus.PENDING && (
-									<ProcessingButton movieDetails={movieDetails} />
-								))}
+							{movieDetails.mediaInfo?.status === MediaStatus.PROCESSING && (
+								<ProcessingButton movieDetails={movieDetails} />
+							)}
+							{movieDetails.mediaInfo?.status === MediaStatus.PENDING && (
+								<ProcessingButton movieDetails={movieDetails} />
+							)}
 							{movieDetails.mediaInfo?.status === MediaStatus.PARTIALLY_AVAILABLE && (
 								<PlayButton movieDetails={movieDetails} />
 							)}
@@ -93,9 +99,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 								</div>
 							</div>
 
-							<div className="flex w-full items-center justify-center gap-2 font-semibold text-white">
-								<p className="hidden rounded-md border-2 px-1 text-xs font-bold ">PG</p>
-								<p className=" text-sm">{movieDetails.runtime} minutes</p>
+							<div className="flex w-full items-center justify-center gap-2  text-white">
+								<p className="hidden rounded-md border-2 px-1 text-xs font-bold">PG</p>
+								<p className="text-sm">{movieDetails.runtime} minutes</p>
 							</div>
 						</div>
 					</div>

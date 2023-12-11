@@ -19,28 +19,30 @@ export default function ProcessingButton({ movieDetails }: { movieDetails: Movie
 		fetcher,
 		{
 			refreshInterval: 5000,
-			onSuccess: (data) => {
-				console.log(data);
+			onSuccess: (data: MovieDetails) => {
 				//movie has begun downloading
-				if (data.mediaInfo.downloadStatus[0]) {
-					//movie is still downloading
-					if (data.mediaInfo.downloadStatus[0].status === 'downloading') {
-						setIsDownloading(true);
-						console.log('downloading');
-						const progress = (
-							((data.mediaInfo.downloadStatus[0].size - data.mediaInfo.downloadStatus[0].sizeLeft) /
-								data.mediaInfo.downloadStatus[0].size) *
-							100
-						).toFixed(2);
-						setDownloadProgress(progress);
-						console.log(progress);
-						//movie has completed downloading but is still processing
-					} else if (data.mediaInfo.downloadStatus[0].status === 'completed') {
-						setIsDownloading(false);
-						console.log('completed');
+				if (data.mediaInfo?.downloadStatus) {
+					if (data.mediaInfo.downloadStatus[0]) {
+						//movie is still downloading
+						if (data.mediaInfo.downloadStatus[0]?.status === 'downloading') {
+							setIsDownloading(true);
+							console.log('downloading');
+							const progress = (
+								((data.mediaInfo.downloadStatus[0].size -
+									data.mediaInfo.downloadStatus[0].sizeLeft) /
+									data.mediaInfo.downloadStatus[0].size) *
+								100
+							).toFixed(2);
+							setDownloadProgress(progress);
+							console.log(progress);
+							//movie has completed downloading but is still processing
+						} else if (data.mediaInfo.downloadStatus[0].status === 'completed') {
+							setIsDownloading(false);
+							console.log('completed');
+						}
+						//movie is available
 					}
-					//movie is available
-				} else if (data.mediaInfo.status === MediaStatus.AVAILABLE) {
+				} else if (data.mediaInfo?.status === MediaStatus.AVAILABLE) {
 					console.log('available');
 					Router.refresh();
 				} else {

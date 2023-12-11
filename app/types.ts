@@ -10,7 +10,6 @@ export interface MovieDetails {
 	budget: number | null;
 	genres: Genre[] | null;
 	homepage: string | null;
-	relatedVideos: RelatedVideo[] | null;
 	originalLanguage: string | null;
 	originalTitle: string | null;
 	overview: string | null;
@@ -18,7 +17,6 @@ export interface MovieDetails {
 	productionCompanies: ProductionCompany[] | null;
 	productionCountries: ProductionCountry[] | null;
 	releaseDate: string | null;
-	//releases: Release[] | null;
 	revenue: number | null;
 	runtime: number | null;
 	spokenLanguages: SpokenLanguage[] | null;
@@ -28,25 +26,13 @@ export interface MovieDetails {
 	video: boolean | null;
 	voteAverage: number | null;
 	voteCount: number | null;
-	//credits: Credits | null;
-	//collection: Collection | null;
 	externalIds: ExternalIds | null;
-	//watchProviders: WatchProviders[] | null;
-	mediaInfo: MediaInfo | null;
+	mediaInfo: Media | null;
 }
 
 export interface Genre {
 	id: number | null;
 	name: string | null;
-}
-
-export interface RelatedVideo {
-	url: string | null;
-	key: string | null;
-	name: string | null;
-	size: number | null;
-	//type: enum | null;
-	//site: enum | null;
 }
 
 export interface ProductionCompany {
@@ -78,7 +64,7 @@ export interface ExternalIds {
 	twitterId: string | null;
 }
 
-export interface MediaInfo {
+export interface Media {
 	downloadStatus: DownloadingItem[] | null;
 	downloadStatus4k: DownloadingItem[] | null;
 	id: number | null;
@@ -87,9 +73,9 @@ export interface MediaInfo {
 	status: MediaStatus;
 	status4k: MediaStatus;
 	//requests: Request[] | null;
-	createdAt: string | null;
-	updatedAt: string | null;
-	mediaAddedAt: string | null;
+	createdAt: Date | null;
+	updatedAt: Date | null;
+	mediaAddedAt: Date | null;
 	ratingKey: string | null;
 	ratingKey4k: string | null;
 	plexUrl: string | null;

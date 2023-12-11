@@ -3,21 +3,20 @@
 import { MovieDetails } from '@/app/types';
 import Heading from '@/components/Heading';
 import MediaCard from '@/components/MediaCard';
+import RecentSearches from '@/components/RecentSearches';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Page() {
-	const [results, setResults] = useState<MovieDetails[]>([]);
-
-	const [isLoading, setIsLoading] = useState(false);
-	const resultsContainerRef = useRef<HTMLDivElement>(null);
-	const router = useRouter();
 	const searchParams = useSearchParams();
-
 	const searchQuery = searchParams.get('query');
 
 	const [search, setSearch] = useState<string | ''>(searchQuery || '');
+	const [results, setResults] = useState<MovieDetails[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const router = useRouter();
 
 	//get search results from overseerr and add to results state
 	async function fetchData(query: string, page: number = 1, language: string = 'en') {
@@ -25,7 +24,6 @@ export default function Page() {
 			'/api/overseerr/search?query=' + query + '&language=' + language + '&page=' + page,
 		);
 
-		setIsLoading(true);
 		const data = await response.json();
 
 		const results = data.results;
@@ -51,12 +49,12 @@ export default function Page() {
 	return (
 		<div className="flex h-full w-full flex-col px-4">
 			<Heading heading="Search" subheading="Overseerr" />
-			<div className="mb-4 flex w-full items-center gap-2 rounded-lg bg-zinc-400/30 px-4">
+			<div className="mb-4 flex w-full items-center gap-2 rounded-lg bg-zinc-400/30 pl-4 pr-2">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"
 					fill="currentColor"
-					className="h-5 w-5 opacity-60"
+					className="h-4 w-4 flex-shrink-0 opacity-60"
 				>
 					<path
 						fillRule="evenodd"
@@ -70,8 +68,6 @@ export default function Page() {
 					value={search}
 					onChange={(e) => {
 						setSearch(e.target.value);
-						//setResults([]);
-						//fetchData(e.target.value);
 					}}
 					onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
 						if (e.key === 'Enter') {
@@ -80,40 +76,75 @@ export default function Page() {
 						}
 					}}
 					onBlur={() => {
+						setIsLoading(true);
 						router.push('/search?query=' + search);
 					}}
-					className="w-full bg-transparent p-2 text-white placeholder-white/60 outline-none"
+					className="w-full bg-transparent p-1.5 text-white placeholder-white/60 outline-none"
 				/>
 				{search && (
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 20 20"
-						fill="currentColor"
-						className="h-8 w-8"
-						onClick={() => {
-							router.push('/search');
-							setSearch('');
-							setResults([]);
-						}}
-					>
-						<path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-					</svg>
+					<button className="flex items-center" onClick={() => router.push('/search')}>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							strokeWidth={1.5}
+							stroke="currentColor"
+							className="h-5 w-5 opacity-60"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
+					</button>
 				)}
 			</div>
-			<div
-				ref={resultsContainerRef}
-				className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2"
-			>
-				{isLoading ? (
-					<div className="flex h-full w-full flex-col items-center justify-center gap-2">
-						<p className="font-semibold">Loading...</p>
-					</div>
-				) : (
+			<div className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
+				{searchQuery ? (
 					<>
-						{results.map((movieDetails: MovieDetails) => (
-							<MediaCard key={movieDetails.id} movieDetails={movieDetails} />
-						))}
+						{isLoading ? (
+							<div className="flex h-full w-full items-center justify-center gap-2">
+								<p className="hidden font-semibold opacity-60">Loading ...</p>
+								<svg
+									stroke="currentColor"
+									viewBox="-2 -2 42 42"
+									xmlns="http://www.w3.org/2000/svg"
+									className="z-20 h-6 w-6"
+								>
+									<g transform="translate(1 1)" strokeWidth="6" fill="none">
+										<circle cx="18" cy="18" r="18" strokeOpacity="0.5"></circle>
+										<path d="M36 18c0-9.94-8.06-18-18-18">
+											<animateTransform
+												attributeName="transform"
+												dur="1.5s"
+												from="0 18 18"
+												repeatCount="indefinite"
+												to="360 18 18"
+												type="rotate"
+											></animateTransform>
+										</path>
+									</g>
+								</svg>
+							</div>
+						) : (
+							<>
+								{results.length > 0 ? (
+									<>
+										{results.map((movieDetails: MovieDetails) => (
+											<MediaCard key={movieDetails.id} movieDetails={movieDetails} />
+										))}
+									</>
+								) : (
+									<div className="flex h-full w-full items-center justify-center">
+										<p className="font-semibold opacity-60">No Results</p>
+									</div>
+								)}
+							</>
+						)}
 					</>
+				) : (
+					<RecentSearches />
 				)}
 			</div>
 		</div>

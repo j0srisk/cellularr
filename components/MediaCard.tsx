@@ -5,15 +5,16 @@ import Poster from '@/components/Poster';
 import Link from 'next/link';
 
 export default function MediaCard({ movieDetails }: { movieDetails: MovieDetails }) {
+	console.log(movieDetails.mediaType);
 	return (
 		<Link className="group" href={'/' + movieDetails.mediaType + '/' + movieDetails.id}>
-			<div className="flex w-full items-center gap-4">
-				<div className="aspect-[2/3] h-20">
+			<div className="flex w-full items-center gap-4 px-2">
+				<div className="aspect-[2/3] h-16">
 					<Poster url={CreatePosterUrl(movieDetails.posterPath)} alt={movieDetails.title} />
 				</div>
 
 				<div className="flex w-full flex-col items-start justify-center truncate">
-					<p className="w-full truncate text-left text-lg font-semibold text-white">
+					<p className="text w-full truncate text-left font-semibold text-white">
 						{movieDetails.title}
 					</p>
 
