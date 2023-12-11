@@ -107,3 +107,11 @@ export enum MediaStatus {
 	PARTIALLY_AVAILABLE = 4,
 	AVAILABLE = 5,
 }
+
+export type Download = {
+	id: string | null;
+	name: string | null;
+	status: string | null;
+	size: number;
+	sizeLeft: number;
+};
