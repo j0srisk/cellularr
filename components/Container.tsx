@@ -16,15 +16,17 @@ export default function Container({
 	return (
 		<Link
 			href={url}
-			className="relative flex h-full w-full items-center justify-start gap-4 rounded-xl bg-zinc-500/30 p-4 "
+			className="relative flex h-full w-full items-center justify-start gap-2 bg-black py-4"
 		>
-			<div className="flex h-14 w-14  items-center justify-center rounded-xl">
+			<div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-neutral-400 p-2">
 				<img src={iconUrl} alt="icon" className="" />
 			</div>
-			<p className="text-center text-2xl font-semibold text-white">{name}</p>
-			<div className="absolute right-2 top-2 h-3 w-3 rounded-full bg-green-500" />
-			<div className="absolute right-2 top-2 z-20 hidden rounded-md bg-green-500 p-1 px-2">
-				<p className="text-xs font-bold">Running</p>
+			<div className="flex w-full flex-col truncate">
+				<p className="w-full truncate text-lg font-semibold text-white">{name}</p>
+				<p className="w-full truncate text-xs font-semibold text-neutral-400">{url}</p>
+			</div>
+			<div className="flex-shrink-0 rounded-full bg-zinc-800 px-4 py-1">
+				<p className="text-sm font-black text-blue-500">Running</p>
 			</div>
 		</Link>
 	);

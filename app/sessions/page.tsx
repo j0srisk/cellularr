@@ -26,7 +26,8 @@ export default function Page() {
 					userThumb: tautulliSession.user_thumb,
 					player: tautulliSession.player,
 					year: tautulliSession.year,
-					thumb: tautulliSession.thumb,
+					posterPath: tautulliSession.thumb,
+					backdropPath: tautulliSession.art,
 					ratingKey: tautulliSession.rating_key,
 					duration: tautulliSession.stream_duration,
 				};
@@ -36,21 +37,20 @@ export default function Page() {
 	});
 
 	return (
-		<div className="flex h-full w-full flex-col px-4">
+		<div className="flex h-full w-full flex-col gap-6 px-4">
 			<div className="flex w-full flex-col pt-5">
 				<p className="text-4xl font-black">Now Streaming</p>
 				<p className="text-lg font-black text-neutral-400">
 					{sessions.length + ' Active Sessions'}
 				</p>
 			</div>
-			<div className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
+			<div className="flex h-full w-full flex-col justify-start gap-6 overflow-auto pb-2">
 				{sessions.map((session) => (
 					<div key={session.id}>
 						<SessionCard session={session} />
 					</div>
 				))}
 			</div>
-			<Heading heading="Now Playing" subheading={sessions.length + ' Active Sessions'} />
 		</div>
 	);
 }

@@ -141,7 +141,8 @@ export type Session = {
 	userThumb: string | null;
 	player: string | null;
 	year: string | null;
-	thumb: string | null;
+	posterPath: string | null;
+	backdropPath: string | null;
 	ratingKey: string | null;
 	duration?: number;
 };

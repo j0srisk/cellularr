@@ -1,5 +1,5 @@
 import { MovieDetails, MediaStatus, MediaType, Cast } from '@/app/types';
-import { CreatePosterUrl, CreateBackdropUrl } from '@/app/utils';
+import { CreatePosterUrl, CreateBackdropUrl, FormatDuration } from '@/app/utils';
 import CastMember from '@/components/CastMember';
 import Heading from '@/components/Heading';
 import PlayButton from '@/components/PlayButton';
@@ -22,10 +22,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 	console.log(movieDetails.mediaInfo?.status);
 
 	const posterUrl = CreatePosterUrl(movieDetails.posterPath);
-
-	const runTimeHours = movieDetails.runtime ? Math.floor(movieDetails.runtime / 60) : 0;
-
-	const runTimeMinutes = movieDetails.runtime ? movieDetails.runtime % 60 : 0;
 
 	return (
 		<>
@@ -51,23 +47,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 								)}
 								<p>{movieDetails.releaseDate?.split('-')[0]}</p>
 								<p>•</p>
-								{movieDetails.runtime && (
-									<>
-										{runTimeHours > 0 && (
-											<p>
-												{runTimeHours} hr
-												{runTimeHours > 1 ? 's' : ''}
-											</p>
-										)}
-
-										{runTimeMinutes > 0 && (
-											<p>
-												{runTimeMinutes} min
-												{runTimeMinutes > 1 ? 's' : ''}
-											</p>
-										)}
-									</>
-								)}
+								{movieDetails.runtime && <>{FormatDuration(movieDetails.runtime)}</>}
 							</div>
 							<button className="flex  h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black">
 								<svg
