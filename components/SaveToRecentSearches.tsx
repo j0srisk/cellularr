@@ -16,8 +16,8 @@ export default function SaveToRecentSearches({ movieDetails }: { movieDetails: M
 			// Add movieDetails to the beginning of the array
 			recentSearches.unshift(movieDetails);
 			// Remove the last item in the array if it is longer than 10 items
-			if (recentSearches.length > 10) {
-				recentSearches.splice(10);
+			if (recentSearches.length > 8) {
+				recentSearches.splice(8);
 			}
 			localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
 		}

@@ -27,14 +27,14 @@ export default function RecentSearches() {
 		);
 	} else {
 		return (
-			<div className="flex flex-col gap-2">
+			<div className="flex flex-col gap-2 pt-4">
 				<div className="flex flex-row items-center justify-between px-1">
-					<p className="font-semibold text-white">Recent Searches</p>
-					<button onClick={clearRecentSearches} className="text-xs text-white opacity-60">
+					<p className="text-xs font-black text-neutral-400">Recently Searched</p>
+					<button onClick={clearRecentSearches} className="text-xs font-black text-blue-500">
 						Clear
 					</button>
 				</div>
-				<div className="flex flex-col gap-2">
+				<div className="flex flex-col gap-[1px] bg-zinc-800 pt-[1px]">
 					{recentSearches.map((movieDetails: MovieDetails) => (
 						<MediaCard key={movieDetails.id} movieDetails={movieDetails} />
 					))}

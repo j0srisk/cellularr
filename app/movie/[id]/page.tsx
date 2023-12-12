@@ -1,5 +1,6 @@
-import { MovieDetails, MediaStatus, MediaType } from '@/app/types';
+import { MovieDetails, MediaStatus, MediaType, Cast } from '@/app/types';
 import { CreatePosterUrl, CreateBackdropUrl } from '@/app/utils';
+import CastMember from '@/components/CastMember';
 import Heading from '@/components/Heading';
 import PlayButton from '@/components/PlayButton';
 import Poster from '@/components/Poster';
@@ -20,19 +21,85 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 	console.log(movieDetails.mediaInfo?.status);
 
+	const posterUrl = CreatePosterUrl(movieDetails.posterPath);
+
+	const runTimeHours = movieDetails.runtime ? Math.floor(movieDetails.runtime / 60) : 0;
+
+	const runTimeMinutes = movieDetails.runtime ? movieDetails.runtime % 60 : 0;
+
 	return (
 		<>
 			<SaveToRecentSearches movieDetails={movieDetails} />
-			<Heading heading={movieDetails.title} subheading={movieDetails.releaseDate?.split('-')[0]} />
-			<div className="flex h-full flex-col overflow-y-scroll">
-				<div className="-mb-14 flex h-1/3 w-full flex-shrink-0">
-					<img
-						src={CreateBackdropUrl(movieDetails.backdropPath)}
-						alt={movieDetails.title}
-						className="h-full w-full object-cover"
-					/>
+			<div className="flex h-full flex-col gap-8 overflow-y-scroll">
+				<div
+					style={
+						{
+							'--image-url': `url(${CreateBackdropUrl(movieDetails.backdropPath)})`,
+						} as React.CSSProperties
+					}
+					className="flex h-[66vh] w-full flex-shrink-0 items-end bg-[image:var(--image-url)] bg-cover bg-center"
+				>
+					<div className="flex h-fit w-full flex-col items-center justify-center gap-1 bg-gradient-to-b from-transparent to-black pt-20">
+						<p className="px-2 text-center text-3xl font-black">{movieDetails.title}</p>
+						<div className="flex w-2/3 flex-col gap-2">
+							<div className="flex w-full items-center justify-center gap-1 text-xs font-black text-neutral-400">
+								{movieDetails.genres && (
+									<>
+										<p>{movieDetails.genres[0].name}</p>
+										<p>•</p>
+									</>
+								)}
+								<p>{movieDetails.releaseDate?.split('-')[0]}</p>
+								<p>•</p>
+								{movieDetails.runtime && (
+									<>
+										{runTimeHours > 0 && (
+											<p>
+												{runTimeHours} hr
+												{runTimeHours > 1 ? 's' : ''}
+											</p>
+										)}
+
+										{runTimeMinutes > 0 && (
+											<p>
+												{runTimeMinutes} min
+												{runTimeMinutes > 1 ? 's' : ''}
+											</p>
+										)}
+									</>
+								)}
+							</div>
+							<button className="flex  h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									className="h-5 w-5"
+								>
+									<path
+										fillRule="evenodd"
+										d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+										clipRule="evenodd"
+									/>
+								</svg>
+
+								<p className="text-lg font-black">Play on Plex</p>
+							</button>
+						</div>
+					</div>
 				</div>
-				<div className="mb-4 flex flex-col gap-8 px-4">
+				<div className="flex flex-col gap-4 px-4">
+					<p className="text-sm font-black text-white">{movieDetails.overview}</p>
+				</div>
+				<div className="flex flex-col gap-2">
+					<p className="px-4 text-2xl font-black text-white">Cast</p>
+					<div className="flex gap-2 overflow-scroll px-4">
+						{movieDetails.credits?.cast.map((cast: Cast) => (
+							<CastMember key={cast.id} cast={cast} />
+						))}
+					</div>
+				</div>
+				<div className="mb-4 flex hidden flex-col gap-8 px-4">
 					<div className="flex items-end justify-start gap-4 ">
 						<div className="flex flex-col items-center justify-center gap-4">
 							<div className="aspect-[2/3] h-56">

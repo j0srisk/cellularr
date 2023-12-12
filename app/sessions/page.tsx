@@ -1,87 +1,56 @@
 'use client';
 
+import { Session } from '@/app/types';
 import Heading from '@/components/Heading';
-import SessionCard from '@/components/SessionCard';
-import { StateEnum } from '@/enums';
+import SessionCard from '@/components/NewSessionCard';
+import { useState } from 'react';
 import useSWR from 'swr';
 
-const fetcher = (...args: any) => fetch(...args, { method: 'POST' }).then((res) => res.json());
-
-type Session = {
-	session_id: string;
-	thumb: string;
-	parent_thumb: string;
-	grandparent_thumb: string;
-	art: string;
-	title: string;
-	media_index: number;
-	parent_media_index: number;
-	grandparent_title: string;
-	year: string;
-	user: string;
-	state: StateEnum;
-	progress_percent: number;
-	transcode_progress: number;
-	duration: number;
-	rating_key: string;
-};
-
 export default function Page() {
-	const {
-		data: sessions,
-		error,
-		isLoading,
-	} = useSWR('/api/sessions', fetcher, {
+	const [sessions, setSessions] = useState<Session[]>([]);
+	const fetcher = (...args: any[]) =>
+		fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
+
+	const { data, error } = useSWR('/api/tautulli/activity', fetcher, {
 		refreshInterval: 5000,
+		onSuccess: (data) => {
+			setSessions([]);
+			data.forEach((tautulliSession: any) => {
+				console.log(tautulliSession);
+				const session: Session = {
+					id: tautulliSession.session_key,
+					title: tautulliSession.full_title,
+					mediaType: 'movie',
+					progress: tautulliSession.progress_percent,
+					user: tautulliSession.friendly_name,
+					userThumb: tautulliSession.user_thumb,
+					player: tautulliSession.player,
+					year: tautulliSession.year,
+					thumb: tautulliSession.thumb,
+					ratingKey: tautulliSession.rating_key,
+					duration: tautulliSession.stream_duration,
+				};
+				setSessions((sessions) => [...sessions, session]);
+			});
+		},
 	});
 
-	let subheading = '';
-
-	if (isLoading) {
-		subheading = 'Loading...';
-	} else {
-		subheading = `${sessions.length} active streams`;
-		if (sessions.length === 1) {
-			subheading = `${sessions.length} active stream`;
-		}
-	}
-
 	return (
-		<>
-			<Heading heading="Now Playing" subheading={subheading} />
-			<div className="flex h-full w-full flex-col justify-between gap-4 overflow-auto">
-				{!isLoading && (
-					<>
-						{sessions.length === 0 && (
-							<div className="flex flex-1 flex-col items-center justify-center">
-								<p className=" text-center text-sm font-bold text-neutral-500">
-									What is the sound <br></br> of nothing playing?
-								</p>
-							</div>
-						)}
-						{sessions.map((session: Session) => (
-							<SessionCard
-								key={session.session_id}
-								thumb={session.thumb}
-								parent_thumb={session.parent_thumb}
-								grandparent_thumb={session.grandparent_thumb}
-								art={session.art}
-								title={session.title}
-								grandparent_title={session.grandparent_title}
-								media_index={session.media_index}
-								parent_media_index={session.parent_media_index}
-								year={session.year}
-								user={session.user}
-								state={session.state}
-								progress_percent={session.progress_percent}
-								transcode_progress={session.transcode_progress}
-								duration={session.duration}
-								rating_key={session.rating_key}
-							/>
-						))}
-					</>
-				)}
+		<div className="flex h-full w-full flex-col px-4">
+			<div className="flex w-full flex-col pt-5">
+				<p className="text-4xl font-black">Now Streaming</p>
+				<p className="text-lg font-black text-neutral-400">
+					{sessions.length + ' Active Sessions'}
+				</p>
 			</div>
-		</>
+			<div className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
+				{sessions.map((session) => (
+					<div key={session.id}>
+						<SessionCard session={session} />
+					</div>
+				))}
+			</div>
+			<Heading heading="Now Playing" subheading={sessions.length + ' Active Sessions'} />
+		</div>
 	);
 }

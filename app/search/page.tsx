@@ -1,6 +1,7 @@
 'use client';
 
 import { MovieDetails } from '@/app/types';
+import AppleHeader from '@/components/AppleHeader';
 import Heading from '@/components/Heading';
 import MediaCard from '@/components/MediaCard';
 import RecentSearches from '@/components/RecentSearches';
@@ -48,23 +49,26 @@ export default function Page() {
 
 	return (
 		<div className="flex h-full w-full flex-col px-4">
-			<Heading heading="Search" subheading="Overseerr" />
-			<div className="mb-4 flex w-full items-center gap-2 rounded-lg bg-zinc-400/30 pl-4 pr-2">
+			<AppleHeader heading="Search" />
+			<div className="my-2 flex w-full items-center gap-2 rounded-lg bg-zinc-800 px-2 ">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
 					viewBox="0 0 24 24"
-					fill="currentColor"
-					className="h-4 w-4 flex-shrink-0 opacity-60"
+					strokeWidth={2.5}
+					stroke="currentColor"
+					className="h-4 w-4 flex-shrink-0 stroke-neutral-400"
 				>
 					<path
-						fillRule="evenodd"
-						d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z"
-						clipRule="evenodd"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
 					/>
 				</svg>
+
 				<input
 					type="text"
-					placeholder="Search..."
+					placeholder="Search Movies & TV"
 					value={search}
 					onChange={(e) => {
 						setSearch(e.target.value);
@@ -79,24 +83,22 @@ export default function Page() {
 						setIsLoading(true);
 						router.push('/search?query=' + search);
 					}}
-					className="w-full bg-transparent p-1.5 text-white placeholder-white/60 outline-none"
+					className="w-full bg-transparent py-1.5 font-semibold text-white placeholder-neutral-400 outline-none"
 				/>
 				{search && (
 					<button className="flex items-center" onClick={() => router.push('/search')}>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth={1.5}
-							stroke="currentColor"
-							className="h-5 w-5 opacity-60"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-							/>
-						</svg>
+						<div className="flex h-5 w-5 items-center justify-center rounded-full bg-neutral-400">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={4}
+								stroke="currentColor"
+								className="h-3 w-3 stroke-zinc-800"
+							>
+								<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</div>
 					</button>
 				)}
 			</div>
@@ -130,11 +132,11 @@ export default function Page() {
 						) : (
 							<>
 								{results.length > 0 ? (
-									<>
+									<div className="flex flex-col gap-[1px] bg-zinc-800">
 										{results.map((movieDetails: MovieDetails) => (
 											<MediaCard key={movieDetails.id} movieDetails={movieDetails} />
 										))}
-									</>
+									</div>
 								) : (
 									<div className="flex h-full w-full items-center justify-center">
 										<p className="font-semibold opacity-60">No Results</p>

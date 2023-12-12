@@ -28,6 +28,7 @@ export interface MovieDetails {
 	voteCount: number | null;
 	externalIds: ExternalIds | null;
 	mediaInfo: Media | null;
+	credits: Credits | null;
 }
 
 export interface Genre {
@@ -62,6 +63,21 @@ export interface ExternalIds {
 	tvdbId: number | null;
 	tvrageId: number | null;
 	twitterId: string | null;
+}
+
+export interface Credits {
+	cast: Cast[];
+}
+
+export interface Cast {
+	castId: number;
+	character: string;
+	creditId: string;
+	id: number;
+	name: string;
+	order: number;
+	gender: number;
+	profilePath: string;
 }
 
 export interface Media {
@@ -114,4 +130,18 @@ export type Download = {
 	status: string | null;
 	size: number;
 	sizeLeft: number;
+};
+
+export type Session = {
+	id: string | null;
+	title: string | null;
+	mediaType: string | null;
+	progress: string | null;
+	user: string | null;
+	userThumb: string | null;
+	player: string | null;
+	year: string | null;
+	thumb: string | null;
+	ratingKey: string | null;
+	duration?: number;
 };
