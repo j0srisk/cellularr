@@ -2,6 +2,7 @@
 export interface MovieDetails {
 	//hardcoded to movie so I can use MovieDetails instead of MovieResult
 	mediaType: MediaType.MOVIE;
+	formattedReleaseDate?: string;
 	id: number | null;
 	imdbId: string | null;
 	adult: boolean | null;
