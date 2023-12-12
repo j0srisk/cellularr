@@ -2,7 +2,6 @@ import { Cast } from '@/app/types';
 import { CreateProfileUrl } from '@/app/utils';
 
 export default function CastMember({ cast }: { cast: Cast }) {
-	console.log(cast);
 	return (
 		<div className="flex w-24 flex-shrink-0 flex-col items-center gap-2">
 			<img

@@ -1,12 +1,16 @@
 import { MovieDetails, MediaStatus, MediaType, Cast } from '@/app/types';
 import { CreatePosterUrl, CreateBackdropUrl, FormatDuration } from '@/app/utils';
 import CastMember from '@/components/CastMember';
-import Heading from '@/components/Heading';
 import PlayButton from '@/components/PlayButton';
 import Poster from '@/components/Poster';
 import ProcessingButton from '@/components/ProcessingButton';
 import RequestButton from '@/components/RequestButton';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+	viewportFit: 'cover',
+};
 
 export default async function Page({ params }: { params: { id: string } }) {
 	const id = params.id;
@@ -18,10 +22,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 	//set the mediaType to movie because MovieDetails doesn't return a mediaType
 	movieDetails.mediaType = MediaType.MOVIE;
-
-	console.log(movieDetails.mediaInfo?.status);
-
-	const posterUrl = CreatePosterUrl(movieDetails.posterPath);
 
 	return (
 		<>
@@ -42,12 +42,22 @@ export default async function Page({ params }: { params: { id: string } }) {
 								{movieDetails.genres && (
 									<>
 										<p>{movieDetails.genres[0].name}</p>
-										<p>•</p>
 									</>
 								)}
-								<p>{movieDetails.releaseDate?.split('-')[0]}</p>
-								<p>•</p>
-								{movieDetails.runtime && <>{FormatDuration(movieDetails.runtime)}</>}
+
+								{movieDetails.releaseDate && (
+									<>
+										<p>•</p>
+										<p>{movieDetails.releaseDate?.split('-')[0]}</p>
+									</>
+								)}
+
+								{movieDetails.runtime !== 0 && (
+									<>
+										<p>•</p>
+										<>{FormatDuration(movieDetails.runtime)}</>
+									</>
+								)}
 							</div>
 							<button className="flex  h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black">
 								<svg

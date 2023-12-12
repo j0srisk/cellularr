@@ -18,7 +18,7 @@ export interface MovieDetails {
 	productionCountries: ProductionCountry[] | null;
 	releaseDate: string | null;
 	revenue: number | null;
-	runtime: number | null;
+	runtime: number;
 	spokenLanguages: SpokenLanguage[] | null;
 	status: string | null;
 	tagline: string | null;
