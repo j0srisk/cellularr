@@ -30,11 +30,21 @@ export interface MovieDetails {
 	externalIds: ExternalIds | null;
 	mediaInfo: Media | null;
 	credits: Credits | null;
+	relatedVideos: RelatedVideo[] | null;
 }
 
 export interface Genre {
 	id: number | null;
 	name: string | null;
+}
+
+export interface RelatedVideo {
+	url: string;
+	key: string;
+	name: string;
+	size: number;
+	type: string;
+	site: string;
 }
 
 export interface ProductionCompany {
@@ -146,4 +156,14 @@ export type Session = {
 	backdropPath: string | null;
 	ratingKey: string | null;
 	duration?: number;
+};
+
+export type FileMetadata = {
+	mediaType: MediaType;
+	contentRating?: string;
+	ratingKey: string;
+	resolution: string;
+	videoCodec: string;
+	audioCodec: string;
+	audioChannelLayout: string;
 };

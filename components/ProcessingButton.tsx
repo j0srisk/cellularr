@@ -79,7 +79,6 @@ export default function ProcessingButton({ media }: { media: MovieDetails }) {
 								</g>
 							</svg>
 							<p className="text-lg font-black">Downloading </p>
-							<p className="text-lg font-black">({downloadProgress}%)</p>
 						</>
 					) : (
 						<>

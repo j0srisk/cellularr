@@ -1,4 +1,4 @@
-import { MovieDetails, MediaStatus, MediaType, Cast } from '@/app/types';
+import { MovieDetails, MediaStatus, MediaType, Cast, FileMetadata } from '@/app/types';
 import { CreatePosterUrl, CreateBackdropUrl, FormatDuration } from '@/app/utils';
 import CastMember from '@/components/CastMember';
 import Divider from '@/components/Divider';
@@ -26,6 +26,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 	//set the mediaType to movie because MovieDetails doesn't return a mediaType
 	movieDetails.mediaType = MediaType.MOVIE;
 
+	//set the formattedReleaseDate to a readable format
 	if (movieDetails.releaseDate) {
 		const releaseDate = new Date(movieDetails.releaseDate);
 		const formattedDate = releaseDate.toLocaleDateString('en-US', {
@@ -37,20 +38,45 @@ export default async function Page({ params }: { params: { id: string } }) {
 		movieDetails.formattedReleaseDate = formattedDate;
 	}
 
+	//get recommended media from overseerr
 	const recommendedMediaResponse = await fetch(
 		'http://localhost:3000/api/overseerrproxy/movie/' + id + '/recommendations',
 	);
 
 	const { results: recommendedMedia } = await recommendedMediaResponse.json();
 
-	console.log(movieDetails.mediaInfo?.status);
+	//get file metadata from tautulli if downloaded
+	let fileMetadata: FileMetadata | undefined;
+
+	if (movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE) {
+		const tautulliResponse = await fetch(
+			'http://localhost:3000/api/tautulliproxy?cmd=get_metadata&rating_key=' +
+				movieDetails.mediaInfo?.ratingKey,
+		);
+
+		const {
+			response: { data: tautulliData },
+		} = await tautulliResponse.json();
+
+		fileMetadata = {
+			ratingKey: tautulliData.rating_key,
+			mediaType: tautulliData.media_type,
+			resolution: tautulliData.media_info[0].video_full_resolution,
+			videoCodec: tautulliData.media_info[0].video_codec,
+			audioCodec: tautulliData.media_info[0].audio_codec,
+			audioChannelLayout: tautulliData.media_info[0].audio_channel_layout,
+			contentRating: tautulliData.content_rating,
+		};
+	}
+
+	console.log(movieDetails.relatedVideos);
 
 	return (
 		<>
 			<SaveToRecentSearches movieDetails={movieDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="z-10 flex h-fit w-full flex-col items-center justify-center gap-1 bg-gradient-to-t from-black  to-transparent pb-8 pt-20">
+					<div className="flex h-fit w-full flex-col items-center justify-center gap-4 bg-gradient-to-t from-black  to-transparent pb-8 pt-20">
 						<p className="px-2 text-center text-3xl font-black">{movieDetails.title}</p>
 						<div className="flex w-2/3 flex-col gap-2">
 							<div className="flex w-full items-center justify-center gap-1 text-xs font-black text-neutral-400">
@@ -154,9 +180,53 @@ export default async function Page({ params }: { params: { id: string } }) {
 						</div>
 					</div>
 				</div>
+
 				<div className="mb-2 flex flex-col gap-2 bg-black">
 					<MediaDetailsSection>
 						<p className="px-4 text-sm font-black text-white">{movieDetails.overview}</p>
+						{fileMetadata && (
+							<div className="no-scrollbar flex w-full gap-2 overflow-x-scroll px-4">
+								<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+									{fileMetadata.contentRating}
+								</p>
+								<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 bg-neutral-400 px-1 text-xs font-bold uppercase leading-[.8rem] text-black">
+									{fileMetadata.resolution}
+								</p>
+								<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+									{fileMetadata.videoCodec}
+								</p>
+								<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+									{fileMetadata.audioCodec}
+								</p>
+								<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+									{fileMetadata.audioChannelLayout}
+								</p>
+							</div>
+						)}
+					</MediaDetailsSection>
+					<Divider />
+					<MediaDetailsSection heading={'Videos'}>
+						<div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
+							{movieDetails.relatedVideos?.map((video) => (
+								<Link
+									href={video.url}
+									className="flex w-48 flex-shrink-0 flex-col gap-1"
+									key={video.key}
+								>
+									<img
+										src={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
+										alt="trailer"
+										className="aspect-video rounded-lg object-cover object-center"
+									/>
+									<div className="flex flex-col">
+										<p className="w-full truncate text-sm font-black text-white">{video.name}</p>
+										<p className="w-full truncate text-xs font-black text-neutral-400">
+											{video.type}
+										</p>
+									</div>
+								</Link>
+							))}
+						</div>
 					</MediaDetailsSection>
 					<Divider />
 					<MediaDetailsSection heading={'Related'}>
