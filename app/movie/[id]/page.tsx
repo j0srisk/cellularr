@@ -76,9 +76,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 			<SaveToRecentSearches movieDetails={movieDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="flex h-fit w-full flex-col items-center justify-center gap-4 bg-gradient-to-t from-black  to-transparent pb-8 pt-20">
-						<p className="px-2 text-center text-3xl font-black">{movieDetails.title}</p>
-						<div className="flex w-2/3 flex-col gap-2">
+					<div className="flex h-fit w-full flex-col items-center justify-center bg-gradient-to-t from-black to-transparent pb-8 pt-20">
+						<p className="px-2 pb-3 text-center text-3xl font-black">{movieDetails.title}</p>
+						<div className="flex w-2/3 flex-col gap-4">
 							<div className="flex w-full items-center justify-center gap-1 text-xs font-black text-neutral-400">
 								{movieDetails.genres && (
 									<>
@@ -247,12 +247,16 @@ export default async function Page({ params }: { params: { id: string } }) {
 					<Divider />
 					<MediaDetailsSection heading={'Information'}>
 						{movieDetails.productionCompanies && (
-							<div className="flex flex-col px-4">
-								<p className="text-xs font-black text-white">Production Company</p>
-								<p className="text-xs font-black text-neutral-400">
-									{movieDetails.productionCompanies[0].name}
-								</p>
-							</div>
+							<>
+								{movieDetails.productionCompanies[0] && (
+									<div className="flex flex-col px-4">
+										<p className="text-xs font-black text-white">Production Company</p>
+										<p className="text-xs font-black text-neutral-400">
+											{movieDetails.productionCompanies[0].name}
+										</p>
+									</div>
+								)}
+							</>
 						)}
 						{movieDetails.formattedReleaseDate && (
 							<div className="flex flex-col px-4">
