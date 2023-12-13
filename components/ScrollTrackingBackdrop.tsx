@@ -15,7 +15,7 @@ export default function ScrollTrackingBackdrop({
 	return (
 		<>
 			<div
-				className="flex h-full flex-col overflow-y-scroll"
+				className="no-scrollbar flex h-full flex-col overflow-y-scroll"
 				onScroll={(e) => setScroll(e.target.scrollTop)}
 			>
 				{children}

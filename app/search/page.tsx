@@ -102,7 +102,7 @@ export default function Page() {
 					</button>
 				)}
 			</div>
-			<div className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
+			<div className="no-scrollbar flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
 				{searchQuery ? (
 					<>
 						{isLoading ? (

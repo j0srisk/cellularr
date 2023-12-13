@@ -1,6 +1,7 @@
 import { MovieDetails, MediaStatus, MediaType, Cast } from '@/app/types';
 import { CreatePosterUrl, CreateBackdropUrl, FormatDuration } from '@/app/utils';
 import CastMember from '@/components/CastMember';
+import Divider from '@/components/Divider';
 import MediaCardCompact from '@/components/MediaCardCompact';
 import MediaDetailsSection from '@/components/MediaDetailsSection';
 import ProcessingButton from '@/components/ProcessingButton';
@@ -153,24 +154,27 @@ export default async function Page({ params }: { params: { id: string } }) {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-col gap-4 bg-black">
+				<div className="mb-2 flex flex-col gap-2 bg-black">
 					<MediaDetailsSection>
 						<p className="px-4 text-sm font-black text-white">{movieDetails.overview}</p>
 					</MediaDetailsSection>
+					<Divider />
 					<MediaDetailsSection heading={'Related'}>
-						<div className="flex gap-3 overflow-x-auto px-4">
+						<div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
 							{recommendedMedia.map((media: MovieDetails) => (
 								<MediaCardCompact media={media} key={media.id} />
 							))}
 						</div>
 					</MediaDetailsSection>
+					<Divider />
 					<MediaDetailsSection heading={'Cast'}>
-						<div className="flex gap-3 overflow-x-auto px-4">
+						<div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
 							{movieDetails.credits?.cast.map((cast: Cast) => (
 								<CastMember key={cast.id} cast={cast} />
 							))}
 						</div>
 					</MediaDetailsSection>
+					<Divider />
 					<MediaDetailsSection heading={'Information'}>
 						{movieDetails.productionCompanies && (
 							<div className="flex flex-col px-4">

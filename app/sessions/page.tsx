@@ -44,7 +44,7 @@ export default function Page() {
 					{sessions.length + ' Active Sessions'}
 				</p>
 			</div>
-			<div className="flex h-full w-full flex-col justify-start gap-6 overflow-auto pb-2">
+			<div className="no-scrollbar flex h-full w-full flex-col justify-start gap-6 overflow-auto pb-2">
 				{sessions.map((session) => (
 					<div key={session.id}>
 						<SessionCard session={session} />
