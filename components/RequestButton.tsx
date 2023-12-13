@@ -3,7 +3,7 @@
 import { MovieDetails } from '@/app/types';
 import { useRouter } from 'next/navigation';
 
-export default function RequestButton({ moviedetails }: { moviedetails: MovieDetails }) {
+export default function RequestButton({ media }: { media: MovieDetails }) {
 	const router = useRouter();
 
 	const handleRequest = async () => {
@@ -11,8 +11,9 @@ export default function RequestButton({ moviedetails }: { moviedetails: MovieDet
 		const response = await fetch('/api/overseerr/request', {
 			method: 'POST',
 			body: JSON.stringify({
-				mediaType: moviedetails.mediaType,
-				mediaId: moviedetails.id,
+				mediaType: media.mediaType,
+				mediaId: media.id,
+				userId: 6,
 			}),
 		});
 		const data = await response.json();
@@ -21,19 +22,25 @@ export default function RequestButton({ moviedetails }: { moviedetails: MovieDet
 
 	return (
 		<button
-			className=" flex h-fit w-full items-center  justify-center gap-2 rounded-lg border border-indigo-500 bg-indigo-600 py-2 font-semibold"
+			className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black"
 			onClick={handleRequest}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 20 20"
-				fill="currentColor"
-				className="h-4 w-4"
+				fill="none"
+				viewBox="0 0 24 24"
+				strokeWidth={3}
+				stroke="currentColor"
+				className="h-5 w-5"
 			>
-				<path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
-				<path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
+				<path
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+				/>
 			</svg>
-			<p className="capitalize">Request</p>
+
+			<p className="text-lg font-black">Request</p>
 		</button>
 	);
 }
