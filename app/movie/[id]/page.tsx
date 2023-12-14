@@ -1,5 +1,11 @@
-import { MovieDetails, MediaStatus, MediaType, Cast, FileMetadata } from '@/app/types';
-import { CreatePosterUrl, CreateBackdropUrl, FormatDuration } from '@/app/utils';
+import { MovieDetails, MediaStatus, MediaType, Cast, FileMetadata, Rating } from '@/app/types';
+import {
+	CreatePosterUrl,
+	CreateBackdropUrl,
+	FormatDuration,
+	FormatReleaseDate,
+	GetRatingImageUrl,
+} from '@/app/utils';
 import CastMember from '@/components/CastMember';
 import Divider from '@/components/Divider';
 import MediaCardCompact from '@/components/MediaCardCompact';
@@ -11,43 +17,33 @@ import ScrollTrackingBackdrop from '@/components/ScrollTrackingBackdrop';
 import type { Viewport } from 'next';
 import Link from 'next/link';
 
+//sets the viewport to the entire screen so backdrop image surrounds notch or dynamic island
 export const viewport: Viewport = {
 	viewportFit: 'cover',
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
+	//gets tmdb movie id from the url
 	const id = params.id;
+
+	//gets movie details from overseerr
 	const overseerrResponse = await fetch('http://localhost:3000/api/overseerrproxy/movie/' + id, {
 		cache: 'no-cache',
 	});
 
 	const movieDetails: MovieDetails = await overseerrResponse.json();
 
-	//set the mediaType to movie because MovieDetails doesn't return a mediaType
+	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
 	movieDetails.mediaType = MediaType.MOVIE;
 
-	//set the formattedReleaseDate to a readable format
-	if (movieDetails.releaseDate) {
-		const releaseDate = new Date(movieDetails.releaseDate);
-		const formattedDate = releaseDate.toLocaleDateString('en-US', {
-			month: 'long',
-			day: 'numeric',
-			year: 'numeric',
-		});
-
-		movieDetails.formattedReleaseDate = formattedDate;
-	}
-
-	//get recommended media from overseerr
-	const recommendedMediaResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/movie/' + id + '/recommendations',
+	//gets rotten tomatoes ratings from overseerr
+	const ratingsResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/movie/' + id + '/ratings',
 	);
 
-	const { results: recommendedMedia } = await recommendedMediaResponse.json();
+	movieDetails.rating = await ratingsResponse.json();
 
-	//get file metadata from tautulli if downloaded
-	let fileMetadata: FileMetadata | undefined;
-
+	//gets file metadata from tautulli if the media is available on plex
 	if (movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE) {
 		const tautulliResponse = await fetch(
 			'http://localhost:3000/api/tautulliproxy?cmd=get_metadata&rating_key=' +
@@ -58,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 			response: { data: tautulliData },
 		} = await tautulliResponse.json();
 
-		fileMetadata = {
+		const mediaMetadata = {
 			ratingKey: tautulliData.rating_key,
 			mediaType: tautulliData.media_type,
 			resolution: tautulliData.media_info[0].video_full_resolution,
@@ -67,9 +63,16 @@ export default async function Page({ params }: { params: { id: string } }) {
 			audioChannelLayout: tautulliData.media_info[0].audio_channel_layout,
 			contentRating: tautulliData.content_rating,
 		};
+
+		movieDetails.mediaMetadata = mediaMetadata;
 	}
 
-	console.log(movieDetails.relatedVideos);
+	//get related media from overseerr
+	const recommendedMediaResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/movie/' + id + '/recommendations',
+	);
+
+	const { results: recommendedMedia } = await recommendedMediaResponse.json();
 
 	return (
 		<>
@@ -184,25 +187,49 @@ export default async function Page({ params }: { params: { id: string } }) {
 				<div className="mb-2 flex flex-col gap-2 bg-black">
 					<MediaDetailsSection>
 						<p className="px-4 text-sm font-black text-white">{movieDetails.overview}</p>
-						{fileMetadata && (
+						{movieDetails.mediaMetadata || movieDetails.rating ? (
 							<div className="no-scrollbar flex w-full gap-2 overflow-x-scroll px-4">
-								<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-									{fileMetadata.contentRating}
-								</p>
-								<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 bg-neutral-400 px-1 text-xs font-bold uppercase leading-[.8rem] text-black">
-									{fileMetadata.resolution}
-								</p>
-								<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-									{fileMetadata.videoCodec}
-								</p>
-								<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-									{fileMetadata.audioCodec}
-								</p>
-								<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-									{fileMetadata.audioChannelLayout}
-								</p>
+								{movieDetails.rating && (
+									<>
+										<div className="flex gap-px">
+											<img
+												src={GetRatingImageUrl(movieDetails.rating.criticsRating ?? '')}
+												alt="rotten tomatoes"
+												className="h-4 w-4"
+											/>
+											{movieDetails.rating.criticsScore ? (
+												<p className="h-fit w-fit rounded-sm border-2 border-transparent px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+													{movieDetails.rating.criticsScore}%
+												</p>
+											) : (
+												<p className="h-fit w-fit rounded-sm border-2 border-transparent px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+													--
+												</p>
+											)}
+										</div>
+									</>
+								)}
+								{movieDetails.mediaMetadata && (
+									<>
+										<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+											{movieDetails.mediaMetadata.contentRating}
+										</p>
+										<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 bg-neutral-400 px-1 text-xs font-bold uppercase leading-[.8rem] text-black">
+											{movieDetails.mediaMetadata.resolution}
+										</p>
+										<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+											{movieDetails.mediaMetadata.videoCodec}
+										</p>
+										<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+											{movieDetails.mediaMetadata.audioCodec}
+										</p>
+										<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
+											{movieDetails.mediaMetadata.audioChannelLayout}
+										</p>
+									</>
+								)}
 							</div>
-						)}
+						) : null}
 					</MediaDetailsSection>
 					<Divider />
 					<MediaDetailsSection heading={'Videos'}>
@@ -258,11 +285,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 								)}
 							</>
 						)}
-						{movieDetails.formattedReleaseDate && (
+						{movieDetails.releaseDate && (
 							<div className="flex flex-col px-4">
 								<p className="text-xs font-black text-white">Release Date</p>
 								<p className="text-xs font-black text-neutral-400">
-									{movieDetails.formattedReleaseDate}
+									{FormatReleaseDate(movieDetails.releaseDate)}
 								</p>
 							</div>
 						)}

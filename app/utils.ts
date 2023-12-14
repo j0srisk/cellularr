@@ -37,3 +37,26 @@ export function FormatDuration(durationInMinutes: number) {
 
 	return hours + hourString + ' ' + minutes + minuteString;
 }
+
+export function FormatReleaseDate(releaseDate: string) {
+	const date = new Date(releaseDate);
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	});
+}
+
+export function GetRatingImageUrl(criticsRating: string): string {
+	switch (criticsRating) {
+		case 'Rotten':
+			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-rotten.f1ef4f02ce3.svg';
+		case 'Fresh':
+			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-fresh.149b5e8adc3.svg';
+		case 'Certified Fresh':
+			//return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/certified_fresh.75211285dbb.svg';
+			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/certified_fresh-notext.56a89734a59.svg';
+		default:
+			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-empty.cd930dab34a.svg';
+	}
+}

@@ -1,8 +1,6 @@
 //commented out properties are ones im too lazy to add
 export interface MovieDetails {
-	//hardcoded to movie so I can use MovieDetails instead of MovieResult
 	mediaType: MediaType.MOVIE;
-	formattedReleaseDate?: string;
 	id: number | null;
 	imdbId: string | null;
 	adult: boolean | null;
@@ -31,6 +29,9 @@ export interface MovieDetails {
 	mediaInfo: Media | null;
 	credits: Credits | null;
 	relatedVideos: RelatedVideo[] | null;
+	//my own properties for the movie details page
+	rating?: Rating;
+	mediaMetadata?: FileMetadata;
 }
 
 export interface Genre {
@@ -167,3 +168,13 @@ export type FileMetadata = {
 	audioCodec: string;
 	audioChannelLayout: string;
 };
+
+export interface Rating {
+	title: string;
+	year: number;
+	url: string;
+	criticsScore?: number;
+	criticsRating?: string;
+	audienceScore?: number;
+	audienceRating?: string;
+}

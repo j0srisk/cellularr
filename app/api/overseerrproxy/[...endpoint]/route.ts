@@ -29,6 +29,8 @@ export async function GET(
 	//build the requestUrl
 	const requestUrl = process.env.OVERSEERR_URL + '/' + endpointString + '?' + queryString;
 
+	console.log(requestUrl);
+
 	const response = await fetch(requestUrl, {
 		headers: {
 			'x-api-key': process.env.OVERSEERR_API_KEY,
