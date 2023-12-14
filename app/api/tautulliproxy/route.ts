@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
 	const requestUrl =
 		process.env.TAUTULLI_URL + '/api/v2?apikey=' + process.env.TAUTULLI_API_KEY + '&' + queryString;
 
+	console.log(requestUrl);
 	const response = await fetch(requestUrl, {
 		cache: 'no-cache',
 	});

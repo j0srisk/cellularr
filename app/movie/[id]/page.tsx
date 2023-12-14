@@ -10,11 +10,18 @@ import CastMember from '@/components/CastMember';
 import Divider from '@/components/Divider';
 import MediaCardCompact from '@/components/MediaCardCompact';
 import MediaDetailsSection from '@/components/MediaDetailsSection';
+import {
+	ContentRatingBadge,
+	ResolutionBadge,
+	RottenTomatoesBadge,
+} from '@/components/MetadataBadges';
 import ProcessingButton from '@/components/ProcessingButton';
 import RequestButton from '@/components/RequestButton';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import ScrollTrackingBackdrop from '@/components/ScrollTrackingBackdrop';
+import SnapCarousel from '@/components/SnapCarousel';
 import type { Viewport } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 //sets the viewport to the entire screen so backdrop image surrounds notch or dynamic island
@@ -79,30 +86,38 @@ export default async function Page({ params }: { params: { id: string } }) {
 			<SaveToRecentSearches movieDetails={movieDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="flex h-fit w-full flex-col items-center justify-center bg-gradient-to-t from-black to-transparent pb-8 pt-20">
-						<p className="px-2 pb-3 text-center text-3xl font-black">{movieDetails.title}</p>
-						<div className="flex w-2/3 flex-col gap-4">
-							<div className="flex w-full items-center justify-center gap-1 text-xs font-black text-neutral-400">
-								{movieDetails.genres && (
-									<>
-										<p>{movieDetails.genres[0].name}</p>
-									</>
-								)}
+					<div className="flex h-fit w-full flex-col items-center justify-center bg-gradient-to-t from-black to-transparent px-3 pb-3 pt-20">
+						{/* Title */}
+						<p className="pb-1 text-center text-3xl font-bold text-white/95">
+							{movieDetails.title}
+						</p>
+						{/* Media Info */}
+						<div
+							className="text-off-white
+							 mb-3 flex w-full items-center justify-center gap-1 text-xs font-semibold"
+						>
+							{movieDetails.genres && (
+								<>
+									<p>{movieDetails.genres[0].name}</p>
+								</>
+							)}
 
-								{movieDetails.releaseDate && (
-									<>
-										<p>•</p>
-										<p>{movieDetails.releaseDate?.split('-')[0]}</p>
-									</>
-								)}
+							{movieDetails.releaseDate && (
+								<>
+									<p>•</p>
+									<p>{movieDetails.releaseDate?.split('-')[0]}</p>
+								</>
+							)}
 
-								{movieDetails.runtime !== 0 && (
-									<>
-										<p>•</p>
-										<>{FormatDuration(movieDetails.runtime)}</>
-									</>
-								)}
-							</div>
+							{movieDetails.runtime !== 0 && (
+								<>
+									<p>•</p>
+									<>{FormatDuration(movieDetails.runtime)}</>
+								</>
+							)}
+						</div>
+						{/* Play / Request Button */}
+						<div className="flex w-full flex-col items-center px-6">
 							{!movieDetails.mediaInfo && <RequestButton media={movieDetails} />}
 							{movieDetails.mediaInfo?.status === MediaStatus.UNKNOWN && (
 								<RequestButton media={movieDetails} />
@@ -137,13 +152,13 @@ export default async function Page({ params }: { params: { id: string } }) {
 											? movieDetails.mediaInfo.iOSPlexUrl
 											: 'https://app.plex.tv'
 									}
-									className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black"
+									className="flex h-9 w-56 items-center justify-center gap-2 rounded-md bg-white text-black"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
 										fill="currentColor"
-										className="h-5 w-5"
+										className="hidden h-5 w-5"
 									>
 										<path
 											fillRule="evenodd"
@@ -152,7 +167,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 										/>
 									</svg>
 
-									<p className="text-lg font-black">Play on Plex</p>
+									<p className="font-semibold">Watch on Plex</p>
 								</Link>
 							)}
 							{movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE && (
@@ -162,13 +177,13 @@ export default async function Page({ params }: { params: { id: string } }) {
 											? movieDetails.mediaInfo.iOSPlexUrl
 											: 'https://app.plex.tv'
 									}
-									className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black"
+									className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
 										fill="currentColor"
-										className="h-5 w-5"
+										className="hidden h-5 w-5"
 									>
 										<path
 											fillRule="evenodd"
@@ -177,55 +192,33 @@ export default async function Page({ params }: { params: { id: string } }) {
 										/>
 									</svg>
 
-									<p className="text-lg font-black">Play on Plex</p>
+									<p className="font-semibold">Watch on Plex</p>
 								</Link>
 							)}
 						</div>
 					</div>
 				</div>
-
-				<div className="mb-2 flex flex-col gap-2 bg-black">
+				<div className="flex flex-col bg-black">
 					<MediaDetailsSection>
-						<p className="px-4 text-sm font-black text-white">{movieDetails.overview}</p>
+						<p className="mb-3 px-4 text-sm font-normal text-white/95">{movieDetails.overview}</p>
 						{movieDetails.mediaMetadata || movieDetails.rating ? (
-							<div className="no-scrollbar flex w-full gap-2 overflow-x-scroll px-4">
+							<div className="no-scrollbar text-off-white mb-3 flex w-full items-center gap-[5px] overflow-x-scroll px-4">
 								{movieDetails.rating && (
-									<>
-										<div className="flex gap-px">
-											<img
-												src={GetRatingImageUrl(movieDetails.rating.criticsRating ?? '')}
-												alt="rotten tomatoes"
-												className="h-4 w-4"
-											/>
+									<div className="flex items-center gap-1">
+										<RottenTomatoesBadge criticsRating={movieDetails.rating.criticsRating} />
+										<p className="h-fit w-fit rounded-sm text-xs font-medium uppercase">
 											{movieDetails.rating.criticsScore ? (
-												<p className="h-fit w-fit rounded-sm border-2 border-transparent px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-													{movieDetails.rating.criticsScore}%
-												</p>
+												<>{movieDetails.rating.criticsScore}%</>
 											) : (
-												<p className="h-fit w-fit rounded-sm border-2 border-transparent px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-													--
-												</p>
+												<>--</>
 											)}
-										</div>
-									</>
+										</p>
+									</div>
 								)}
 								{movieDetails.mediaMetadata && (
 									<>
-										<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-											{movieDetails.mediaMetadata.contentRating}
-										</p>
-										<p className="h-fit w-fit rounded-sm border-2 border-neutral-400 bg-neutral-400 px-1 text-xs font-bold uppercase leading-[.8rem] text-black">
-											{movieDetails.mediaMetadata.resolution}
-										</p>
-										<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-											{movieDetails.mediaMetadata.videoCodec}
-										</p>
-										<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-											{movieDetails.mediaMetadata.audioCodec}
-										</p>
-										<p className="h-fit w-fit flex-shrink-0 rounded-sm border-2 border-neutral-400 px-1 text-xs font-black uppercase leading-[.8rem] text-neutral-400">
-											{movieDetails.mediaMetadata.audioChannelLayout}
-										</p>
+										<ContentRatingBadge contentRating={movieDetails.mediaMetadata.contentRating} />
+										<ResolutionBadge resolution={movieDetails.mediaMetadata.resolution} />
 									</>
 								)}
 							</div>
@@ -233,43 +226,39 @@ export default async function Page({ params }: { params: { id: string } }) {
 					</MediaDetailsSection>
 					<Divider />
 					<MediaDetailsSection heading={'Videos'}>
-						<div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
+						<SnapCarousel>
 							{movieDetails.relatedVideos?.map((video) => (
-								<Link
-									href={video.url}
-									className="flex w-48 flex-shrink-0 flex-col gap-1"
+								<MediaCardCompact
 									key={video.key}
-								>
-									<img
-										src={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
-										alt="trailer"
-										className="aspect-video rounded-lg object-cover object-center"
-									/>
-									<div className="flex flex-col">
-										<p className="w-full truncate text-sm font-black text-white">{video.name}</p>
-										<p className="w-full truncate text-xs font-black text-neutral-400">
-											{video.type}
-										</p>
-									</div>
-								</Link>
+									title={video.name}
+									subtitle={video.type}
+									imageUrl={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
+									url={video.url}
+								/>
 							))}
-						</div>
+						</SnapCarousel>
 					</MediaDetailsSection>
 					<Divider />
 					<MediaDetailsSection heading={'Related'}>
-						<div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
+						<SnapCarousel>
 							{recommendedMedia.map((media: MovieDetails) => (
-								<MediaCardCompact media={media} key={media.id} />
+								<MediaCardCompact
+									key={media.id}
+									title={media.title}
+									subtitle={media.releaseDate?.split('-')[0]}
+									imageUrl={CreateBackdropUrl(media.backdropPath)}
+									url={'/movie/' + media.id}
+								/>
 							))}
-						</div>
+						</SnapCarousel>
 					</MediaDetailsSection>
 					<Divider />
 					<MediaDetailsSection heading={'Cast'}>
-						<div className="no-scrollbar flex gap-3 overflow-x-auto px-4">
+						<SnapCarousel>
 							{movieDetails.credits?.cast.map((cast: Cast) => (
 								<CastMember key={cast.id} cast={cast} />
 							))}
-						</div>
+						</SnapCarousel>
 					</MediaDetailsSection>
 					<Divider />
 					<MediaDetailsSection heading={'Information'}>
@@ -277,8 +266,8 @@ export default async function Page({ params }: { params: { id: string } }) {
 							<>
 								{movieDetails.productionCompanies[0] && (
 									<div className="flex flex-col px-4">
-										<p className="text-xs font-black text-white">Production Company</p>
-										<p className="text-xs font-black text-neutral-400">
+										<p className="text-xs font-medium text-white">Production Company</p>
+										<p className="text-off-white text-xs font-medium">
 											{movieDetails.productionCompanies[0].name}
 										</p>
 									</div>
@@ -287,32 +276,32 @@ export default async function Page({ params }: { params: { id: string } }) {
 						)}
 						{movieDetails.releaseDate && (
 							<div className="flex flex-col px-4">
-								<p className="text-xs font-black text-white">Release Date</p>
-								<p className="text-xs font-black text-neutral-400">
+								<p className="text-xs font-medium text-white">Release Date</p>
+								<p className="text-off-white text-xs font-medium">
 									{FormatReleaseDate(movieDetails.releaseDate)}
 								</p>
 							</div>
 						)}
 						{movieDetails.runtime !== 0 && (
 							<div className="flex flex-col px-4">
-								<p className="text-xs font-black text-white">Runtime</p>
-								<p className="text-xs font-black text-neutral-400">
+								<p className="text-xs font-medium text-white">Runtime</p>
+								<p className="text-off-white text-xs font-medium">
 									{FormatDuration(movieDetails.runtime)}
 								</p>
 							</div>
 						)}
 						{movieDetails.budget !== 0 && (
 							<div className="flex flex-col px-4">
-								<p className="text-xs font-black text-white">Budget</p>
-								<p className="text-xs font-black text-neutral-400">
+								<p className="text-xs font-medium text-white">Budget</p>
+								<p className="text-off-white text-xs font-medium">
 									${movieDetails.budget?.toLocaleString()}
 								</p>
 							</div>
 						)}
 						{movieDetails.revenue !== 0 && (
 							<div className="flex flex-col px-4">
-								<p className="text-xs font-black text-white">Revenue</p>
-								<p className="text-xs font-black text-neutral-400">
+								<p className="text-xs font-medium text-white">Revenue</p>
+								<p className="text-off-white text-xs font-medium">
 									${movieDetails.revenue?.toLocaleString()}
 								</p>
 							</div>

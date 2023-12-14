@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+//const inter = Inter({ subsets: ['latin'] });
 
 export const viewport: Viewport = {
 	width: 'device-width',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html className="overscroll-y-none bg-black text-white" lang="en">
-			<body className={`${inter.className} flex h-[100vh] flex-col`}>
+			<body className={` flex h-[100vh] flex-col`}>
 				<div className="flex flex-1 flex-col overflow-auto">{children}</div>
 				<Navbar />
 			</body>
