@@ -7,6 +7,7 @@ import {
 	GetRatingImageUrl,
 } from '@/app/utils';
 import CastMember from '@/components/CastMember';
+import CastSection from '@/components/CastSection';
 import Divider from '@/components/Divider';
 import MediaCardCompact from '@/components/MediaCardCompact';
 import MediaDetailsSection from '@/components/MediaDetailsSection';
@@ -15,11 +16,15 @@ import {
 	ResolutionBadge,
 	RottenTomatoesBadge,
 } from '@/components/MetadataBadges';
+import OverviewSection from '@/components/OverviewSection';
+import PlayButton from '@/components/PlayButton';
 import ProcessingButton from '@/components/ProcessingButton';
+import RelatedMediaSection from '@/components/RelatedMediaSection';
 import RequestButton from '@/components/RequestButton';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import ScrollTrackingBackdrop from '@/components/ScrollTrackingBackdrop';
 import SnapCarousel from '@/components/SnapCarousel';
+import VideosSection from '@/components/VideosSection';
 import type { Viewport } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -43,43 +48,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
 	movieDetails.mediaType = MediaType.MOVIE;
 
-	//gets rotten tomatoes ratings from overseerr
-	const ratingsResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/movie/' + id + '/ratings',
-	);
-
-	movieDetails.rating = await ratingsResponse.json();
-
-	//gets file metadata from tautulli if the media is available on plex
-	if (movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE) {
-		const tautulliResponse = await fetch(
-			'http://localhost:3000/api/tautulliproxy?cmd=get_metadata&rating_key=' +
-				movieDetails.mediaInfo?.ratingKey,
-		);
-
-		const {
-			response: { data: tautulliData },
-		} = await tautulliResponse.json();
-
-		const mediaMetadata = {
-			ratingKey: tautulliData.rating_key,
-			mediaType: tautulliData.media_type,
-			resolution: tautulliData.media_info[0].video_full_resolution,
-			videoCodec: tautulliData.media_info[0].video_codec,
-			audioCodec: tautulliData.media_info[0].audio_codec,
-			audioChannelLayout: tautulliData.media_info[0].audio_channel_layout,
-			contentRating: tautulliData.content_rating,
-		};
-
-		movieDetails.mediaMetadata = mediaMetadata;
-	}
-
-	//get related media from overseerr
-	const recommendedMediaResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/movie/' + id + '/recommendations',
-	);
-
-	const { results: recommendedMedia } = await recommendedMediaResponse.json();
+	console.log(movieDetails.releaseDate);
 
 	return (
 		<>
@@ -96,7 +65,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 							className="text-off-white
 							 mb-3 flex w-full items-center justify-center gap-1 text-xs font-semibold"
 						>
-							{movieDetails.genres && (
+							{movieDetails.genres[0] && (
 								<>
 									<p>{movieDetails.genres[0].name}</p>
 								</>
@@ -123,12 +92,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 								<RequestButton media={movieDetails} />
 							)}
 							{movieDetails.mediaInfo?.status === MediaStatus.PENDING && (
-								<div className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black">
+								<div className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
 										viewBox="0 0 24 24"
-										strokeWidth={3}
+										strokeWidth={2}
 										stroke="currentColor"
 										className="h-5 w-5"
 									>
@@ -139,173 +108,74 @@ export default async function Page({ params }: { params: { id: string } }) {
 										/>
 									</svg>
 
-									<p className="text-lg font-black">Request Pending</p>
+									<p className="font-bold">Request Pending</p>
 								</div>
 							)}
 							{movieDetails.mediaInfo?.status === MediaStatus.PROCESSING && (
 								<ProcessingButton media={movieDetails} />
 							)}
 							{movieDetails.mediaInfo?.status === MediaStatus.PARTIALLY_AVAILABLE && (
-								<Link
-									href={
-										movieDetails.mediaInfo.iOSPlexUrl
-											? movieDetails.mediaInfo.iOSPlexUrl
-											: 'https://app.plex.tv'
-									}
-									className="flex h-9 w-56 items-center justify-center gap-2 rounded-md bg-white text-black"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="currentColor"
-										className="hidden h-5 w-5"
-									>
-										<path
-											fillRule="evenodd"
-											d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
-											clipRule="evenodd"
-										/>
-									</svg>
-
-									<p className="font-semibold">Watch on Plex</p>
-								</Link>
+								<PlayButton mediaDetails={movieDetails} />
 							)}
 							{movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE && (
-								<Link
-									href={
-										movieDetails.mediaInfo.iOSPlexUrl
-											? movieDetails.mediaInfo.iOSPlexUrl
-											: 'https://app.plex.tv'
-									}
-									className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="currentColor"
-										className="hidden h-5 w-5"
-									>
-										<path
-											fillRule="evenodd"
-											d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
-											clipRule="evenodd"
-										/>
-									</svg>
-
-									<p className="font-semibold">Watch on Plex</p>
-								</Link>
+								<PlayButton mediaDetails={movieDetails} />
 							)}
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-col bg-black">
-					<MediaDetailsSection>
-						<p className="mb-3 px-4 text-sm font-normal text-white/95">{movieDetails.overview}</p>
-						{movieDetails.mediaMetadata || movieDetails.rating ? (
-							<div className="no-scrollbar text-off-white mb-3 flex w-full items-center gap-[5px] overflow-x-scroll px-4">
-								{movieDetails.rating && (
-									<div className="flex items-center gap-1">
-										<RottenTomatoesBadge criticsRating={movieDetails.rating.criticsRating} />
-										<p className="h-fit w-fit rounded-sm text-xs font-medium uppercase">
-											{movieDetails.rating.criticsScore ? (
-												<>{movieDetails.rating.criticsScore}%</>
-											) : (
-												<>--</>
-											)}
-										</p>
-									</div>
-								)}
-								{movieDetails.mediaMetadata && (
-									<>
-										<ContentRatingBadge contentRating={movieDetails.mediaMetadata.contentRating} />
-										<ResolutionBadge resolution={movieDetails.mediaMetadata.resolution} />
-									</>
-								)}
-							</div>
-						) : null}
-					</MediaDetailsSection>
+				<div className="flex flex-col bg-black pb-24">
+					<OverviewSection mediaDetails={movieDetails} />
 					<Divider />
-					<MediaDetailsSection heading={'Videos'}>
-						<SnapCarousel>
-							{movieDetails.relatedVideos?.map((video) => (
-								<MediaCardCompact
-									key={video.key}
-									title={video.name}
-									subtitle={video.type}
-									imageUrl={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
-									url={video.url}
-								/>
-							))}
-						</SnapCarousel>
-					</MediaDetailsSection>
+					<VideosSection mediaDetails={movieDetails} />
 					<Divider />
-					<MediaDetailsSection heading={'Related'}>
-						<SnapCarousel>
-							{recommendedMedia.map((media: MovieDetails) => (
-								<MediaCardCompact
-									key={media.id}
-									title={media.title}
-									subtitle={media.releaseDate?.split('-')[0]}
-									imageUrl={CreateBackdropUrl(media.backdropPath)}
-									url={'/movie/' + media.id}
-								/>
-							))}
-						</SnapCarousel>
-					</MediaDetailsSection>
+					<RelatedMediaSection mediaDetails={movieDetails} />
 					<Divider />
-					<MediaDetailsSection heading={'Cast'}>
-						<SnapCarousel>
-							{movieDetails.credits?.cast.map((cast: Cast) => (
-								<CastMember key={cast.id} cast={cast} />
-							))}
-						</SnapCarousel>
-					</MediaDetailsSection>
+					<CastSection mediaDetails={movieDetails} />
+
 					<Divider />
 					<MediaDetailsSection heading={'Information'}>
-						{movieDetails.productionCompanies && (
-							<>
-								{movieDetails.productionCompanies[0] && (
-									<div className="flex flex-col px-4">
-										<p className="text-xs font-medium text-white">Production Company</p>
-										<p className="text-off-white text-xs font-medium">
-											{movieDetails.productionCompanies[0].name}
-										</p>
-									</div>
+						<div className="flex flex-col px-4">
+							<p className="text-xs font-medium text-white">Production Company</p>
+							<p className="text-off-white text-xs font-medium">
+								{movieDetails.productionCompanies[0] ? (
+									<>{movieDetails.productionCompanies[0].name}</>
+								) : (
+									<>Unknown</>
 								)}
-							</>
-						)}
-						{movieDetails.releaseDate && (
-							<div className="flex flex-col px-4">
-								<p className="text-xs font-medium text-white">Release Date</p>
-								<p className="text-off-white text-xs font-medium">
-									{FormatReleaseDate(movieDetails.releaseDate)}
-								</p>
-							</div>
-						)}
-						{movieDetails.runtime !== 0 && (
-							<div className="flex flex-col px-4">
-								<p className="text-xs font-medium text-white">Runtime</p>
-								<p className="text-off-white text-xs font-medium">
-									{FormatDuration(movieDetails.runtime)}
-								</p>
-							</div>
-						)}
-						{movieDetails.budget !== 0 && (
-							<div className="flex flex-col px-4">
-								<p className="text-xs font-medium text-white">Budget</p>
-								<p className="text-off-white text-xs font-medium">
-									${movieDetails.budget?.toLocaleString()}
-								</p>
-							</div>
-						)}
-						{movieDetails.revenue !== 0 && (
-							<div className="flex flex-col px-4">
-								<p className="text-xs font-medium text-white">Revenue</p>
-								<p className="text-off-white text-xs font-medium">
-									${movieDetails.revenue?.toLocaleString()}
-								</p>
-							</div>
-						)}
+							</p>
+						</div>
+						<div className="flex flex-col px-4">
+							<p className="text-xs font-medium text-white">Release Date</p>
+							<p className="text-off-white text-xs font-medium">
+								{movieDetails.releaseDate ? (
+									<>{FormatReleaseDate(movieDetails.releaseDate)}</>
+								) : (
+									<>Unknown</>
+								)}
+							</p>
+						</div>
+						<div className="flex flex-col px-4">
+							<p className="text-xs font-medium text-white">Runtime</p>
+							<p className="text-off-white text-xs font-medium">
+								{movieDetails.runtime ? <>{FormatDuration(movieDetails.runtime)}</> : <>Unknown</>}
+							</p>
+						</div>
+						<div className="flex flex-col px-4">
+							<p className="text-xs font-medium text-white">Budget</p>
+							<p className="text-off-white text-xs font-medium">
+								{movieDetails.budget ? <>${movieDetails.budget?.toLocaleString()}</> : <>Unknown</>}
+							</p>
+						</div>
+						<div className="flex flex-col px-4">
+							<p className="text-xs font-medium text-white">Revenue</p>
+							<p className="text-off-white text-xs font-medium">
+								{movieDetails.revenue ? (
+									<>${movieDetails.revenue?.toLocaleString()}</>
+								) : (
+									<>Unknown</>
+								)}
+							</p>
+						</div>
 					</MediaDetailsSection>
 				</div>
 			</ScrollTrackingBackdrop>

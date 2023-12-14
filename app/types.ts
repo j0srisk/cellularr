@@ -7,13 +7,13 @@ export interface MovieDetails {
 	backdropPath: string | null;
 	posterPath: string | null;
 	budget: number | null;
-	genres: Genre[] | null;
+	genres: Genre[];
 	homepage: string | null;
 	originalLanguage: string | null;
 	originalTitle: string | null;
 	overview: string | null;
 	popularity: number | null;
-	productionCompanies: ProductionCompany[] | null;
+	productionCompanies: ProductionCompany[];
 	productionCountries: ProductionCountry[] | null;
 	releaseDate: string | null;
 	revenue: number | null;
@@ -28,7 +28,7 @@ export interface MovieDetails {
 	externalIds: ExternalIds | null;
 	mediaInfo: Media | null;
 	credits: Credits | null;
-	relatedVideos: RelatedVideo[] | null;
+	relatedVideos: RelatedVideo[];
 	//my own properties for the movie details page
 	rating?: Rating;
 	mediaMetadata?: FileMetadata;
@@ -167,6 +167,7 @@ export type FileMetadata = {
 	videoCodec: string;
 	audioCodec: string;
 	audioChannelLayout: string;
+	dynamicRange: string;
 };
 
 export interface Rating {

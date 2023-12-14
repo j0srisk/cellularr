@@ -26,7 +26,7 @@ export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps)
 					<g
 						id="Icons/Tomatometer-&amp;-AS/rotten"
 						stroke="none"
-						stroke-width="1"
+						strokeWidth="1"
 						fill="none"
 						fillRule="evenodd"
 					>
@@ -78,7 +78,7 @@ export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps)
 					<g
 						id="Icons/Tomatometer-&amp;-AS/fresh"
 						stroke="none"
-						stroke-width="1"
+						strokeWidth="1"
 						fill="none"
 						fillRule="evenodd"
 					>
@@ -140,7 +140,7 @@ export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps)
 					<g
 						id="Icons/Tomatometer-&amp;-AS/certified_fresh_notext"
 						stroke="none"
-						stroke-width="1"
+						strokeWidth="1"
 						fill="none"
 						fillRule="evenodd"
 					>
@@ -250,7 +250,7 @@ export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps)
 					<g
 						id="Icons/Tomatometer-&amp;-AS/No-Tomatometer"
 						stroke="none"
-						stroke-width="1"
+						strokeWidth="1"
 						fill="none"
 						fillRule="evenodd"
 					>
@@ -300,9 +300,15 @@ export function ContentRatingBadge({ contentRating }: ContentRatingBadgeProps) {
 	switch (contentRating) {
 		case 'G':
 			return (
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500">
-					<p className="text-xs font-bold text-white">G</p>
-				</div>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 15" className="h-[14px]">
+					<g fill="none" fill-rule="evenodd">
+						<path
+							d="m10.385 8.614c0-.715.295-.38 2.827-.38 1.87 0 2.649-.254 2.648.349s-1.194-.01-1.422.567.072 2.046-.449 2.394c-1.300912.4412394-2.6591866.6905259-4.032.74-4.932 0-5.138-1.084-5.134-4.578.005-4.494.852-4.972 5.786-4.972 1.108 0 3.369.048 3.484.617.2459833.78657525.2695183 1.62587626.068 2.425-.219.555-1.907.208-1.907.208-.721-.692-.16-1.929-2.254-1.929-2.623 0-2.4 1.517-2.4 3.676 0 1.327-.206 3.224 2.305 3.224.969 0 1.67-.111 1.671-1.345.004-1.196-1.192-.14-1.191-.996z"
+							fill="currentColor"
+						/>
+						<rect height="14" rx="2.759" stroke="#3c3c43" width="19" x=".5" y=".5" />
+					</g>
+				</svg>
 			);
 		case 'PG':
 			return (
@@ -351,20 +357,11 @@ export function ContentRatingBadge({ contentRating }: ContentRatingBadgeProps) {
 					</g>
 				</svg>
 			);
-		case 'NC-17':
-			return (
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-500">
-					<p className="text-xs font-bold text-white">NC-17</p>
-				</div>
-			);
-		case 'NR':
-			return (
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-500">
-					<p className="text-xs font-bold text-white">NR</p>
-				</div>
-			);
+		case 'Not Rated':
+			return <p className="h-fit w-fit rounded-sm text-xs font-medium">NR</p>;
+
 		default:
-			return <p>NOT FOUND</p>;
+			return <p className="h-fit w-fit rounded-sm text-xs font-medium">{contentRating}</p>;
 	}
 }
 
@@ -395,6 +392,38 @@ export function ResolutionBadge({ resolution }: ResolutionBadgeProps) {
 				</svg>
 			);
 		default:
-			return <p>NOT FOUND</p>;
+			return <p className="h-fit w-fit rounded-sm text-xs font-medium">{resolution}</p>;
+	}
+}
+
+type DynamicRangeBadgeProps = {
+	dynamicRange: FileMetadata['dynamicRange'];
+};
+
+export function DynamicRangeBadge({ dynamicRange }: DynamicRangeBadgeProps) {
+	switch (dynamicRange) {
+		case 'SDR':
+			return null;
+		case 'HDR10':
+			return (
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 15" className="h-[14px]">
+					<path
+						d="M2.72 0h28.557A2.724 2.724 0 0134 2.727v9.545A2.724 2.724 0 0131.277 15H2.72A2.723 2.723 0 010 12.272V2.727A2.723 2.723 0 012.72 0zm9.672 11.6V3.151h-1.769v3.433H6.816V3.151H5.047V11.6h1.769V8.042h3.807V11.6zM13.8 3.151V11.6h3.257c2.536 0 4.03-1.576 4.03-4.258s-1.494-4.194-4.03-4.194H13.8zm1.77 1.459h1.277c1.558 0 2.437.972 2.437 2.741 0 1.827-.855 2.788-2.437 2.788H15.57zM24 4.534h1.53a1.3 1.3 0 011.429 1.347 1.268 1.268 0 01-1.412 1.347H24zm0 3.977h1.447l1.571 3.089h2L27.24 8.247a2.484 2.484 0 001.535-2.4c0-1.669-1.113-2.694-3.057-2.694h-3.491V11.6H24z"
+						fill="currentColor"
+						fill-rule="evenodd"
+					/>
+				</svg>
+			);
+		case 'Dolby Vision/HDR10':
+			return (
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 22" className="h-[14px]">
+					<path
+						d="M9.72 14.87l1.927 5.454h.04l1.946-5.453h1.344l-2.806 7.084h-1.077l-2.767-7.084zm7.839 0v7.085h-1.245v-7.084zm9.369 0v7.085h-1.245v-7.084zm5.227 0c.52 0 1 .083 1.438.248.439.165.818.4 1.138.705.32.305.569.675.748 1.11.178.434.268.922.268 1.46 0 .528-.09 1.009-.268 1.444-.18.435-.428.809-.748 1.123-.32.314-.7.559-1.138.733a3.86 3.86 0 01-1.438.262c-.515 0-.99-.087-1.425-.262a3.346 3.346 0 01-1.128-.733 3.36 3.36 0 01-.743-1.123 3.762 3.762 0 01-.268-1.443c0-.54.09-1.027.268-1.462.178-.434.426-.804.743-1.109.316-.305.692-.54 1.128-.705.435-.165.91-.247 1.425-.247zm6.985 0l3.25 5.304h.02v-5.303h1.245v7.084h-1.58l-3.32-5.473h-.02v5.473h-1.246v-7.084zm-17.28.002c.337 0 .68.06 1.026.18.278.097.526.232.746.405l.159.137-.769.854a1.442 1.442 0 00-.53-.413 1.567 1.567 0 00-1.1-.114 1.253 1.253 0 00-.376.162.886.886 0 00-.276.284.791.791 0 00-.108.423c0 .152.031.281.094.389.062.108.148.2.257.275.11.076.242.143.399.2.156.057.328.113.515.17.213.07.433.15.661.238.228.089.438.205.628.351s.347.33.469.55c.122.222.183.497.183.826 0 .361-.066.676-.197.945-.131.27-.306.492-.525.67a2.23 2.23 0 01-.769.398 3.199 3.199 0 01-.928.133c-.431 0-.853-.08-1.265-.242a2.488 2.488 0 01-.875-.565l-.138-.152.844-.797c.162.228.38.408.652.54.271.134.539.2.801.2.137 0 .278-.017.422-.052.144-.035.273-.093.389-.176a.979.979 0 00.281-.308.903.903 0 00.108-.46.758.758 0 00-.122-.442 1.097 1.097 0 00-.328-.304c-.138-.085-.3-.16-.488-.223l-.59-.2c-.2-.062-.4-.138-.6-.227-.2-.089-.38-.206-.54-.351a1.692 1.692 0 01-.388-.537c-.1-.212-.15-.476-.15-.792 0-.342.07-.636.21-.883.141-.247.326-.451.554-.612.228-.162.487-.282.778-.361.29-.08.586-.119.886-.119zm10.304 1.15c-.332 0-.632.061-.9.183-.268.123-.499.29-.692.504a2.28 2.28 0 00-.447.751 2.688 2.688 0 00-.159.934c0 .348.053.668.159.957.105.29.256.542.452.756.196.214.428.38.696.5s.566.178.891.178c.326 0 .624-.06.895-.179s.505-.285.701-.499c.196-.214.347-.466.453-.756.105-.29.158-.609.158-.957a2.69 2.69 0 00-.158-.934 2.29 2.29 0 00-.448-.75 2.075 2.075 0 00-.697-.505 2.179 2.179 0 00-.904-.183zM46.325 3.15l1.993 4.536 1.993-4.536h1.671l-3.962 8.966a1.975 1.975 0 01-2.47 1.075l-.142-.058-.53-.24h-.003l.19-.431.428-.973.219.1a.812.812 0 001.025-.32l.052-.1.004-.01.613-1.402.02-.044.057-.125-2.829-6.438zM39.21.002v3.784a3.446 3.446 0 012-.638c1.928 0 3.496 1.588 3.496 3.541 0 1.953-1.568 3.54-3.496 3.54a3.446 3.446 0 01-2-.638v.64h-1.532V.002zm-2.818 0v10.23h-1.53V.002zm-6.016 3.146c1.928 0 3.496 1.588 3.496 3.54 0 1.953-1.568 3.541-3.496 3.541-1.929 0-3.497-1.588-3.497-3.54 0-1.953 1.568-3.541 3.497-3.541zM21.057 0c2.782 0 5.046 2.292 5.046 5.11s-2.264 5.11-5.046 5.11h-3.645V0zm-6.7 0v10.22h-1.49c-2.78 0-5.045-2.295-5.045-5.11 0-2.743 2.151-4.992 4.833-5.105L12.868 0zM1.488 0c2.78 0 5.046 2.295 5.046 5.11 0 2.743-2.152 4.991-4.833 5.105l-.213.004h-1.49V0zm39.72 4.541c-.926 0-1.719.61-1.999 1.461a2.152 2.152 0 000 1.346 2.11 2.11 0 002 1.463c1.157 0 2.108-.95 2.108-2.135 0-1.172-.951-2.135-2.108-2.135zm-10.833 0c-1.157 0-2.109.95-2.109 2.134 0 1.172.939 2.135 2.109 2.135 1.157 0 2.108-.95 2.108-2.135 0-1.171-.951-2.135-2.108-2.135zm-9.32-2.992h-2.114V8.67h2.115c1.937 0 3.516-1.599 3.516-3.56s-1.58-3.56-3.516-3.56z"
+						fill="currentColor"
+					/>
+				</svg>
+			);
+		default:
+			return <p className="h-fit w-fit rounded-sm text-xs font-medium">{dynamicRange}</p>;
 	}
 }

@@ -7,11 +7,7 @@ export function CreatePosterUrl(posterPath: String | null) {
 }
 
 export function CreateBackdropUrl(backdropPath: String | null) {
-	if (backdropPath === null) {
-		return;
-	} else {
-		return 'https://image.tmdb.org/t/p/w1920_and_h800_multi_faces' + backdropPath;
-	}
+	return 'https://image.tmdb.org/t/p/w1920_and_h800_multi_faces' + backdropPath;
 }
 
 export function CreateProfileUrl(profilePath: String | null) {

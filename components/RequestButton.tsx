@@ -22,14 +22,14 @@ export default function RequestButton({ media }: { media: MovieDetails }) {
 
 	return (
 		<button
-			className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white text-black"
+			className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black"
 			onClick={handleRequest}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
 				viewBox="0 0 24 24"
-				strokeWidth={3}
+				strokeWidth={2}
 				stroke="currentColor"
 				className="h-5 w-5"
 			>
@@ -40,7 +40,7 @@ export default function RequestButton({ media }: { media: MovieDetails }) {
 				/>
 			</svg>
 
-			<p className="text-lg font-black">Request</p>
+			<p className="font-bold">Request</p>
 		</button>
 	);
 }

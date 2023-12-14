@@ -53,8 +53,8 @@ export default function ProcessingButton({ media }: { media: MovieDetails }) {
 	console.log(isDownloading);
 
 	return (
-		<div className="relative flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-white text-black">
-			{!isLoading && (
+		<div className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black">
+			{!isLoading ? (
 				<>
 					{isDownloading ? (
 						<>
@@ -78,7 +78,7 @@ export default function ProcessingButton({ media }: { media: MovieDetails }) {
 									</path>
 								</g>
 							</svg>
-							<p className="text-lg font-black">Downloading </p>
+							<p className="font-bold">Downloading </p>
 						</>
 					) : (
 						<>
@@ -86,17 +86,19 @@ export default function ProcessingButton({ media }: { media: MovieDetails }) {
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
-								strokeWidth={3}
+								strokeWidth={2}
 								stroke="currentColor"
 								className="h-5 w-5"
 							>
 								<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
 							</svg>
 
-							<p className="text-lg font-black">Request Approved</p>
+							<p className="font-bold">Request Approved</p>
 						</>
 					)}
 				</>
+			) : (
+				<p className="font-bold">Updating Status</p>
 			)}
 		</div>
 	);
