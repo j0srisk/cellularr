@@ -15,14 +15,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	appleWebApp: true,
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: 'black-translucent',
+	},
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html className="overscroll-y-none bg-black text-white" lang="en">
-			<body className={` flex h-[100vh] flex-col`}>
-				<div className="flex flex-1 flex-col overflow-auto">{children}</div>
+			<body className="h-[100dvh] overflow-hidden">
+				{children}
 				<Navbar />
 			</body>
 		</html>

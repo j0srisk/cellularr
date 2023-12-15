@@ -1,9 +1,8 @@
+export const fetcher = (...args: any[]) =>
+	fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
+
 export function CreatePosterUrl(posterPath: String | null) {
-	if (posterPath === null) {
-		return;
-	} else {
-		return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + posterPath;
-	}
+	return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + posterPath;
 }
 
 export function CreateBackdropUrl(backdropPath: String | null) {
@@ -11,11 +10,7 @@ export function CreateBackdropUrl(backdropPath: String | null) {
 }
 
 export function CreateProfileUrl(profilePath: String | null) {
-	if (profilePath === null) {
-		return;
-	} else {
-		return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + profilePath;
-	}
+	return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + profilePath;
 }
 
 export function FormatDuration(durationInMinutes: number) {

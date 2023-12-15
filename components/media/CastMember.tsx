@@ -1,11 +1,14 @@
 import { Cast } from '@/app/types';
 import { CreateProfileUrl } from '@/app/utils';
+import Image from 'next/image';
 
 export default function CastMember({ cast }: { cast: Cast }) {
 	return (
 		<div className="flex w-24 flex-shrink-0 snap-start scroll-ml-4 flex-col items-center gap-2 ">
-			<img
+			<Image
 				src={CreateProfileUrl(cast.profilePath)}
+				height={150}
+				width={150}
 				alt="icon"
 				className="h-24 w-24 flex-grow-0 rounded-full object-cover object-center"
 			/>

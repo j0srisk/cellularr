@@ -1,13 +1,12 @@
 'use client';
 
-import MediaBackdrop from '@/components/MediaBackdrop';
 import { useState } from 'react';
 
 export default function ScrollTrackingBackdrop({
 	url,
 	children,
 }: {
-	url?: String;
+	url: String;
 	children?: React.ReactNode;
 }) {
 	const [scroll, setScroll] = useState(0);
@@ -16,16 +15,16 @@ export default function ScrollTrackingBackdrop({
 		<>
 			<div
 				className="no-scrollbar flex h-full flex-col overflow-y-scroll"
-				onScroll={(e) => setScroll(e.target.scrollTop)}
+				onScroll={(e) => setScroll((e.target as HTMLElement).scrollTop)}
 			>
 				{children}
 
 				<div
 					style={{
 						height: `calc(66vh - ${scroll < 0 ? scroll : 0}px)`,
-						'--image-url': `url(${url})`,
+						backgroundImage: `url(${url})`,
 					}}
-					className="absolute top-0 -z-10 flex w-full items-center justify-center bg-[image:var(--image-url)] bg-cover bg-center"
+					className="absolute top-0 -z-10 flex w-full items-center justify-center bg-cover bg-center"
 				/>
 			</div>
 		</>

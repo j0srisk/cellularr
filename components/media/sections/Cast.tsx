@@ -1,0 +1,15 @@
+import CastMember from '@/components/media/CastMember';
+import SectionTemplate from '@/components/media/SectionTemplate';
+import SnapCarousel from '@/components/SnapCarousel';
+import { Cast, MovieDetails } from '@/app/types';
+
+
+export default function Cast({ mediaDetails }: { mediaDetails: MovieDetails }) {
+	return (
+		<SectionTemplate heading={'Cast'}>
+			<SnapCarousel>
+				{mediaDetails.credits?.cast.map((cast: Cast) => <CastMember key={cast.id} cast={cast} />)}
+			</SnapCarousel>
+		</SectionTemplate>
+	);
+}

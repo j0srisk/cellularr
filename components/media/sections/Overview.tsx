@@ -1,11 +1,11 @@
+import { MovieDetails, MediaStatus } from '@/app/types';
 import {
 	RottenTomatoesBadge,
 	ContentRatingBadge,
 	ResolutionBadge,
 	DynamicRangeBadge,
-} from './MetadataBadges';
-import { MovieDetails, FileMetadata, MediaStatus } from '@/app/types';
-import MediaDetailsSection from '@/components/MediaDetailsSection';
+} from '@/components/media/Badges';
+import SectionTemplate from '@/components/media/SectionTemplate';
 import Link from 'next/link';
 
 export default async function OverviewSection({ mediaDetails }: { mediaDetails: MovieDetails }) {
@@ -30,7 +30,7 @@ export default async function OverviewSection({ mediaDetails }: { mediaDetails: 
 			response: { data: tautulliData },
 		} = await tautulliResponse.json();
 
-		const mediaMetadata = {
+		const tautulliMetadata = {
 			ratingKey: tautulliData.rating_key,
 			mediaType: tautulliData.media_type,
 			resolution: tautulliData.media_info[0].video_full_resolution,
@@ -41,37 +41,30 @@ export default async function OverviewSection({ mediaDetails }: { mediaDetails: 
 			dynamicRange: tautulliData.media_info[0].parts[0].streams[0].video_dynamic_range,
 		};
 
-		mediaDetails.mediaMetadata = mediaMetadata;
+		mediaDetails.tatutulliMetadata = tautulliMetadata;
 	}
 	return (
-		<MediaDetailsSection>
+		<SectionTemplate>
 			<p className="mb-3 px-4 text-sm font-normal text-white/95">{mediaDetails.overview}</p>
-			{mediaDetails.mediaMetadata || mediaDetails.rating ? (
-				<div className="no-scrollbar text-off-white mb-3 flex w-full items-center gap-[5px] overflow-x-scroll px-4">
-					{mediaDetails.rating && (
-						<Link
-							href={mediaDetails.rating.url ? mediaDetails.rating.url : '#'}
-							className="flex items-center gap-1"
-						>
-							<RottenTomatoesBadge criticsRating={mediaDetails.rating.criticsRating} />
-							<p className="h-fit w-fit rounded-sm text-xs font-medium uppercase">
-								{mediaDetails.rating.criticsScore ? (
-									<>{mediaDetails.rating.criticsScore}%</>
-								) : (
-									<>--</>
-								)}
-							</p>
-						</Link>
-					)}
-					{mediaDetails.mediaMetadata && (
-						<>
-							<ContentRatingBadge contentRating={mediaDetails.mediaMetadata.contentRating} />
-							<ResolutionBadge resolution={mediaDetails.mediaMetadata.resolution} />
-							<DynamicRangeBadge dynamicRange={mediaDetails.mediaMetadata.dynamicRange} />
-						</>
-					)}
-				</div>
-			) : null}
-		</MediaDetailsSection>
+			<div className="no-scrollbar text-off-white mb-3 flex w-full items-center gap-[5px] overflow-x-scroll px-4">
+				<Link
+					href={mediaDetails.rating.url ? mediaDetails.rating.url : '#'}
+					className="flex items-center gap-1"
+				>
+					<RottenTomatoesBadge criticsRating={mediaDetails.rating.criticsRating} />
+					<p className="h-fit w-fit rounded-sm text-xs font-medium uppercase">
+						{mediaDetails.rating.criticsScore ? <>{mediaDetails.rating.criticsScore}%</> : <>--</>}
+					</p>
+				</Link>
+
+				{mediaDetails.tatutulliMetadata && (
+					<>
+						<ContentRatingBadge contentRating={mediaDetails.tatutulliMetadata.contentRating} />
+						<ResolutionBadge resolution={mediaDetails.tatutulliMetadata.resolution} />
+						<DynamicRangeBadge dynamicRange={mediaDetails.tatutulliMetadata.dynamicRange} />
+					</>
+				)}
+			</div>
+		</SectionTemplate>
 	);
 }

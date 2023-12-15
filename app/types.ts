@@ -1,38 +1,24 @@
-//commented out properties are ones im too lazy to add
-export interface MovieDetails {
-	mediaType: MediaType.MOVIE;
-	id: number | null;
-	imdbId: string | null;
-	adult: boolean | null;
-	backdropPath: string | null;
-	posterPath: string | null;
-	budget: number | null;
+export type MovieDetails = {
+	mediaType: MediaType;
+	id: number;
+	backdropPath: string;
+	posterPath: string;
 	genres: Genre[];
-	homepage: string | null;
-	originalLanguage: string | null;
-	originalTitle: string | null;
-	overview: string | null;
-	popularity: number | null;
+	relatedVideos: RelatedVideo[];
+	overview: string;
 	productionCompanies: ProductionCompany[];
-	productionCountries: ProductionCountry[] | null;
-	releaseDate: string | null;
+	releaseDate: string;
+	budget: number | null;
 	revenue: number | null;
 	runtime: number;
-	spokenLanguages: SpokenLanguage[] | null;
-	status: string | null;
-	tagline: string | null;
+	status: MediaStatus;
 	title: string;
-	video: boolean | null;
-	voteAverage: number | null;
-	voteCount: number | null;
-	externalIds: ExternalIds | null;
-	mediaInfo: Media | null;
-	credits: Credits | null;
-	relatedVideos: RelatedVideo[];
-	//my own properties for the movie details page
-	rating?: Rating;
-	mediaMetadata?: FileMetadata;
-}
+	credits: Credits;
+	mediaInfo: MediaInfo;
+	//
+	rating: Rating;
+	tatutulliMetadata: FileMetadata;
+};
 
 export interface Genre {
 	id: number | null;
@@ -92,7 +78,7 @@ export interface Cast {
 	profilePath: string;
 }
 
-export interface Media {
+export interface MediaInfo {
 	downloadStatus: DownloadingItem[] | null;
 	downloadStatus4k: DownloadingItem[] | null;
 	id: number | null;
