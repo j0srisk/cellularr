@@ -30,14 +30,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
 	movieDetails.mediaType = MediaType.MOVIE;
 
-	console.log(movieDetails.releaseDate);
-
 	return (
 		<>
 			<SaveToRecentSearches movieDetails={movieDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="h-fit w-full bg-gradient-to-t from-black to-transparent pt-20">
+					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
 						<Header mediaDetails={movieDetails} />
 					</div>
 				</div>

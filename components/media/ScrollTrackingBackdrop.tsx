@@ -11,6 +11,12 @@ export default function ScrollTrackingBackdrop({
 }) {
 	const [scroll, setScroll] = useState(0);
 
+	//opacity goes to 0 as you scroll up
+	const calculateOpacity = () => {
+		const opacity = scroll < 0 ? 1 : 1 - scroll / window.innerHeight;
+		return opacity;
+	};
+
 	return (
 		<>
 			<div
