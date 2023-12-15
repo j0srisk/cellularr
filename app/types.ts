@@ -154,6 +154,8 @@ export type FileMetadata = {
 	audioCodec: string;
 	audioChannelLayout: string;
 	dynamicRange: string;
+	audios: Audio[];
+	subtitles: Subtitle[];
 };
 
 export interface Rating {
@@ -165,3 +167,15 @@ export interface Rating {
 	audienceScore?: number;
 	audienceRating?: string;
 }
+
+export type Audio = {
+	id: string;
+	language: string;
+	languageCode: string;
+};
+
+export type Subtitle = {
+	id: string;
+	language: string;
+	languageCode: string;
+};

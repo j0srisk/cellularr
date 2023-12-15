@@ -43,7 +43,7 @@ export default function ProcessingStatus({ media }: { media: MovieDetails }) {
 	}
 
 	if (isDownloading) {
-		return <>Downloading...</>;
+		return <>Downloading</>;
 	} else {
 		return <>Requested</>;
 	}

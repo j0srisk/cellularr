@@ -27,7 +27,7 @@ export default function Information({ mediaDetails }: { mediaDetails: MovieDetai
 				}
 			/>
 			<InformationItem
-				title={'Runtime'}
+				title={'Run Time'}
 				value={mediaDetails.runtime ? <>{FormatDuration(mediaDetails.runtime)}</> : <>Unknown</>}
 			/>
 			<InformationItem

@@ -54,6 +54,16 @@ export default function RequestButton({ media }: { media: MovieDetails }) {
 				href={media.mediaInfo?.iOSPlexUrl ? media.mediaInfo.iOSPlexUrl : 'https://app.plex.tv'}
 				className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black"
 			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="#000000"
+					viewBox="0 0 24 24"
+					role="img"
+					className="h-4 w-4"
+				>
+					<title>Plex icon</title>
+					<path d="M11.643 0H4.68l7.679 12L4.68 24h6.963l7.677-12-7.677-12" />
+				</svg>
 				<p className="font-bold">Watch on Plex</p>
 			</Link>
 		);
