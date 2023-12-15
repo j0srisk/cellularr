@@ -1,5 +1,6 @@
 import { MovieDetails } from '@/app/types';
 import { CreateBackdropUrl } from '@/app/utils';
+import Divider from '@/components/Divider';
 import MediaCardSmall from '@/components/MediaCardSmall';
 import SnapCarousel from '@/components/SnapCarousel';
 import SectionTemplate from '@/components/media/SectionTemplate';
@@ -25,6 +26,7 @@ export default async function RelatedMedia({ mediaDetails }: { mediaDetails: Mov
 					/>
 				))}
 			</SnapCarousel>
+			<Divider />
 		</SectionTemplate>
 	);
 }

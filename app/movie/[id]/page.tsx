@@ -87,17 +87,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 						<Header mediaDetails={movieDetails} />
 					</div>
 				</div>
-				<div className="flex flex-col bg-black pb-24">
+				<div className="flex flex-col bg-black pb-28">
 					<Overview mediaDetails={movieDetails} />
-					<Divider />
 					<Videos mediaDetails={movieDetails} />
-					<Divider />
 					<RelatedMedia mediaDetails={movieDetails} />
-					<Divider />
 					<Cast mediaDetails={movieDetails} />
-					<Divider />
 					<Information mediaDetails={movieDetails} />
-					<Divider />
 					<Languages mediaDetails={movieDetails} />
 				</div>
 			</ScrollTrackingBackdrop>

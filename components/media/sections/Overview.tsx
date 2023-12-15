@@ -1,4 +1,5 @@
 import { MovieDetails, MediaStatus, Subtitle } from '@/app/types';
+import Divider from '@/components/Divider';
 import {
 	RottenTomatoesBadge,
 	ContentRatingBadge,
@@ -43,6 +44,7 @@ export default async function OverviewSection({ mediaDetails }: { mediaDetails: 
 					</>
 				)}
 			</div>
+			<Divider />
 		</SectionTemplate>
 	);
 }

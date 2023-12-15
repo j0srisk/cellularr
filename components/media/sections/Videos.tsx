@@ -1,4 +1,5 @@
 import { MovieDetails } from '@/app/types';
+import Divider from '@/components/Divider';
 import MediaCardSmall from '@/components/MediaCardSmall';
 import SnapCarousel from '@/components/SnapCarousel';
 import SectionTemplate from '@/components/media/SectionTemplate';
@@ -18,6 +19,7 @@ export default function Videos({ mediaDetails }: { mediaDetails: MovieDetails })
 					/>
 				))}
 			</SnapCarousel>
+			<Divider />
 		</SectionTemplate>
 	);
 }

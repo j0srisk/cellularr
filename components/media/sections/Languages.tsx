@@ -12,16 +12,20 @@ export default function Information({ mediaDetails }: { mediaDetails: MovieDetai
 		<SectionTemplate heading={'Languages'}>
 			<InformationItem
 				title={'Audio'}
-				value={Array.from(
-					new Set(mediaDetails.tatutulliMetadata.audios.map((audio) => audio.language)),
-				).join(', ')}
+				value={
+					Array.from(
+						new Set(mediaDetails.tatutulliMetadata.audios.map((audio) => audio.language)),
+					).join(', ') || 'None'
+				}
 			/>
 
 			<InformationItem
 				title={'Subtitles'}
-				value={Array.from(
-					new Set(mediaDetails.tatutulliMetadata.subtitles.map((subtitle) => subtitle.language)),
-				).join(', ')}
+				value={
+					Array.from(
+						new Set(mediaDetails.tatutulliMetadata.subtitles.map((subtitle) => subtitle.language)),
+					).join(', ') || 'None'
+				}
 			/>
 		</SectionTemplate>
 	);

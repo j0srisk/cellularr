@@ -1,5 +1,6 @@
 import { MovieDetails } from '@/app/types';
 import { FormatDuration, FormatReleaseDate } from '@/app/utils';
+import Divider from '@/components/Divider';
 import InformationItem from '@/components/media/InformationItem';
 import SectionTemplate from '@/components/media/SectionTemplate';
 
