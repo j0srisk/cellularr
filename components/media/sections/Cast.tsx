@@ -6,6 +6,12 @@ import Divider from '@/components/Divider';
 
 
 export default function Cast({ mediaDetails }: { mediaDetails: MovieDetails }) {
+
+
+	if (!mediaDetails.credits.cast[0]) {
+		return null;
+	}
+
 	return (
 		<SectionTemplate heading={'Cast'}>
 			<SnapCarousel>

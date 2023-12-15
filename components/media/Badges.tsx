@@ -5,6 +5,7 @@ type RottenTomatoesBadgeProps = {
 };
 
 export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps) {
+	console.log(criticsRating);
 	switch (criticsRating) {
 		case 'Rotten':
 			return (
@@ -449,7 +450,7 @@ export function DynamicRangeBadge({ dynamicRange }: DynamicRangeBadgeProps) {
 export function ClosedCaptionBadge() {
 	return (
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 15" className="h-[14px]">
-			<g fill="none" fill-rule="evenodd">
+			<g fill="none" fillRule="evenodd">
 				<rect height="14" rx="2.737" stroke="currentColor" width="25" x=".5" y=".5" />
 				<path
 					d="M8.93 11.75a3.43 3.43 0 003.72-3.081h-1.722a1.908 1.908 0 01-1.991 1.617c-1.353 0-2.2-1.113-2.2-2.917 0-1.781.861-2.9 2.2-2.9a1.958 1.958 0 011.991 1.716h1.722a3.482 3.482 0 00-3.72-3.18c-2.448 0-4 1.646-4 4.369s1.54 4.376 4 4.376zm8.549 0A3.43 3.43 0 0021.2 8.669h-1.724a1.909 1.909 0 01-1.992 1.617c-1.353 0-2.2-1.113-2.2-2.917 0-1.781.861-2.9 2.2-2.9a1.958 1.958 0 011.991 1.716h1.722a3.481 3.481 0 00-3.713-3.18c-2.448 0-4 1.646-4 4.369s1.535 4.376 3.995 4.376z"

@@ -5,6 +5,10 @@ import SnapCarousel from '@/components/SnapCarousel';
 import SectionTemplate from '@/components/media/SectionTemplate';
 
 export default function Videos({ mediaDetails }: { mediaDetails: MovieDetails }) {
+	if (!mediaDetails.relatedVideos[0]) {
+		return null;
+	}
+
 	return (
 		<SectionTemplate heading={'Videos'}>
 			<SnapCarousel>

@@ -1,14 +1,16 @@
 import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio } from '@/app/types';
-import { CreateBackdropUrl } from '@/app/utils';
-import Divider from '@/components/Divider';
+import { CreateBackdropUrl, FormatDuration } from '@/app/utils';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
+import RequestButton from '@/components/media/RequestButton';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import Cast from '@/components/media/sections/Cast';
+import Collection from '@/components/media/sections/Collection';
 import Header from '@/components/media/sections/Header';
 import Information from '@/components/media/sections/Information';
 import Languages from '@/components/media/sections/Languages';
 import Overview from '@/components/media/sections/Overview';
-import RelatedMedia from '@/components/media/sections/RelatedMedia';
+import RecommendedMedia from '@/components/media/sections/RecommendedMedia';
+import SimilarMedia from '@/components/media/sections/SimilarMedia';
 import Videos from '@/components/media/sections/Videos';
 import type { Viewport } from 'next';
 
@@ -30,6 +32,21 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
 	movieDetails.mediaType = MediaType.MOVIE;
+
+	//gets relevant metadata details for the header
+	const movieDetailsArray = [];
+
+	if (movieDetails.genres[0]) {
+		movieDetailsArray.push(movieDetails.genres[0].name);
+	}
+
+	if (movieDetails.releaseDate) {
+		movieDetailsArray.push(movieDetails.releaseDate.split('-')[0]);
+	}
+
+	if (movieDetails.runtime !== 0) {
+		movieDetailsArray.push(FormatDuration(movieDetails.runtime));
+	}
 
 	//gets file metadata from tautulli if the media is available on plex
 	if (movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE) {
@@ -84,14 +101,25 @@ export default async function Page({ params }: { params: { id: string } }) {
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
 					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
-						<Header mediaDetails={movieDetails} />
+						<Header
+							name={movieDetails.title}
+							metadataDetailsArray={movieDetailsArray}
+							button={<RequestButton media={movieDetails} />}
+						/>
 					</div>
 				</div>
 				<div className="flex flex-col bg-black pb-28">
-					<Overview mediaDetails={movieDetails} />
+					<Overview
+						overview={movieDetails.overview}
+						id={movieDetails.id}
+						mediaType="movie"
+						tatutulliMetadata={movieDetails.tatutulliMetadata}
+					/>
 					<Videos mediaDetails={movieDetails} />
-					<RelatedMedia mediaDetails={movieDetails} />
+					<SimilarMedia mediaDetails={movieDetails} />
+					<RecommendedMedia mediaDetails={movieDetails} />
 					<Cast mediaDetails={movieDetails} />
+					<Collection collection={movieDetails.collection} />
 					<Information mediaDetails={movieDetails} />
 					<Languages mediaDetails={movieDetails} />
 				</div>

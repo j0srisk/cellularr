@@ -1,4 +1,4 @@
-import { MovieDetails, MediaStatus, Subtitle } from '@/app/types';
+import { MovieDetails, MediaStatus, Subtitle, FileMetadata, Rating } from '@/app/types';
 import Divider from '@/components/Divider';
 import {
 	RottenTomatoesBadge,
@@ -10,40 +10,55 @@ import {
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Link from 'next/link';
 
-export default async function OverviewSection({ mediaDetails }: { mediaDetails: MovieDetails }) {
+type OverviewSectionProps = {
+	overview?: string;
+	id: number;
+	mediaType?: string;
+	tatutulliMetadata?: FileMetadata;
+};
+
+export default async function OverviewSection({
+	overview,
+	id,
+	mediaType,
+	tatutulliMetadata,
+}: OverviewSectionProps) {
 	const ratingsResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/movie/' + mediaDetails.id + '/ratings',
+		'http://localhost:3000/api/overseerrproxy/' + mediaType + '/' + id + '/ratings',
 	);
 
-	mediaDetails.rating = await ratingsResponse.json();
+	const rating: Rating = await ratingsResponse.json();
 
-	if (mediaDetails.overview === '') {
-		mediaDetails.overview = 'No overview available.';
+	if (overview === '') {
+		overview = 'No overview available.';
 	}
 
 	return (
 		<SectionTemplate>
-			<p className="mb-3 px-4 text-sm font-normal text-white/95">{mediaDetails.overview}</p>
-			<div className="no-scrollbar text-off-white mb-3 flex w-full items-center gap-[5px] overflow-x-scroll px-4">
-				<Link
-					href={mediaDetails.rating.url ? mediaDetails.rating.url : '#'}
-					className="flex items-center gap-1"
-				>
-					<RottenTomatoesBadge criticsRating={mediaDetails.rating.criticsRating} />
-					<p className="h-fit w-fit rounded-sm text-xs font-medium uppercase">
-						{mediaDetails.rating.criticsScore ? <>{mediaDetails.rating.criticsScore}%</> : <>--</>}
-					</p>
-				</Link>
+			<p className="mb-3 px-4 text-sm font-normal text-white/95">{overview}</p>
+			{rating.criticsRating || tatutulliMetadata ? (
+				<div className="no-scrollbar text-off-white mb-3 flex w-full items-center gap-[5px] overflow-x-scroll px-4">
+					{rating.criticsRating && (
+						<Link href={rating.url ? rating.url : '#'} className="flex items-center gap-1">
+							<RottenTomatoesBadge criticsRating={rating.criticsRating} />
+							<p className="h-fit w-fit rounded-sm text-xs font-medium uppercase">
+								{rating.criticsScore ? <>{rating.criticsScore}%</> : <>--</>}
+							</p>
+						</Link>
+					)}
 
-				{mediaDetails.tatutulliMetadata && (
-					<>
-						<ContentRatingBadge contentRating={mediaDetails.tatutulliMetadata.contentRating} />
-						<ResolutionBadge resolution={mediaDetails.tatutulliMetadata.resolution} />
-						<DynamicRangeBadge dynamicRange={mediaDetails.tatutulliMetadata.dynamicRange} />
-						{mediaDetails.tatutulliMetadata.subtitles.length > 0 && <ClosedCaptionBadge />}
-					</>
-				)}
-			</div>
+					{tatutulliMetadata && (
+						<>
+							<ContentRatingBadge contentRating={tatutulliMetadata.contentRating} />
+							<ResolutionBadge resolution={tatutulliMetadata.resolution} />
+							<DynamicRangeBadge dynamicRange={tatutulliMetadata.dynamicRange} />
+							{tatutulliMetadata.subtitles.length > 0 && <ClosedCaptionBadge />}
+						</>
+					)}
+				</div>
+			) : (
+				<></>
+			)}
 			<Divider />
 		</SectionTemplate>
 	);

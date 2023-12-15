@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-const approvedEndpoints = ['status', 'movie', 'tv', 'search', 'request'];
+const approvedEndpoints = ['status', 'movie', 'tv', 'collection', 'search', 'request'];
 
 export async function GET(
 	request: NextRequest,

@@ -1,22 +1,18 @@
-import { MovieDetails } from '@/app/types';
+import { MovieDetails, Collection } from '@/app/types';
 import { CreateBackdropUrl } from '@/app/utils';
 import Divider from '@/components/Divider';
 import MediaCardSmall from '@/components/MediaCardSmall';
 import SnapCarousel from '@/components/SnapCarousel';
 import SectionTemplate from '@/components/media/SectionTemplate';
 
-export default async function RelatedMedia({ mediaDetails }: { mediaDetails: MovieDetails }) {
-	//get related media from overseerr
-	const recommendedMediaResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/movie/' + mediaDetails.id + '/recommendations',
-	);
-
-	const { results: recommendedMedia } = await recommendedMediaResponse.json();
-
+export default async function Movies({ collection }: { collection: Collection }) {
+	if (!collection) {
+		return null;
+	}
 	return (
-		<SectionTemplate heading={'Related'}>
+		<SectionTemplate heading={'Movies'}>
 			<SnapCarousel>
-				{recommendedMedia.map((media: MovieDetails) => (
+				{collection.parts?.map((media: MovieDetails) => (
 					<MediaCardSmall
 						key={media.id}
 						title={media.title}

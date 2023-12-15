@@ -14,6 +14,7 @@ export type MovieDetails = {
 	status: MediaStatus;
 	title: string;
 	credits: Credits;
+	collection: Collection;
 	mediaInfo: MediaInfo;
 	//
 	rating: Rating;
@@ -178,4 +179,13 @@ export type Subtitle = {
 	id: string;
 	language: string;
 	languageCode: string;
+};
+
+export type Collection = {
+	id: number;
+	name: string;
+	overview: string;
+	posterPath: string;
+	backdropPath: string;
+	parts?: MovieDetails[];
 };
