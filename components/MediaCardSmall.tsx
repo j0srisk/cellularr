@@ -1,19 +1,34 @@
-import { Cast } from '@/app/types';
-import { CreateProfileUrl } from '@/app/utils';
 import Image from 'next/image';
+import Link from 'next/link';
 
-export default function CastMember({ cast }: { cast: Cast }) {
-	const imageUrl = CreateProfileUrl(cast.profilePath);
+type MediaCardCompactProps = {
+	title: string;
+	subtitle?: string;
+	imageUrl?: string | null;
+	url: string;
+	viewWidth?: number;
+};
 
+export default function MediaCardSmall({
+	title,
+	subtitle,
+	imageUrl,
+	url,
+	viewWidth,
+}: MediaCardCompactProps) {
 	return (
-		<div className="flex w-24 flex-shrink-0 snap-start scroll-ml-4 flex-col items-center gap-2 ">
-			<div className="h-24 w-24 overflow-hidden rounded-full">
+		<Link
+			style={{ width: `calc(${viewWidth ? viewWidth : 50}vw - 22px)` }}
+			href={url}
+			className="flex flex-shrink-0 snap-start scroll-ml-4 flex-col gap-1"
+		>
+			<div className="aspect-video overflow-hidden rounded-lg">
 				{imageUrl ? (
 					<Image
 						src={imageUrl}
-						height={150}
-						width={150}
-						alt="icon"
+						alt={title}
+						width={300}
+						height={300}
 						className="h-full w-full object-cover object-center"
 					/>
 				) : (
@@ -35,12 +50,10 @@ export default function CastMember({ cast }: { cast: Cast }) {
 					</div>
 				)}
 			</div>
-			<div className="w-full">
-				<p className="text-center text-sm font-medium text-white">{cast.name}</p>
-				<p className="text-off-white w-full truncate text-center text-xs font-medium">
-					{cast.character}
-				</p>
+			<div className="flex w-full flex-col">
+				<p className="w-full truncate text-sm font-medium text-white">{title}</p>
+				<p className="w-full truncate text-xs font-medium text-neutral-400">{subtitle}</p>
 			</div>
-		</div>
+		</Link>
 	);
 }

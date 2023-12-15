@@ -1,6 +1,6 @@
 import { MovieDetails } from '@/app/types';
 import { CreateBackdropUrl } from '@/app/utils';
-import MediaCardCompact from '@/components/MediaCardCompact';
+import MediaCardSmall from '@/components/MediaCardSmall';
 import SnapCarousel from '@/components/SnapCarousel';
 import SectionTemplate from '@/components/media/SectionTemplate';
 
@@ -16,7 +16,7 @@ export default async function RelatedMedia({ mediaDetails }: { mediaDetails: Mov
 		<SectionTemplate heading={'Related'}>
 			<SnapCarousel>
 				{recommendedMedia.map((media: MovieDetails) => (
-					<MediaCardCompact
+					<MediaCardSmall
 						key={media.id}
 						title={media.title}
 						subtitle={media.releaseDate?.split('-')[0]}
