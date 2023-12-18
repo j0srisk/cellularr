@@ -21,6 +21,27 @@ export type MovieDetails = {
 	tatutulliMetadata: FileMetadata;
 };
 
+export type TvDetails = {
+	id: number;
+	mediaType: MediaType.TV;
+	backdropPath: string;
+	posterPath: string;
+	firstAirDate: string;
+	lastAirDate: string;
+	genres: Genre[];
+	name: string;
+	mediaInfo: MediaInfo;
+	overview: string;
+	episodeRunTime: number[];
+	numberOfSeasons: number;
+	numberOfEpisodes: number;
+	credits: Credits;
+	status: string;
+	networks: Network[];
+	seasons: Season[];
+	contentRatings: ContentRatings;
+};
+
 export interface Genre {
 	id: number | null;
 	name: string | null;
@@ -188,4 +209,46 @@ export type Collection = {
 	posterPath: string;
 	backdropPath: string;
 	parts?: MovieDetails[];
+};
+
+export type Network = {
+	id: number;
+	name: string;
+	logoPath: string;
+	originCountry: string;
+};
+
+export type Season = {
+	id: number;
+	airDate: string | null;
+	episodeCount: number;
+	name: string;
+	overview: string;
+	posterPath: string;
+	seasonNumber: number;
+	episodes: Episode[];
+};
+
+export type Episode = {
+	id: number;
+	name: string;
+	airDate: string | null;
+	episodeNumber: number;
+	overview: string;
+	productionCode: string;
+	seasonNumber: number;
+	showId: number;
+	stillPath: string | null;
+	voteAverage: number;
+	voteCount: number;
+};
+
+export type ContentRating = {
+	descriptors: string[];
+	iso_3166_1: string;
+	rating: string;
+};
+
+export type ContentRatings = {
+	results: ContentRating[];
 };

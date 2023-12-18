@@ -1,4 +1,11 @@
-import { MovieDetails, MediaStatus, Subtitle, FileMetadata, Rating } from '@/app/types';
+import {
+	MovieDetails,
+	MediaStatus,
+	Subtitle,
+	FileMetadata,
+	Rating,
+	ContentRating,
+} from '@/app/types';
 import Divider from '@/components/Divider';
 import {
 	RottenTomatoesBadge,
@@ -14,6 +21,7 @@ type OverviewSectionProps = {
 	overview?: string;
 	id: number;
 	mediaType?: string;
+	contentRating?: ContentRating;
 	tatutulliMetadata?: FileMetadata;
 };
 
@@ -21,6 +29,7 @@ export default async function OverviewSection({
 	overview,
 	id,
 	mediaType,
+	contentRating,
 	tatutulliMetadata,
 }: OverviewSectionProps) {
 	const ratingsResponse = await fetch(
@@ -46,6 +55,8 @@ export default async function OverviewSection({
 							</p>
 						</Link>
 					)}
+
+					{contentRating && <ContentRatingBadge contentRating={contentRating.rating} />}
 
 					{tatutulliMetadata && (
 						<>

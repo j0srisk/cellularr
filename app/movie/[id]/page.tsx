@@ -1,17 +1,23 @@
-import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio } from '@/app/types';
-import { CreateBackdropUrl, FormatDuration } from '@/app/utils';
+import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio, Cast } from '@/app/types';
+import {
+	CreateBackdropUrl,
+	FormatDuration,
+	FormatReleaseDate,
+	GetMediaDetails,
+	GetRecommendedMedia,
+	GetSimilarMedia,
+} from '@/app/utils';
+import Divider from '@/components/Divider';
+import MediaCardSmall from '@/components/MediaCardSmall';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
+import SnapCarousel from '@/components/SnapCarousel';
+import CastMember from '@/components/media/CastMember';
+import InformationItem from '@/components/media/InformationItem';
 import RequestButton from '@/components/media/RequestButton';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
-import Cast from '@/components/media/sections/Cast';
-import Collection from '@/components/media/sections/Collection';
+import SectionTemplate from '@/components/media/SectionTemplate';
 import Header from '@/components/media/sections/Header';
-import Information from '@/components/media/sections/Information';
-import Languages from '@/components/media/sections/Languages';
 import Overview from '@/components/media/sections/Overview';
-import RecommendedMedia from '@/components/media/sections/RecommendedMedia';
-import SimilarMedia from '@/components/media/sections/SimilarMedia';
-import Videos from '@/components/media/sections/Videos';
 import type { Viewport } from 'next';
 
 //sets the viewport to the entire screen so backdrop image surrounds notch or dynamic island
@@ -20,18 +26,17 @@ export const viewport: Viewport = {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-	//gets tmdb movie id from the url
-	const id = params.id;
-
-	//gets movie details from overseerr
-	const overseerrResponse = await fetch('http://localhost:3000/api/overseerrproxy/movie/' + id, {
-		cache: 'no-cache',
-	});
-
-	const movieDetails: MovieDetails = await overseerrResponse.json();
+	//gets movieDetails from overseerr based on the id in the url
+	const movieDetails: MovieDetails = await GetMediaDetails(MediaType.MOVIE, params.id);
 
 	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
 	movieDetails.mediaType = MediaType.MOVIE;
+
+	//gets recommended media from overseerr
+	const recommendedMedia = await GetRecommendedMedia(movieDetails.mediaType, movieDetails.id);
+
+	//gets similar media from overseerr
+	const similarMedia = await GetSimilarMedia(movieDetails.mediaType, movieDetails.id);
 
 	//gets relevant metadata details for the header
 	const movieDetailsArray = [];
@@ -115,13 +120,142 @@ export default async function Page({ params }: { params: { id: string } }) {
 						mediaType="movie"
 						tatutulliMetadata={movieDetails.tatutulliMetadata}
 					/>
-					<Videos mediaDetails={movieDetails} />
-					<SimilarMedia mediaDetails={movieDetails} />
-					<RecommendedMedia mediaDetails={movieDetails} />
-					<Cast mediaDetails={movieDetails} />
-					<Collection collection={movieDetails.collection} />
-					<Information mediaDetails={movieDetails} />
-					<Languages mediaDetails={movieDetails} />
+					{movieDetails.relatedVideos[0] && (
+						<SectionTemplate heading={'Videos'}>
+							<SnapCarousel>
+								{movieDetails.relatedVideos?.map((video) => (
+									<MediaCardSmall
+										key={video.key}
+										title={video.name}
+										subtitle={video.type}
+										imageUrl={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
+										url={video.url}
+										viewWidth={66}
+									/>
+								))}
+							</SnapCarousel>
+							<Divider />
+						</SectionTemplate>
+					)}
+					{similarMedia[0] && (
+						<SectionTemplate heading={'Similar'}>
+							<SnapCarousel>
+								{similarMedia.map((media: MovieDetails) => (
+									<MediaCardSmall
+										key={media.id}
+										title={media.title}
+										subtitle={media.releaseDate?.split('-')[0]}
+										imageUrl={CreateBackdropUrl(media.backdropPath)}
+										url={'/movie/' + media.id}
+									/>
+								))}
+							</SnapCarousel>
+							<Divider />
+						</SectionTemplate>
+					)}
+					{recommendedMedia[0] && (
+						<SectionTemplate heading={'Recommended'}>
+							<SnapCarousel>
+								{recommendedMedia.map((media: MovieDetails) => (
+									<MediaCardSmall
+										key={media.id}
+										title={media.title}
+										subtitle={media.releaseDate?.split('-')[0]}
+										imageUrl={CreateBackdropUrl(media.backdropPath)}
+										url={'/movie/' + media.id}
+									/>
+								))}
+							</SnapCarousel>
+							<Divider />
+						</SectionTemplate>
+					)}
+					{!movieDetails.credits.cast[0] && (
+						<SectionTemplate heading={'Cast'}>
+							<SnapCarousel>
+								{movieDetails.credits?.cast.map((cast: Cast) => (
+									<CastMember key={cast.id} cast={cast} />
+								))}
+							</SnapCarousel>
+							<Divider />
+						</SectionTemplate>
+					)}
+					{movieDetails.collection && (
+						<SectionTemplate heading={'Collection'}>
+							<SnapCarousel>
+								<MediaCardSmall
+									key={movieDetails.collection.id}
+									title={movieDetails.collection.name}
+									imageUrl={CreateBackdropUrl(movieDetails.collection.backdropPath)}
+									url={'/collection/' + movieDetails.collection.id}
+									viewWidth={66}
+								/>
+							</SnapCarousel>
+							<Divider />
+						</SectionTemplate>
+					)}
+					<SectionTemplate heading={'Information'}>
+						<InformationItem
+							title={'Production Company'}
+							value={
+								movieDetails.productionCompanies[0] ? (
+									<>{movieDetails.productionCompanies[0].name}</>
+								) : (
+									<>Unknown</>
+								)
+							}
+						/>
+						<InformationItem
+							title={'Release Date'}
+							value={
+								movieDetails.releaseDate ? (
+									<>{FormatReleaseDate(movieDetails.releaseDate)}</>
+								) : (
+									<>Unknown</>
+								)
+							}
+						/>
+						<InformationItem
+							title={'Run Time'}
+							value={
+								movieDetails.runtime ? <>{FormatDuration(movieDetails.runtime)}</> : <>Unknown</>
+							}
+						/>
+						<InformationItem
+							title={'Budget'}
+							value={
+								movieDetails.budget ? <>${movieDetails.budget?.toLocaleString()}</> : <>Unknown</>
+							}
+						/>
+						<InformationItem
+							title={'Revenue'}
+							value={
+								movieDetails.revenue ? <>${movieDetails.revenue?.toLocaleString()}</> : <>Unknown</>
+							}
+						/>
+					</SectionTemplate>
+					{movieDetails.tatutulliMetadata && (
+						<SectionTemplate heading={'Languages'}>
+							<InformationItem
+								title={'Audio'}
+								value={
+									Array.from(
+										new Set(movieDetails.tatutulliMetadata.audios.map((audio) => audio.language)),
+									).join(', ') || 'None'
+								}
+							/>
+
+							<InformationItem
+								title={'Subtitles'}
+								value={
+									Array.from(
+										new Set(
+											movieDetails.tatutulliMetadata.subtitles.map((subtitle) => subtitle.language),
+										),
+									).join(', ') || 'None'
+								}
+							/>
+						</SectionTemplate>
+					)}
 				</div>
 			</ScrollTrackingBackdrop>
 		</>

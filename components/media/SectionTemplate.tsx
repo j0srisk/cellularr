@@ -1,5 +1,5 @@
 interface SectionTemplateProps {
-	heading?: string;
+	heading?: string | React.ReactNode;
 	children: React.ReactNode;
 }
 

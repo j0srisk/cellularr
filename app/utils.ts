@@ -1,3 +1,5 @@
+import { MediaType } from './types';
+
 export const fetcher = (...args: any[]) =>
 	fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
 
@@ -36,6 +38,9 @@ export function FormatDuration(durationInMinutes: number) {
 }
 
 export function FormatReleaseDate(releaseDate: string) {
+	if (releaseDate === null || releaseDate === undefined) {
+		return;
+	}
 	const date = new Date(releaseDate);
 	return date.toLocaleDateString('en-US', {
 		year: 'numeric',
@@ -44,16 +49,42 @@ export function FormatReleaseDate(releaseDate: string) {
 	});
 }
 
-export function GetRatingImageUrl(criticsRating: string): string {
-	switch (criticsRating) {
-		case 'Rotten':
-			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-rotten.f1ef4f02ce3.svg';
-		case 'Fresh':
-			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-fresh.149b5e8adc3.svg';
-		case 'Certified Fresh':
-			//return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/certified_fresh.75211285dbb.svg';
-			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/certified_fresh-notext.56a89734a59.svg';
-		default:
-			return 'https://www.rottentomatoes.com/assets/pizza-pie/images/icons/tomatometer/tomatometer-empty.cd930dab34a.svg';
-	}
+export async function GetMediaDetails(mediaType: MediaType, id: string) {
+	const mediaDetailsResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/' + mediaType + '/' + id,
+	);
+
+	const mediaDetails = await mediaDetailsResponse.json();
+
+	return mediaDetails;
+}
+
+export async function GetSeason(tvId: number, seasonId: number) {
+	const seasonResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/tv/' + tvId + '/season/' + seasonId,
+	);
+
+	const season = await seasonResponse.json();
+
+	return season;
+}
+
+export async function GetRecommendedMedia(mediaType: MediaType, mediaId: number) {
+	const recommendedMediaResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/' + mediaType + '/' + mediaId + '/recommendations',
+	);
+
+	const { results } = await recommendedMediaResponse.json();
+
+	return results;
+}
+
+export async function GetSimilarMedia(mediaType: MediaType, mediaId: number) {
+	const similarMediaResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/' + mediaType + '/' + mediaId + '/similar',
+	);
+
+	const { results } = await similarMediaResponse.json();
+
+	return results;
 }

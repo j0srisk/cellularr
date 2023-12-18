@@ -5,7 +5,6 @@ type RottenTomatoesBadgeProps = {
 };
 
 export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps) {
-	console.log(criticsRating);
 	switch (criticsRating) {
 		case 'Rotten':
 			return (
@@ -353,6 +352,18 @@ export function ContentRatingBadge({ contentRating }: ContentRatingBadgeProps) {
 						/>
 						<path
 							d="m8.812 6.719c1.5.054 2.778.212 2.778-1.393 0-1.13-.851-1.3-2.778-1.2v2.6zm6.332 4.075c.2376852.174479.5107818.2946416.8.352.4 0 .361 1.082.006 1.082-.9914926.0629022-1.9863191.050868-2.976-.036-.5109794-.3214532-.9367257-.7616083-1.241-1.283l-2.921-3.074v2.2c0 .856 1.263.943 1.617.943.533 0 .548 1.239.015 1.239h-5.312c-.532 0-.5-1.239 0-1.239.2672888.0501773.54214932-.0344307.73495139-.2262338s.27883671-.4662203.23004861-.7337662v-5.206c-.007-.485.241-.724-.971-.731-.532 0-.508-1.331.011-1.331s5.917 0 6.54-.009c1.431.03 2.811-.013 2.811 2.316 0 1.456-.505 2.786-1.91 2.855z"
+							fill="currentColor"
+						/>
+					</g>
+				</svg>
+			);
+		case 'TV-MA':
+			return (
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47 15" className="h-[14px]">
+					<g fill="none" fill-rule="evenodd">
+						<rect height="14" rx="2.746" stroke="currentColor" width="46" x=".5" y=".5" />
+						<path
+							d="m8.758 11.6v-6.99h2.495v-1.458h-6.765v1.458h2.489v6.99zm7.947 0 2.861-8.452h-1.94l-1.946 6.634h-.042l-1.946-6.63h-1.992l2.859 8.448h2.147zm7.275-2.642v-1.49h-3.874v1.494h3.875zm10.453-5.81h-2.063l-2.418 5.996h-.052l-2.414-5.992h-2.064v8.448h1.587v-5.7h.047l2.312 5.623h1.121l2.311-5.623h.047v5.7h1.587v-8.448zm6.994 8.452h1.893l-2.96-8.448h-2.094l-2.955 8.448h1.828l.649-2.05h2.99zm-2.164-6.832h.037l1.1 3.462h-2.229z"
 							fill="currentColor"
 						/>
 					</g>

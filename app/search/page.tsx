@@ -31,10 +31,9 @@ export default function Page() {
 
 		for (let key in results) {
 			//only add movies to results
-			if (results[key].mediaType === 'movie') {
-				const movieDetails: MovieDetails = results[key];
-				setResults((results) => [...results, movieDetails]);
-			}
+
+			const movieDetails: MovieDetails = results[key];
+			setResults((results) => [...results, movieDetails]);
 		}
 		setIsLoading(false);
 	}

@@ -1,11 +1,8 @@
-import MetadataDetails from '../MetadataDetails';
-import { MovieDetails } from '@/app/types';
-import RequestButton from '@/components/media/RequestButton';
 import React from 'react';
 
 type HeaderProps = {
 	name: string;
-	metadataDetailsArray?: string[] | null;
+	metadataDetailsArray?: (string | null)[];
 	button?: JSX.Element;
 };
 

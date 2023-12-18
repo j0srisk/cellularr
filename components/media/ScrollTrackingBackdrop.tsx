@@ -6,7 +6,7 @@ export default function ScrollTrackingBackdrop({
 	url,
 	children,
 }: {
-	url: String;
+	url?: String;
 	children?: React.ReactNode;
 }) {
 	const [scroll, setScroll] = useState(0);
