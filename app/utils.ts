@@ -1,4 +1,4 @@
-import { MediaType } from './types';
+import { MediaType, Session } from '@/app/types';
 
 export const fetcher = (...args: any[]) =>
 	fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
@@ -50,6 +50,44 @@ export function FormatReleaseDate(releaseDate: string) {
 		month: 'long',
 		day: 'numeric',
 	});
+}
+
+export async function GetSessions() {
+	const sessionsResponse = await fetch('http://localhost:3000/api/tautulliproxy?cmd=get_activity', {
+		cache: 'no-store',
+	});
+
+	const sessions = await sessionsResponse.json();
+
+	let activeSessions: Session[] = [];
+
+	sessions.response.data.sessions.forEach((tautulliSession: any) => {
+		const guid =
+			tautulliSession.grandparent_guids.find((guid: string) => guid.startsWith('tmdb://')) ||
+			tautulliSession.guids.find((guid: string) => guid.startsWith('tmdb://'));
+		const text = guid.substring('tmdb://'.length);
+		const session: Session = {
+			id: tautulliSession.session_key,
+			title: tautulliSession.grandparent_title || tautulliSession.title,
+			mediaType: tautulliSession.media_type === 'episode' ? 'tv' : tautulliSession.media_type,
+			progress: tautulliSession.progress_percent,
+			user: tautulliSession.friendly_name,
+			userThumb: tautulliSession.user_thumb,
+			player: tautulliSession.player,
+			year: tautulliSession.year,
+			posterPath: tautulliSession.thumb,
+			backdropPath: tautulliSession.art,
+			ratingKey: tautulliSession.rating_key,
+			duration: tautulliSession.stream_duration,
+			state: tautulliSession.state,
+			tmdbId: text,
+			season: tautulliSession.parent_media_index,
+			episode: tautulliSession.media_index,
+		};
+		activeSessions.push(session);
+	});
+
+	return activeSessions;
 }
 
 export async function GetMediaDetails(mediaType: MediaType, id: string) {
