@@ -69,7 +69,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 						</Header>
 					</div>
 				</div>
-				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light">
+				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light dark:bg-system-primary-dark">
 					<SectionTemplate>
 						<p className="px-4 text-subheadline">{tvDetails.overview}</p>
 						<BadgeRow
