@@ -124,8 +124,6 @@ export async function GetSeason(tvId: number, seasonId: number) {
 	*/
 	}
 
-	console.log(seasonId);
-
 	const seasonResponse = await fetch(
 		'http://localhost:3000/api/overseerrproxy/tv/' + tvId + '/season/' + seasonId,
 	);

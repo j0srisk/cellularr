@@ -37,8 +37,8 @@ export default function CastMember({ cast }: { cast: Cast }) {
 			</div>
 
 			<div className="flex w-full flex-col items-start justify-center">
-				<p className="font-body w-full text-center text-subheadline">{cast.name}</p>
-				<p className="w-full text-center text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+				<p className="font-body line-clamp-2 w-full text-center text-subheadline">{cast.name}</p>
+				<p className="line-clamp-2 w-full text-center text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 					{cast.character}
 				</p>
 			</div>

@@ -50,7 +50,7 @@ export default function Seasons({
 						imageUrl={CreateBackdropUrl(episode.stillPath)}
 						viewWidth={66}
 					>
-						<p className="w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+						<p className="line-clamp-3 w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 							{episode.overview}
 						</p>
 					</MediaCardSmall>

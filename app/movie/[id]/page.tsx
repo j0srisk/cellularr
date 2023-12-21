@@ -105,7 +105,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 				</div>
 				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light dark:bg-system-primary-dark">
 					<SectionTemplate>
-						<p className="px-4 text-subheadline">{movieDetails.overview}</p>
+						<p className="line-clamp-3 px-4 text-subheadline">{movieDetails.overview}</p>
 						<BadgeRow
 							id={movieDetails.id}
 							mediaType={movieDetails.mediaType}
@@ -119,6 +119,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 							<SnapCarousel>
 								{movieDetails.relatedVideos?.map((video) => (
 									<MediaCardSmall
+										key={video.name}
 										title={video.name}
 										detailsArray={[video.type]}
 										imageUrl={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
