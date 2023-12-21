@@ -8,11 +8,9 @@ export default function Header({ heading, subheading, children }: HeaderProps) {
 	return (
 		<div className="flex w-full flex-col gap-[9px] pb-[9px] pt-5">
 			<div className="flex w-full flex-col items-center justify-center">
-				<p className="text-large-title-emphasized text-label-primary-dark w-full truncate">
-					{heading}
-				</p>
+				<p className="w-full truncate text-large-title-emphasized">{heading}</p>
 				{subheading && (
-					<p className="text-label-secondary-dark text-subheadline-emphasized w-full truncate">
+					<p className="w-full truncate text-subheadline-emphasized text-label-secondary-light dark:text-label-secondary-dark">
 						{subheading}
 					</p>
 				)}

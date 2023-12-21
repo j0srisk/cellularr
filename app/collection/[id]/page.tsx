@@ -44,15 +44,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 		<>
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(collection.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
+					<div className="flex h-fit w-full items-end bg-gradient-to-t from-system-primary-light pt-20 dark:from-system-primary-dark">
 						<Header name={collection.name} metadataDetailsArray={collectionDetails}>
-							<Button className="text-system-primary-dark bg-white" text="Play" />
+							<Button className="bg-white text-system-primary-dark" text="Play" />
 						</Header>
 					</div>
 				</div>
-				<div className="pb-nav flex flex-col gap-[9px] bg-black">
+				<div className="pb-nav flex flex-col gap-[9px] bg-system-primary-light dark:bg-system-primary-dark">
 					<SectionTemplate>
-						<p className="text-label-primary-dark text-subheadline px-4">{collection.overview}</p>
+						<p className="px-4 text-subheadline">{collection.overview}</p>
 					</SectionTemplate>
 					<Seperator className="px-4" />
 					{collection.parts && (

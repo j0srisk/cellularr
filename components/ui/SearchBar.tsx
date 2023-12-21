@@ -7,14 +7,14 @@ type SearchBarProps = {
 
 export default function SearchBar({ value, onChange, onBlur, clearFunction }: SearchBarProps) {
 	return (
-		<div className="bg-fill-tetiary-dark flex h-9 w-full flex-shrink-0 items-center gap-2 rounded-lg px-2">
+		<div className="flex h-9 w-full flex-shrink-0 items-center gap-2 rounded-lg bg-fill-tetiary-light px-2 dark:bg-fill-tetiary-dark">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
 				viewBox="0 0 24 24"
 				strokeWidth={2.5}
 				stroke="currentColor"
-				className="stroke-label-secondary-dark h-4 w-4 flex-shrink-0"
+				className="h-4 w-4 flex-shrink-0 stroke-label-secondary-light dark:stroke-label-secondary-dark"
 			>
 				<path
 					strokeLinecap="round"
@@ -35,11 +35,11 @@ export default function SearchBar({ value, onChange, onBlur, clearFunction }: Se
 					}
 				}}
 				onBlur={onBlur}
-				className="text-body placeholder-label-secondary-dark text-label-primary h-full w-full bg-transparent outline-none"
+				className="text-label-primary h-full w-full bg-transparent text-body placeholder-label-secondary-light outline-none dark:placeholder-label-secondary-dark"
 			/>
 			{value && (
 				<button className="h-[22px] w-[22px]" onClick={clearFunction}>
-					<div className="bg-fill-tetiary-light dark:bg-fill-tetiary-dark text-label-secondary-light dark:text-label-secondary-dark flex aspect-square items-center justify-center rounded-full">
+					<div className="flex aspect-square items-center justify-center rounded-full bg-fill-tetiary-light text-label-secondary-light dark:bg-fill-tetiary-dark dark:text-label-secondary-dark">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"

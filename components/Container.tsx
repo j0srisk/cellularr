@@ -19,10 +19,12 @@ export default function Container({
 				<img src={iconUrl} alt="icon" className="" />
 			</div>
 			<div className="flex w-full flex-col ">
-				<p className="text-label-primary-dark text-subheadline w-full truncate">{name}</p>
-				<p className="text-footnote text-label-secondary-dark w-full truncate">{url}</p>
+				<p className="w-full truncate text-subheadline">{name}</p>
+				<p className="w-full truncate text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+					{url}
+				</p>
 			</div>
-			<div className="bg-system-green-dark mr-4 h-[12px] w-[12px] flex-shrink-0 rounded-full"></div>
+			<div className="mr-4 h-[12px] w-[12px] flex-shrink-0 rounded-full bg-system-green-dark"></div>
 		</Link>
 	);
 }

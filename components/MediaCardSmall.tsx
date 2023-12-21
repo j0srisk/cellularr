@@ -38,14 +38,14 @@ export default function MediaCardSmall({
 					<div className="absolute inset-0 flex h-full w-full items-end bg-gradient-to-t from-black/30 p-2">
 						<div className="flex h-8 w-full gap-4">
 							<div className="flex h-full w-full flex-col justify-between">
-								<p className="text-body-emphasized w-full truncate uppercase opacity-60">
+								<p className="w-full truncate text-body-emphasized uppercase text-label-secondary-dark">
 									{durationText}
 								</p>
 								{progress && (
-									<div className="flex h-1 w-full rounded-full bg-white bg-opacity-50">
+									<div className="flex h-1 w-full rounded-full bg-label-tetiary-dark">
 										<div
 											style={{ width: `${progress}%` }}
-											className="h-full rounded-full bg-white"
+											className="h-full rounded-full bg-system-orange-light dark:bg-system-orange-dark"
 										></div>
 									</div>
 								)}
@@ -63,7 +63,7 @@ export default function MediaCardSmall({
 						className="h-full w-full object-cover object-center"
 					/>
 				) : (
-					<div className="text-label-secondary-dark flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900">
+					<div className="flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900 text-label-secondary-dark">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -83,13 +83,11 @@ export default function MediaCardSmall({
 			</div>
 			{title && (
 				<div className="flex w-full flex-col items-start justify-center">
-					<p className="text-label-secondary-dark text-footnote-emphasized w-full truncate text-left uppercase">
+					<p className="w-full truncate text-left text-footnote-emphasized uppercase text-label-secondary-light dark:text-label-secondary-dark">
 						{heading}
 					</p>
-					<p className="font-body text-label-primary-dark text-body w-full truncate text-left">
-						{title}
-					</p>
-					<p className="text-label-secondary-dark text-subheadline w-full truncate text-left">
+					<p className="w-full truncate text-left text-body">{title}</p>
+					<p className="w-full truncate text-left text-subheadline text-label-secondary-light dark:text-label-secondary-dark">
 						{detailsArray?.map((value, index) => (
 							<span key={index}>
 								{value}

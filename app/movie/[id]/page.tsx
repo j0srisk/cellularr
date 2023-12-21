@@ -97,15 +97,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 		<>
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
+					<div className="flex h-fit w-full items-end bg-gradient-to-t from-system-primary-light pt-20 dark:from-system-primary-dark">
 						<Header name={movieDetails.title} metadataDetailsArray={movieDetailsArray}>
-							<Button className="text-system-primary-dark bg-white" text="Play" />
+							<Button className="bg-white text-system-primary-dark" text="Play" />
 						</Header>
 					</div>
 				</div>
-				<div className="pb-nav flex flex-col gap-3 bg-black">
+				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light dark:bg-system-primary-dark">
 					<SectionTemplate>
-						<p className="text-label-primary-dark text-subheadline px-4">{movieDetails.overview}</p>
+						<p className="px-4 text-subheadline">{movieDetails.overview}</p>
 						<BadgeRow
 							id={movieDetails.id}
 							mediaType={movieDetails.mediaType}

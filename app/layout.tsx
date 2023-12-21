@@ -24,7 +24,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html className="overscroll-y-none bg-black text-white" lang="en">
+		<html
+			className="overscroll-y-none bg-system-primary-light text-label-primary-light dark:bg-system-primary-dark dark:text-label-primary-dark"
+			lang="en"
+		>
 			<body className="h-[100vh] overflow-hidden">
 				{children}
 				<Navbar />

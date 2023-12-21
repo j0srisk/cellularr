@@ -25,11 +25,11 @@ export default async function BadgeRow({
 	const ratings = await GetRatings(mediaType, id);
 
 	return (
-		<div className="no-scrollbar text-label-secondary-dark flex w-full items-center gap-[5px] overflow-x-scroll px-4">
+		<div className="no-scrollbar flex w-full items-center gap-[5px] overflow-x-scroll px-4 text-label-secondary-light dark:text-label-secondary-dark">
 			{ratings && ratings.criticsRating && (
 				<Link href={ratings.url ? ratings.url : '#'} className="flex items-center gap-1">
 					<RottenTomatoesBadge criticsRating={ratings.criticsRating} />
-					<p className="text-footnote h-fit w-fit uppercase">
+					<p className="h-fit w-fit text-footnote uppercase">
 						{ratings.criticsScore ? <>{ratings.criticsScore}%</> : <>--</>}
 					</p>
 				</Link>

@@ -17,7 +17,7 @@ export default function CastMember({ cast }: { cast: Cast }) {
 						className="h-full w-full object-cover object-center"
 					/>
 				) : (
-					<div className="text-label-secondary-dark flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900 ">
+					<div className="flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900 text-label-secondary-dark ">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -37,10 +37,8 @@ export default function CastMember({ cast }: { cast: Cast }) {
 			</div>
 
 			<div className="flex w-full flex-col items-start justify-center">
-				<p className="font-body text-label-primary-dark text-subheadline w-full text-center">
-					{cast.name}
-				</p>
-				<p className="text-label-secondary-dark text-footnote w-full text-center">
+				<p className="font-body w-full text-center text-subheadline">{cast.name}</p>
+				<p className="w-full text-center text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 					{cast.character}
 				</p>
 			</div>
