@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server';
 
-const approvedCommands = ['get_metadata'];
+const approvedCommands = [
+	'get_metadata',
+	'get_children_metadata',
+	'get_activity',
+	'pms_image_proxy',
+	'get_server_identity',
+];
 
 export async function GET(request: NextRequest) {
 	//get the searchParams from the request
@@ -33,12 +39,21 @@ export async function GET(request: NextRequest) {
 		cache: 'no-cache',
 	});
 
-	const data = await response.json();
-
-	return new Response(JSON.stringify(data), {
-		headers: {
-			'content-type': 'application/json',
-		},
-		status: 200,
-	});
+	if (response.headers.get('content-type')?.startsWith('image/')) {
+		// If the response is an image
+		const imageBlob = await response.blob();
+		return new Response(imageBlob, {
+			headers: {
+				'content-type': response.headers.get('content-type') || 'image/jpeg',
+			},
+		});
+	} else {
+		// If the response is JSON
+		const data = await response.json();
+		return new Response(JSON.stringify(data), {
+			headers: {
+				'content-type': 'application/json',
+			},
+		});
+	}
 }

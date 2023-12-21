@@ -1,39 +1,24 @@
-import {
-	MovieDetails,
-	MediaType,
-	MediaStatus,
-	Subtitle,
-	Audio,
-	Collection,
-	Cast,
-	TvDetails,
-} from '@/app/types';
+import { MediaType, Cast, TvDetails } from '@/app/types';
 import {
 	CreateBackdropUrl,
-	FormatDuration,
 	FormatReleaseDate,
 	GetMediaDetails,
 	GetRecommendedMedia,
 	GetSimilarMedia,
 	GetSeason,
 } from '@/app/utils';
-import Divider from '@/components/Divider';
 import MediaCardSmall from '@/components/MediaCardSmall';
-import SaveToRecentSearches from '@/components/SaveToRecentSearches';
+import Request from '@/components/Request';
 import SnapCarousel from '@/components/SnapCarousel';
+import BadgeRow from '@/components/media/BadgeRow';
 import CastMember from '@/components/media/CastMember';
 import InformationItem from '@/components/media/InformationItem';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Header from '@/components/media/sections/Header';
-import Overview from '@/components/media/sections/Overview';
 import Seasons from '@/components/media/sections/Seasons';
-import type { Viewport } from 'next';
-
-//sets the viewport to the entire screen so backdrop image surrounds notch or dynamic island
-export const viewport: Viewport = {
-	viewportFit: 'cover',
-};
+import Button from '@/components/ui/Button';
+import Seperator from '@/components/ui/Seperator';
 
 export default async function Page({ params }: { params: { id: string } }) {
 	//gets movieDetails from overseerr based on the id in the url
@@ -52,7 +37,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 	const contentRating = tvDetails.contentRatings.results.find(
 		(contentRating) => contentRating.iso_3166_1 === 'US',
-	);
+	) || { rating: 'NR' };
 
 	//gets relevant metadata details for the header
 	const tvDetailsArray = [];
@@ -78,34 +63,22 @@ export default async function Page({ params }: { params: { id: string } }) {
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(tvDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
 					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
-						<Header
-							name={tvDetails.name}
-							button={
-								<button className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="#000000"
-										viewBox="0 0 24 24"
-										role="img"
-										className="h-4 w-4"
-									>
-										<title>Plex icon</title>
-										<path d="M11.643 0H4.68l7.679 12L4.68 24h6.963l7.677-12-7.677-12" />
-									</svg>
-									<p className="font-bold">Placeholder Button</p>
-								</button>
-							}
-							metadataDetailsArray={tvDetailsArray}
-						/>
+						<Header name={tvDetails.name} metadataDetailsArray={tvDetailsArray}>
+							<Button className="text-system-primary-dark bg-white" text="Play" />
+							<Request type={MediaType.TV} seasons={tvDetails.seasons} />
+						</Header>
 					</div>
 				</div>
-				<div className="flex flex-col bg-black pb-28">
-					<Overview
-						overview={tvDetails.overview}
-						id={tvDetails.id}
-						mediaType="tv"
-						contentRating={contentRating}
-					/>
+				<div className="pb-nav flex flex-col gap-3 bg-black">
+					<SectionTemplate>
+						<p className="text-label-primary-dark text-subheadline px-4">{tvDetails.overview}</p>
+						<BadgeRow
+							id={tvDetails.id}
+							mediaType={tvDetails.mediaType}
+							contentRating={contentRating.rating}
+						/>
+					</SectionTemplate>
+					<Seperator className="px-4" />
 					<Seasons tvDetails={tvDetails} firstSeason={firstSeason} contentRating={contentRating} />
 					{similarMedia[0] && (
 						<SectionTemplate heading={'Similar'}>
@@ -113,14 +86,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 								{similarMedia.map((media: TvDetails) => (
 									<MediaCardSmall
 										key={media.id}
+										className="w-[calc(50%-6px)]"
 										title={media.name}
-										subtitle={media.firstAirDate?.split('-')[0]}
+										detailsArray={[media.firstAirDate?.split('-')[0]]}
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										url={'/tv/' + media.id}
+										href={'/tv/' + media.id}
 									/>
 								))}
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 					{recommendedMedia[0] && (
@@ -129,14 +103,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 								{recommendedMedia.map((media: TvDetails) => (
 									<MediaCardSmall
 										key={media.id}
+										className="w-[calc(50%-6px)]"
 										title={media.name}
-										subtitle={media.firstAirDate?.split('-')[0]}
+										detailsArray={[media.firstAirDate?.split('-')[0]]}
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										url={'/tv/' + media.id}
+										href={'/tv/' + media.id}
 									/>
 								))}
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 					<SectionTemplate heading={'Cast'}>
@@ -145,7 +120,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 								<CastMember key={cast.id} cast={cast} />
 							))}
 						</SnapCarousel>
-						<Divider />
+						<Seperator className="px-4" />
 					</SectionTemplate>
 					<SectionTemplate heading={'Information'}>
 						<InformationItem

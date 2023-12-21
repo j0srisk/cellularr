@@ -1,17 +1,16 @@
 'use client';
 
 import { Download } from '@/app/types';
+import { fetcher } from '@/app/utils';
 import DownloadCard from '@/components/DownloadCard';
-import Heading from '@/components/Heading';
+import Header from '@/components/Header';
 import { useState } from 'react';
 import useSWR from 'swr';
 
 export default function Page() {
 	const [downloads, setDownloads] = useState<Download[]>([]);
-	const fetcher = (...args: any[]) =>
-		fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
 
-	const { data, error } = useSWR('/api/downloads', fetcher, {
+	const { data, error } = useSWR('/api/deluge', fetcher, {
 		refreshInterval: 5000,
 		onSuccess: (data) => {
 			setDownloads(data);
@@ -19,8 +18,8 @@ export default function Page() {
 	});
 
 	return (
-		<div className="flex h-full w-full flex-col px-4">
-			<Heading heading="Downloads" subheading={downloads.length + ' Downloads'} />
+		<div className="pt-safe flex h-full w-full flex-col px-4">
+			<Header heading="Downloads" subheading={downloads.length + ' Active Downloads'} />
 			<div className="flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
 				{downloads.map((download) => (
 					<div key={download.name}>

@@ -7,23 +7,16 @@ import {
 	GetRecommendedMedia,
 	GetSimilarMedia,
 } from '@/app/utils';
-import Divider from '@/components/Divider';
 import MediaCardSmall from '@/components/MediaCardSmall';
-import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import SnapCarousel from '@/components/SnapCarousel';
+import BadgeRow from '@/components/media/BadgeRow';
 import CastMember from '@/components/media/CastMember';
 import InformationItem from '@/components/media/InformationItem';
-import RequestButton from '@/components/media/RequestButton';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Header from '@/components/media/sections/Header';
-import Overview from '@/components/media/sections/Overview';
-import type { Viewport } from 'next';
-
-//sets the viewport to the entire screen so backdrop image surrounds notch or dynamic island
-export const viewport: Viewport = {
-	viewportFit: 'cover',
-};
+import Button from '@/components/ui/Button';
+import Seperator from '@/components/ui/Seperator';
 
 export default async function Page({ params }: { params: { id: string } }) {
 	//gets movieDetails from overseerr based on the id in the url
@@ -102,39 +95,39 @@ export default async function Page({ params }: { params: { id: string } }) {
 
 	return (
 		<>
-			<SaveToRecentSearches movieDetails={movieDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
 					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
-						<Header
-							name={movieDetails.title}
-							metadataDetailsArray={movieDetailsArray}
-							button={<RequestButton media={movieDetails} />}
-						/>
+						<Header name={movieDetails.title} metadataDetailsArray={movieDetailsArray}>
+							<Button className="text-system-primary-dark bg-white" text="Play" />
+						</Header>
 					</div>
 				</div>
-				<div className="flex flex-col bg-black pb-28">
-					<Overview
-						overview={movieDetails.overview}
-						id={movieDetails.id}
-						mediaType="movie"
-						tatutulliMetadata={movieDetails.tatutulliMetadata}
-					/>
+				<div className="pb-nav flex flex-col gap-3 bg-black">
+					<SectionTemplate>
+						<p className="text-label-primary-dark text-subheadline px-4">{movieDetails.overview}</p>
+						<BadgeRow
+							id={movieDetails.id}
+							mediaType={movieDetails.mediaType}
+							contentRating={'PG'}
+							tautulliMetadata={movieDetails.tatutulliMetadata}
+						/>
+					</SectionTemplate>
+					<Seperator className="px-4" />
 					{movieDetails.relatedVideos[0] && (
 						<SectionTemplate heading={'Videos'}>
 							<SnapCarousel>
 								{movieDetails.relatedVideos?.map((video) => (
 									<MediaCardSmall
-										key={video.key}
 										title={video.name}
-										subtitle={video.type}
+										detailsArray={[video.type]}
 										imageUrl={'http://i3.ytimg.com/vi/' + video.key + '/hqdefault.jpg'}
-										url={video.url}
-										viewWidth={66}
+										className="w-[calc(66%)]"
+										href={video.url}
 									/>
 								))}
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 					{similarMedia[0] && (
@@ -144,13 +137,14 @@ export default async function Page({ params }: { params: { id: string } }) {
 									<MediaCardSmall
 										key={media.id}
 										title={media.title}
-										subtitle={media.releaseDate?.split('-')[0]}
+										detailsArray={[media.releaseDate?.split('-')[0]]}
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										url={'/movie/' + media.id}
+										href={'/movie/' + media.id}
+										className="w-[calc(50%-6px)]"
 									/>
 								))}
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 					{recommendedMedia[0] && (
@@ -160,23 +154,24 @@ export default async function Page({ params }: { params: { id: string } }) {
 									<MediaCardSmall
 										key={media.id}
 										title={media.title}
-										subtitle={media.releaseDate?.split('-')[0]}
+										detailsArray={[media.releaseDate?.split('-')[0]]}
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										url={'/movie/' + media.id}
+										href={'/movie/' + media.id}
+										className="w-[calc(50%-6px)]"
 									/>
 								))}
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
-					{!movieDetails.credits.cast[0] && (
+					{movieDetails.credits.cast[0] && (
 						<SectionTemplate heading={'Cast'}>
 							<SnapCarousel>
 								{movieDetails.credits?.cast.map((cast: Cast) => (
 									<CastMember key={cast.id} cast={cast} />
 								))}
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 					{movieDetails.collection && (
@@ -186,11 +181,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 									key={movieDetails.collection.id}
 									title={movieDetails.collection.name}
 									imageUrl={CreateBackdropUrl(movieDetails.collection.backdropPath)}
-									url={'/collection/' + movieDetails.collection.id}
-									viewWidth={66}
+									href={'/collection/' + movieDetails.collection.id}
+									className="w-[calc(66%)]"
 								/>
 							</SnapCarousel>
-							<Divider />
+							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 					<SectionTemplate heading={'Information'}>

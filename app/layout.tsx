@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google';
 export const viewport: Viewport = {
 	width: 'device-width',
 	height: 'device-height',
+	viewportFit: 'cover',
 	initialScale: 1,
 	minimumScale: 1,
 	maximumScale: 1,
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html className="overscroll-y-none bg-black text-white" lang="en">
-			<body className="h-[100dvh] overflow-hidden">
+			<body className="h-[100vh] overflow-hidden">
 				{children}
 				<Navbar />
 			</body>

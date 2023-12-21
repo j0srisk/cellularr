@@ -1,5 +1,4 @@
 import { MovieDetails } from '@/app/types';
-import MediaCard from '@/components/MediaCard';
 import { useEffect, useState } from 'react';
 
 export default function RecentSearches() {
@@ -36,7 +35,7 @@ export default function RecentSearches() {
 				</div>
 				<div className="flex flex-col gap-[1px] bg-zinc-800 pt-[1px]">
 					{recentSearches.map((movieDetails: MovieDetails) => (
-						<MediaCard key={movieDetails.id} movieDetails={movieDetails} />
+						<></>
 					))}
 				</div>
 			</div>

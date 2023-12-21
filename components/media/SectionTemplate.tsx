@@ -5,8 +5,8 @@ interface SectionTemplateProps {
 
 export default function SectionTemplate({ heading, children }: SectionTemplateProps) {
 	return (
-		<div className="flex flex-col gap-3 pt-3">
-			{heading && <p className="px-4 text-xl font-bold text-white">{heading}</p>}
+		<div className="flex flex-col gap-3">
+			{heading && <p className="text-title-3-emphasized px-4 text-white">{heading}</p>}
 			{children}
 		</div>
 	);

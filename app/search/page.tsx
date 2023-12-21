@@ -1,20 +1,35 @@
 'use client';
 
-import { MovieDetails } from '@/app/types';
-import AppleHeader from '@/components/AppleHeader';
-import Heading from '@/components/Heading';
-import MediaCard from '@/components/MediaCard';
+import { CreatePosterUrl } from '../utils';
+import { MediaType, MediaStatus } from '@/app/types';
+import Header from '@/components/Header';
+import MediaCardLandscape from '@/components/MediaCardLandscape';
 import RecentSearches from '@/components/RecentSearches';
+import SearchBar from '@/components/ui/SearchBar';
+import Seperator from '@/components/ui/Seperator';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+
+type SearchResult = {
+	id: number;
+	title?: string;
+	name?: string;
+	posterPath: string;
+	backdropPath: string;
+	status?: MediaStatus;
+	mediaType: MediaType;
+	releaseDate?: string;
+	firstAirDate?: string;
+};
 
 export default function Page() {
 	const searchParams = useSearchParams();
 	const searchQuery = searchParams.get('query');
 
 	const [search, setSearch] = useState<string | ''>(searchQuery || '');
-	const [results, setResults] = useState<MovieDetails[]>([]);
+	const [results, setResults] = useState<SearchResult[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const router = useRouter();
@@ -30,10 +45,11 @@ export default function Page() {
 		const results = data.results;
 
 		for (let key in results) {
-			//only add movies to results
-
-			const movieDetails: MovieDetails = results[key];
-			setResults((results) => [...results, movieDetails]);
+			//filters persons from results
+			if (results[key].mediaType === MediaType.MOVIE || results[key].mediaType === MediaType.TV) {
+				const searchResult: SearchResult = results[key];
+				setResults((results) => [...results, searchResult]);
+			}
 		}
 		setIsLoading(false);
 	}
@@ -47,61 +63,23 @@ export default function Page() {
 	}, [searchQuery]);
 
 	return (
-		<div className="flex h-full w-full flex-col px-4">
-			<AppleHeader heading="Search" />
-			<div className="my-2 flex w-full items-center gap-2 rounded-lg bg-zinc-800 px-2 ">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					strokeWidth={2.5}
-					stroke="currentColor"
-					className="h-4 w-4 flex-shrink-0 stroke-neutral-400"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-					/>
-				</svg>
-
-				<input
-					type="text"
-					placeholder="Search Movies & TV"
+		<div className="pt-safe flex h-full w-full flex-col px-4">
+			<Header heading="Search">
+				<SearchBar
 					value={search}
-					onChange={(e) => {
-						setSearch(e.target.value);
-					}}
-					onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-						if (e.key === 'Enter') {
-							e.preventDefault();
-							(e.target as HTMLInputElement).blur();
-						}
-					}}
+					onChange={(e) => setSearch(e.target.value)}
 					onBlur={() => {
 						setIsLoading(true);
 						router.push('/search?query=' + search);
 					}}
-					className="w-full bg-transparent py-1.5 font-semibold text-white placeholder-neutral-400 outline-none"
+					clearFunction={() => {
+						setSearch('');
+						router.push('/search');
+					}}
 				/>
-				{search && (
-					<button className="flex items-center" onClick={() => router.push('/search')}>
-						<div className="flex h-5 w-5 items-center justify-center rounded-full bg-neutral-400">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								strokeWidth={4}
-								stroke="currentColor"
-								className="h-3 w-3 stroke-zinc-800"
-							>
-								<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-							</svg>
-						</div>
-					</button>
-				)}
-			</div>
-			<div className="no-scrollbar flex h-full w-full flex-col justify-start gap-2 overflow-auto pb-2">
+			</Header>
+
+			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start gap-2 overflow-y-auto overflow-x-hidden">
 				{searchQuery ? (
 					<>
 						{isLoading ? (
@@ -131,9 +109,29 @@ export default function Page() {
 						) : (
 							<>
 								{results.length > 0 ? (
-									<div className="flex flex-col gap-[1px] bg-zinc-800">
-										{results.map((movieDetails: MovieDetails) => (
-											<MediaCard key={movieDetails.id} movieDetails={movieDetails} />
+									<div className="flex w-full flex-col gap-[9px]">
+										{results.map((searchResult) => (
+											<>
+												<Link href={'/' + searchResult.mediaType + '/' + searchResult.id}>
+													<MediaCardLandscape
+														key={searchResult.id}
+														imageUrl={CreatePosterUrl(searchResult.posterPath)}
+														title={searchResult.title || searchResult.name}
+														details={
+															searchResult.mediaType === MediaType.MOVIE
+																? searchResult.releaseDate
+																	? 'Movie • ' + searchResult.releaseDate?.split('-')[0]
+																	: 'Movie'
+																: searchResult.firstAirDate
+																  ? 'Series • ' + searchResult.firstAirDate?.split('-')[0]
+																  : 'Series'
+														}
+													/>
+												</Link>
+												{results.indexOf(searchResult) !== results.length - 1 && (
+													<Seperator className="px-0" />
+												)}
+											</>
 										))}
 									</div>
 								) : (

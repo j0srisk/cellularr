@@ -7,8 +7,8 @@ export default function InformationItem({
 }) {
 	return (
 		<div className="flex flex-col px-4">
-			<p className="text-xs font-medium text-white">{title}</p>
-			<p className="text-off-white text-xs font-medium">{value}</p>
+			<p className="text-footnote text-label-primary-dark">{title}</p>
+			<p className="text-footnote  text-label-secondary-dark">{value}</p>
 		</div>
 	);
 }

@@ -4,18 +4,21 @@ type HeaderProps = {
 	name: string;
 	metadataDetailsArray?: (string | null)[];
 	button?: JSX.Element;
+	children: React.ReactNode;
 };
 
-export default function Header({ name, metadataDetailsArray, button }: HeaderProps) {
+export default function Header({ name, metadataDetailsArray, button, children }: HeaderProps) {
 	return (
 		<div className="flex h-fit w-full flex-col items-center justify-center px-4 pb-3">
 			{/* Title */}
-			<p className="pb-1 text-center text-3xl font-bold text-white/95">{name}</p>
+			<p className="text-large-title-emphasized text-label-primary-dark text-center font-bold">
+				{name}
+			</p>
 			{/* Media Info */}
 			{metadataDetailsArray && (
 				<div
-					className="text-off-white
-							 mb-3 flex w-full items-center justify-center gap-1 text-xs font-semibold"
+					className="text-footnote-emphasized
+							 text-label-secondary-dark mb-[7px] flex w-full items-center justify-center gap-1 truncate"
 				>
 					{metadataDetailsArray.map((metadataDetail, index) => (
 						<React.Fragment key={index}>
@@ -27,7 +30,7 @@ export default function Header({ name, metadataDetailsArray, button }: HeaderPro
 			)}
 			{/* metadataDetailsComponent */}
 			{/* Play / Request Button */}
-			<div className="flex w-full flex-col items-center px-6">{button}</div>
+			<div className="flex w-full items-center gap-[9px] px-6">{children}</div>
 		</div>
 	);
 }

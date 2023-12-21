@@ -1,22 +1,12 @@
 import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio, Collection } from '@/app/types';
 import { CreateBackdropUrl } from '@/app/utils';
-import SaveToRecentSearches from '@/components/SaveToRecentSearches';
+import MediaCardSmall from '@/components/MediaCardSmall';
+import SnapCarousel from '@/components/SnapCarousel';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
-import Cast from '@/components/media/sections/Cast';
+import SectionTemplate from '@/components/media/SectionTemplate';
 import Header from '@/components/media/sections/Header';
-import Information from '@/components/media/sections/Information';
-import Languages from '@/components/media/sections/Languages';
-import Movies from '@/components/media/sections/Movies';
-import Overview from '@/components/media/sections/Overview';
-import RecommendedMedia from '@/components/media/sections/RecommendedMedia';
-import SimilarMedia from '@/components/media/sections/SimilarMedia';
-import Videos from '@/components/media/sections/Videos';
-import type { Viewport } from 'next';
-
-//sets the viewport to the entire screen so backdrop image surrounds notch or dynamic island
-export const viewport: Viewport = {
-	viewportFit: 'cover',
-};
+import Button from '@/components/ui/Button';
+import Seperator from '@/components/ui/Seperator';
 
 export default async function Page({ params }: { params: { id: string } }) {
 	//gets tmdb movie id from the url
@@ -55,30 +45,33 @@ export default async function Page({ params }: { params: { id: string } }) {
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(collection.backdropPath)}>
 				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
 					<div className="flex h-fit w-full items-end bg-gradient-to-t from-black pt-20">
-						<Header
-							name={collection.name}
-							metadataDetailsArray={collectionDetails}
-							button={
-								<button className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-black">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="#000000"
-										viewBox="0 0 24 24"
-										role="img"
-										className="h-4 w-4"
-									>
-										<title>Plex icon</title>
-										<path d="M11.643 0H4.68l7.679 12L4.68 24h6.963l7.677-12-7.677-12" />
-									</svg>
-									<p className="font-bold">Collection Button</p>
-								</button>
-							}
-						/>
+						<Header name={collection.name} metadataDetailsArray={collectionDetails}>
+							<Button className="text-system-primary-dark bg-white" text="Play" />
+						</Header>
 					</div>
 				</div>
-				<div className="flex flex-col bg-black pb-28">
-					<Overview overview={collection.overview} id={collection.id} mediaType="collection" />
-					<Movies collection={collection} />
+				<div className="pb-nav flex flex-col gap-[9px] bg-black">
+					<SectionTemplate>
+						<p className="text-label-primary-dark text-subheadline px-4">{collection.overview}</p>
+					</SectionTemplate>
+					<Seperator className="px-4" />
+					{collection.parts && (
+						<SectionTemplate heading={'Movies'}>
+							<SnapCarousel>
+								{collection.parts.map((media: MovieDetails) => (
+									<MediaCardSmall
+										key={media.id}
+										title={media.title}
+										detailsArray={[media.releaseDate?.split('-')[0]]}
+										imageUrl={CreateBackdropUrl(media.backdropPath)}
+										className="w-[calc(50%-6px)]"
+										href={'/movie/' + media.id}
+									/>
+								))}
+							</SnapCarousel>
+						</SectionTemplate>
+					)}
+
 					{/*
 					<Videos mediaDetails={movieDetails} />
 					<SimilarMedia mediaDetails={movieDetails} />

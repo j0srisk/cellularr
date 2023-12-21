@@ -153,18 +153,22 @@ export type Download = {
 };
 
 export type Session = {
-	id: string | null;
-	title: string | null;
-	mediaType: string | null;
-	progress: string | null;
-	user: string | null;
-	userThumb: string | null;
-	player: string | null;
-	year: string | null;
+	id: string;
+	title: string;
+	mediaType: string;
+	progress: number;
+	user: string;
+	userThumb: string;
+	player: string;
+	year: string;
 	posterPath: string | null;
 	backdropPath: string | null;
-	ratingKey: string | null;
-	duration?: number;
+	ratingKey: string;
+	duration: number;
+	season?: number;
+	episode?: number;
+	tmdbId?: number;
+	state: string;
 };
 
 export type FileMetadata = {

@@ -2,37 +2,68 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 type MediaCardCompactProps = {
+	className?: string;
+	heading?: string;
 	title: string;
-	subtitle?: string;
-	imageUrl?: string | null;
-	url: string;
+	detailsArray?: string[];
+	imageUrl?: string;
+	durationText?: string;
+	progress?: number;
+	iconUrl?: string | null;
 	viewWidth?: number;
+	href?: string;
+	children?: React.ReactNode;
 };
 
 export default function MediaCardSmall({
+	className,
+	heading,
 	title,
-	subtitle,
+	detailsArray,
 	imageUrl,
-	url,
+	durationText,
+	progress,
+	iconUrl,
 	viewWidth,
+	href,
+	children,
 }: MediaCardCompactProps) {
 	return (
 		<Link
-			style={{ width: `calc(${viewWidth ? viewWidth : 50}vw - 22px)` }}
-			href={url}
-			className="flex flex-shrink-0 snap-start scroll-ml-4 flex-col gap-1"
+			href={href ? href : ''}
+			className={`flex flex-shrink-0 snap-start scroll-ml-4 flex-col gap-1 ${className}`}
 		>
-			<div className="aspect-video overflow-hidden rounded-lg">
+			<div className="relative aspect-video overflow-hidden rounded-lg">
+				{progress || durationText || iconUrl ? (
+					<div className="absolute inset-0 flex h-full w-full items-end bg-gradient-to-t from-black/30 p-2">
+						<div className="flex h-8 w-full gap-4">
+							<div className="flex h-full w-full flex-col justify-between">
+								<p className="text-body-emphasized w-full truncate uppercase opacity-60">
+									{durationText}
+								</p>
+								{progress && (
+									<div className="flex h-1 w-full rounded-full bg-white bg-opacity-50">
+										<div
+											style={{ width: `${progress}%` }}
+											className="h-full rounded-full bg-white"
+										></div>
+									</div>
+								)}
+							</div>
+							{iconUrl && <img src={iconUrl} alt="icon" className="h-8 w-8 rounded-[10px]" />}
+						</div>
+					</div>
+				) : null}
 				{imageUrl ? (
 					<Image
 						src={imageUrl}
 						alt={title}
-						width={300}
-						height={300}
+						width={500}
+						height={500}
 						className="h-full w-full object-cover object-center"
 					/>
 				) : (
-					<div className="text-off-white flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900">
+					<div className="text-label-secondary-dark flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -50,10 +81,25 @@ export default function MediaCardSmall({
 					</div>
 				)}
 			</div>
-			<div className="flex w-full flex-col">
-				<p className="w-full truncate text-sm font-medium text-white">{title}</p>
-				<p className="w-full truncate text-xs font-medium text-neutral-400">{subtitle}</p>
-			</div>
+			{title && (
+				<div className="flex w-full flex-col items-start justify-center">
+					<p className="text-label-secondary-dark text-footnote-emphasized w-full truncate text-left uppercase">
+						{heading}
+					</p>
+					<p className="font-body text-label-primary-dark text-body w-full truncate text-left">
+						{title}
+					</p>
+					<p className="text-label-secondary-dark text-subheadline w-full truncate text-left">
+						{detailsArray?.map((value, index) => (
+							<span key={index}>
+								{value}
+								{detailsArray[index + 1] !== '' && index !== detailsArray.length - 1 && ' • '}
+							</span>
+						))}
+					</p>
+					{children}
+				</div>
+			)}
 		</Link>
 	);
 }
