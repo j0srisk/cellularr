@@ -1,4 +1,5 @@
 import { MovieDetails } from '@/app/types';
+import CenteredMessage from '@/components/CenteredMessage';
 import { useEffect, useState } from 'react';
 
 export default function RecentSearches() {
@@ -19,11 +20,7 @@ export default function RecentSearches() {
 	}, []);
 
 	if (recentSearches.length === 0) {
-		return (
-			<div className="flex h-full w-full flex-col items-center justify-center">
-				<p className="font-semibold opacity-60">Seek and ye shall find</p>
-			</div>
-		);
+		return <CenteredMessage text="¡ seek and ye shall find !" />;
 	} else {
 		return (
 			<div className="flex flex-col gap-2 pt-4">
