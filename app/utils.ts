@@ -54,7 +54,7 @@ export function FormatReleaseDate(releaseDate: string) {
 
 export async function GetSessions() {
 	const sessionsResponse = await fetch('http://localhost:3000/api/tautulliproxy?cmd=get_activity', {
-		cache: 'no-store',
+		next: { revalidate: 10 },
 	});
 
 	const sessions = await sessionsResponse.json();

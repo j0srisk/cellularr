@@ -35,7 +35,7 @@ export default function MediaCardSmall({
 		>
 			<div className="relative aspect-video overflow-hidden rounded-lg">
 				{progress || durationText || iconUrl ? (
-					<div className="absolute inset-0 flex h-full w-full items-end bg-gradient-to-t from-black/30 p-2">
+					<div className="absolute inset-0 flex h-full w-full items-end bg-gradient-to-t from-black/50 p-2">
 						<div className="flex h-8 w-full gap-4">
 							<div className="flex h-full w-full flex-col justify-between">
 								<p className="w-full truncate text-body-emphasized uppercase text-label-secondary-dark">

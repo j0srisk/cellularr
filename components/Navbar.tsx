@@ -1,8 +1,10 @@
+import Seperator from './ui/Seperator';
 import Link from 'next/link';
 
 export default function Navbar() {
 	return (
 		<nav className="pb-safe fixed bottom-0 w-full bg-system-primary-light/75 text-[#999] bg-blend-hard-light backdrop-blur-[25px] dark:bg-system-primary-dark/75">
+			<Seperator />
 			<div className="flex w-full flex-wrap items-center justify-between px-6 py-[7px]">
 				<Link href="/sessions" className="flex flex-col items-center gap-[7px]">
 					<svg

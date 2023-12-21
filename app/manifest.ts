@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
 		name: 'Unraid Dashboard',
 		short_name: 'Unraid',
 		description: 'Next.js App',
-		start_url: '/search',
+		start_url: '/sessions',
 		scope: '/',
 		display: 'fullscreen',
 		background_color: '#000',
