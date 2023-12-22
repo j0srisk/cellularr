@@ -33,9 +33,9 @@ export default function Request({ type, seasons }: RequestProps) {
 			/>
 			{requesting && (
 				<Sheet title={`Request ${typeText}`} closeFunction={() => setRequesting(false)}>
-					<div className="flex h-full w-full flex-col items-center justify-between gap-[18px]">
+					<div className="pb-nav z-40 flex h-full w-full flex-col items-center justify-between gap-[18px]">
 						{/* Seasons / Movies */}
-						<div className="no-scrollbar bg-system-secondary-light dark:bg-system-secondary-dark-elevated flex max-h-[385px] w-full flex-grow-0 snap-y flex-col overflow-auto rounded-xl px-4">
+						<div className="no-scrollbar flex max-h-[385px] w-full flex-grow-0 snap-y flex-col overflow-auto rounded-xl bg-system-secondary-light px-4 dark:bg-system-secondary-dark-elevated">
 							{filteredSeasons.map((season: Season, index: number) => (
 								<>
 									<MediaCardLandscape

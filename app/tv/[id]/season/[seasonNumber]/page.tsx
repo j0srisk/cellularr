@@ -78,8 +78,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					<Button className="bg-white text-system-primary-dark" text="Play" />
 					<Request type={MediaType.TV} seasons={tvDetails.seasons} />
 				</Hero>
-				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light dark:bg-system-primary-dark">
-					<div></div>
+				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
 					{tvDetails.mediaInfo?.downloadStatus[0] && (
 						<>
 							<DownloadStatus downloadStatus={tvDetails.mediaInfo.downloadStatus} />

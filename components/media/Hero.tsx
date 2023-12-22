@@ -40,7 +40,7 @@ export default function Hero({
 					))}
 				</div>
 			)}
-			<div className="z-20 flex w-full items-center gap-[9px] px-4">{children}</div>
+			<div className="z-30 flex w-full items-center gap-[9px] px-4">{children}</div>
 			{/* completely blured background div */}
 			<div className="relative flex w-full flex-col items-center gap-[9px] py-3">
 				<p className="z-20 line-clamp-3 px-4 text-subheadline text-label-primary-dark">
