@@ -8,14 +8,14 @@ export default function Sheet({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="pt-safe fixed left-0 top-0 z-40 flex h-full w-full items-end">
-			<div className="pb-safe bg-system-primary-light dark:bg-system-primary-dark-elevated flex max-h-full w-full flex-col gap-[18px] overflow-hidden rounded-t-[10px] px-4 py-3">
+		<div className="pt-safe fixed left-0 top-0 z-50 flex h-full w-full items-end">
+			<div className="pb-safe flex max-h-full w-full flex-col gap-[18px] overflow-hidden rounded-t-[10px] bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark-elevated">
 				<div className="flex items-center justify-between">
 					<p className="text-title-3-emphasized text-label-primary-light dark:text-label-primary-dark">
 						{title}
 					</p>
 					<button className="h-[30px] w-[30px]" onClick={closeFunction}>
-						<div className="bg-fill-tetiary-light dark:bg-fill-tetiary-dark text-label-secondary-light dark:text-label-secondary-dark flex aspect-square items-center justify-center rounded-full">
+						<div className="flex aspect-square items-center justify-center rounded-full bg-fill-tetiary-light text-label-secondary-light dark:bg-fill-tetiary-dark dark:text-label-secondary-dark">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"

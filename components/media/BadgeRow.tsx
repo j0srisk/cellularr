@@ -25,7 +25,7 @@ export default async function BadgeRow({
 	const ratings = await GetRatings(mediaType, id);
 
 	return (
-		<div className="no-scrollbar flex w-full items-center gap-[5px] overflow-x-scroll px-4 text-label-secondary-light dark:text-label-secondary-dark">
+		<div className="no-scrollbar z-20 flex w-full items-center gap-[5px] overflow-x-scroll px-4 text-label-secondary-dark">
 			{ratings && ratings.criticsRating && (
 				<Link href={ratings.url ? ratings.url : '#'} className="flex items-center gap-1">
 					<RottenTomatoesBadge criticsRating={ratings.criticsRating} />

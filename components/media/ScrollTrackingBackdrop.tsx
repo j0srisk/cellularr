@@ -27,7 +27,7 @@ export default function ScrollTrackingBackdrop({
 
 				<div
 					style={{
-						height: `calc(66vh - ${scroll < 0 ? scroll : 0}px)`,
+						height: `calc(75vh - ${scroll < 0 ? scroll : 0}px)`,
 						backgroundImage: `url(${url})`,
 					}}
 					className="absolute top-0 -z-10 flex w-full items-center justify-center bg-cover bg-center"

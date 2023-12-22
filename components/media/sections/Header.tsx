@@ -9,14 +9,16 @@ type HeaderProps = {
 
 export default function Header({ name, metadataDetailsArray, button, children }: HeaderProps) {
 	return (
-		<div className="flex h-fit w-full flex-col items-center justify-center px-4 pb-3">
+		<div className="z-10 flex h-fit w-full max-w-screen-md flex-col items-center justify-center pb-3">
 			{/* Title */}
-			<p className="text-center text-large-title-emphasized font-bold">{name}</p>
+			<p className="text-center text-large-title-emphasized font-bold text-label-primary-dark">
+				{name}
+			</p>
 			{/* Media Info */}
 			{metadataDetailsArray && (
 				<div
 					className="light:text-label-secondary-light
-							 mb-[7px] flex w-full items-center justify-center gap-1 truncate text-footnote text-label-secondary-light dark:text-label-secondary-dark"
+							 mb-[7px] flex w-full items-center justify-center gap-1 truncate text-footnote text-label-secondary-dark"
 				>
 					{metadataDetailsArray.map((metadataDetail, index) => (
 						<React.Fragment key={index}>
