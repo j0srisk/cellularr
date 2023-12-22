@@ -101,34 +101,30 @@ export async function GetMediaDetails(mediaType: MediaType, id: string) {
 }
 
 export async function GetSeason(tvId: number, seasonId: number) {
-	const tvDetailsResponse = await GetMediaDetails(MediaType.TV, tvId.toString());
-
-	{
-		/*
-	if (tvDetailsResponse.mediaInfo.ratingKey) {
-		const tautulliResponse = await fetch(
-			'http://localhost:3000/api/tautulliproxy?cmd=get_children_metadata&rating_key=' +
-				tvDetailsResponse.mediaInfo.ratingKey,
-		);
-
-		const tautulliResponseJson = await tautulliResponse.json();
-
-		const tatutulliSeasons = tautulliResponseJson.response.data.children_list;
-
-		let tautulliSeason = tatutulliSeasons.find((season: any) => {
-			return season.media_index.toString() === seasonId.toString();
-		});
-
-		console.log(tautulliSeason);
-	}
-	*/
-	}
-
 	const seasonResponse = await fetch(
 		'http://localhost:3000/api/overseerrproxy/tv/' + tvId + '/season/' + seasonId,
 	);
 
 	const season = await seasonResponse.json();
+
+	//adds download status to each episode
+	{
+		/*
+	const tvDetails = await GetMediaDetails(MediaType.TV, tvId.toString());
+
+	tvDetails.mediaInfo.downloadStatus.forEach((downloadStatus: any) => {
+		console.log(downloadStatus.episode);
+		if (downloadStatus.episode.seasonNumber === seasonId) {
+			season.episodes.forEach((episode: any) => {
+				console.log(episode.episodeNumber);
+				if (episode.episodeNumber === downloadStatus.episode.episodeNumber) {
+					episode.downloadStatus = downloadStatus;
+				}
+			});
+		}
+	});
+	*/
+	}
 
 	return season;
 }

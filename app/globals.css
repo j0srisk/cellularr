@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-	--Materials-Thick---Dark:        
+	--Materials-Thick---Dark:         
 ;
 }
 
@@ -37,5 +37,12 @@
 	.slide-up {
 		transform: translateY(100%);
 		transition: transform 0.3s ease-out;
+	}
+
+	.progress-ring__circle {
+		stroke-dasharray: 400, 400;
+		transition: stroke-dashoffset 0.35s;
+		transform: rotate(-90deg);
+		transform-origin: 50% 50%;
 	}
 }

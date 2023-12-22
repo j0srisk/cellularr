@@ -12,6 +12,7 @@ import Request from '@/components/Request';
 import SnapCarousel from '@/components/SnapCarousel';
 import BadgeRow from '@/components/media/BadgeRow';
 import CastMember from '@/components/media/CastMember';
+import DownloadStatus from '@/components/media/DownloadStatus';
 import InformationItem from '@/components/media/InformationItem';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
@@ -79,7 +80,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 						/>
 					</SectionTemplate>
 					<Seperator className="px-4" />
+					{tvDetails.mediaInfo?.downloadStatus && (
+						<DownloadStatus downloadStatus={tvDetails.mediaInfo.downloadStatus} />
+					)}
+					<Seperator className="px-4" />
 					<Seasons tvDetails={tvDetails} firstSeason={firstSeason} contentRating={contentRating} />
+
 					{similarMedia[0] && (
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
@@ -97,6 +103,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
+
 					{recommendedMedia[0] && (
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>

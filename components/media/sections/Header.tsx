@@ -16,7 +16,7 @@ export default function Header({ name, metadataDetailsArray, button, children }:
 			{metadataDetailsArray && (
 				<div
 					className="light:text-label-secondary-light
-							 mb-[7px] flex w-full items-center justify-center gap-1 truncate text-footnote-emphasized dark:text-label-secondary-dark"
+							 mb-[7px] flex w-full items-center justify-center gap-1 truncate text-footnote text-label-secondary-light dark:text-label-secondary-dark"
 				>
 					{metadataDetailsArray.map((metadataDetail, index) => (
 						<React.Fragment key={index}>

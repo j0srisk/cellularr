@@ -128,7 +128,7 @@ export interface DownloadingItem {
 	timeLeft: string;
 	estimatedCompletionTime: Date;
 	title: string;
-	//episode?: EpisodeNumberResult;
+	episode?: Episode;
 }
 
 export enum MediaType {
@@ -235,7 +235,7 @@ export type Season = {
 
 export type Episode = {
 	id: number;
-	name: string;
+	title: string;
 	airDate: string | null;
 	episodeNumber: number;
 	overview: string;
