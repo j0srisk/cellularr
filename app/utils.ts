@@ -54,7 +54,7 @@ export function FormatReleaseDate(releaseDate: string) {
 
 export async function GetSessions() {
 	const sessionsResponse = await fetch('http://localhost:3000/api/tautulliproxy?cmd=get_activity', {
-		next: { revalidate: 10 },
+		cache: 'no-store',
 	});
 
 	const sessions = await sessionsResponse.json();
@@ -90,7 +90,7 @@ export async function GetSessions() {
 	return activeSessions;
 }
 
-export async function GetMediaDetails(mediaType: MediaType, id: string) {
+export async function GetMediaDetails(mediaType: MediaType, id: number) {
 	const mediaDetailsResponse = await fetch(
 		'http://localhost:3000/api/overseerrproxy/' + mediaType + '/' + id,
 	);
@@ -106,6 +106,10 @@ export async function GetSeason(tvId: number, seasonId: number) {
 	);
 
 	const season = await seasonResponse.json();
+
+	if (season.episodes === undefined) {
+		return;
+	}
 
 	//adds download status to each episode
 	{

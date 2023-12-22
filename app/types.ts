@@ -101,8 +101,8 @@ export interface Cast {
 }
 
 export interface MediaInfo {
-	downloadStatus: DownloadingItem[] | null;
-	downloadStatus4k: DownloadingItem[] | null;
+	downloadStatus: DownloadingItem[];
+	downloadStatus4k: DownloadingItem[];
 	id: number | null;
 	tmdbId: number | null;
 	tvdbId: number | null;
