@@ -2,6 +2,7 @@ import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio, Collection } fro
 import { CreateBackdropUrl } from '@/app/utils';
 import MediaCardSmall from '@/components/MediaCardSmall';
 import SnapCarousel from '@/components/SnapCarousel';
+import Hero from '@/components/media/Hero';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Header from '@/components/media/sections/Header';
@@ -43,18 +44,17 @@ export default async function Page({ params }: { params: { id: string } }) {
 	return (
 		<>
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(collection.backdropPath)}>
-				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="flex h-fit w-full items-end bg-gradient-to-t from-system-primary-light pt-20 dark:from-system-primary-dark">
-						<Header name={collection.name} metadataDetailsArray={collectionDetails}>
-							<Button className="bg-white text-system-primary-dark" text="Play" />
-						</Header>
-					</div>
-				</div>
-				<div className="pb-nav flex flex-col gap-[9px] bg-system-primary-light dark:bg-system-primary-dark">
-					<SectionTemplate>
-						<p className="line-clamp-3 px-4 text-subheadline">{collection.overview}</p>
-					</SectionTemplate>
-					<Seperator className="px-4" />
+				<Hero
+					title={collection.name}
+					metadataDetailsArray={collectionDetails}
+					overview={collection.overview}
+					id={collection.id}
+					mediaType={MediaType.COLLECTION}
+					contentRating={''}
+				>
+					<Button className="bg-white text-system-primary-dark" text="Play" />
+				</Hero>
+				<div className="pb-nav flex flex-col gap-[9px] bg-system-primary-light py-3 dark:bg-system-primary-dark">
 					{collection.parts && (
 						<SectionTemplate heading={'Movies'}>
 							<SnapCarousel>

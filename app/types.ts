@@ -134,6 +134,7 @@ export interface DownloadingItem {
 export enum MediaType {
 	MOVIE = 'movie',
 	TV = 'tv',
+	COLLECTION = 'collection',
 }
 
 export enum MediaStatus {
@@ -235,7 +236,7 @@ export type Season = {
 
 export type Episode = {
 	id: number;
-	title: string;
+	name: string;
 	airDate: string | null;
 	episodeNumber: number;
 	overview: string;

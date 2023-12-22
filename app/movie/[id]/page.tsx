@@ -11,6 +11,7 @@ import MediaCardSmall from '@/components/MediaCardSmall';
 import SnapCarousel from '@/components/SnapCarousel';
 import BadgeRow from '@/components/media/BadgeRow';
 import CastMember from '@/components/media/CastMember';
+import Hero from '@/components/media/Hero';
 import InformationItem from '@/components/media/InformationItem';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
@@ -96,24 +97,18 @@ export default async function Page({ params }: { params: { id: string } }) {
 	return (
 		<>
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
-				<div className="relative flex h-[66vh] w-full flex-shrink-0 items-end">
-					<div className="flex h-fit w-full items-end bg-gradient-to-t from-system-primary-light pt-20 dark:from-system-primary-dark">
-						<Header name={movieDetails.title} metadataDetailsArray={movieDetailsArray}>
-							<Button className="bg-white text-system-primary-dark" text="Play" />
-						</Header>
-					</div>
-				</div>
-				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light dark:bg-system-primary-dark">
-					<SectionTemplate>
-						<p className="line-clamp-3 px-4 text-subheadline">{movieDetails.overview}</p>
-						<BadgeRow
-							id={movieDetails.id}
-							mediaType={movieDetails.mediaType}
-							contentRating={'PG'}
-							tautulliMetadata={movieDetails.tatutulliMetadata}
-						/>
-					</SectionTemplate>
-					<Seperator className="px-4" />
+				<Hero
+					title={movieDetails.title}
+					metadataDetailsArray={movieDetailsArray}
+					overview={movieDetails.overview}
+					id={movieDetails.id}
+					mediaType={movieDetails.mediaType}
+					contentRating={'PG'}
+				>
+					<Button className="bg-white text-system-primary-dark" text="Play" />
+				</Hero>
+
+				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
 					{movieDetails.relatedVideos[0] && (
 						<SectionTemplate heading={'Videos'}>
 							<SnapCarousel>
