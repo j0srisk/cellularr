@@ -65,18 +65,20 @@ export default function Page() {
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4">
 			<Header heading="Search">
-				<SearchBar
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					onBlur={() => {
-						setIsLoading(true);
-						router.push('/search?query=' + search);
-					}}
-					clearFunction={() => {
-						setSearch('');
-						router.push('/search');
-					}}
-				/>
+				<div className="w-full pb-[15px] pt-[1px]">
+					<SearchBar
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						onBlur={() => {
+							setIsLoading(true);
+							router.push('/search?query=' + search);
+						}}
+						clearFunction={() => {
+							setSearch('');
+							router.push('/search');
+						}}
+					/>
+				</div>
 			</Header>
 
 			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start gap-2 overflow-y-auto overflow-x-hidden">

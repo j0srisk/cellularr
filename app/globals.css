@@ -18,7 +18,7 @@
 	}
 
 	.pb-nav {
-		padding-bottom: calc(env(safe-area-inset-bottom) + 69px);
+		padding-bottom: calc(env(safe-area-inset-bottom) + 65px);
 	}
 
 	.pt-safe {

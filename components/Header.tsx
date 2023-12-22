@@ -7,9 +7,9 @@ type HeaderProps = {
 
 export default function Header({ heading, subheading, children, onBack }: HeaderProps) {
 	return (
-		<div className="flex w-full flex-col pb-[8px]">
-			<div className="flex h-[44px] w-full items-center justify-start">
-				{onBack && (
+		<div className="flex w-full flex-col">
+			{onBack && (
+				<div className="flex w-full items-center justify-start py-[11px]">
 					<button
 						onClick={onBack}
 						className="bg-red flex flex-row items-center text-system-blue-light dark:text-system-blue-dark"
@@ -27,9 +27,10 @@ export default function Header({ heading, subheading, children, onBack }: Header
 
 						<p className="text-body">Back</p>
 					</button>
-				)}
-			</div>
-			<div className="flex w-full flex-col items-center justify-center  pt-[3px]">
+				</div>
+			)}
+
+			<div className="flex w-full flex-col items-center justify-center pb-[8px] pt-[3px]">
 				<p className="w-full truncate text-large-title-emphasized">{heading}</p>
 				{subheading && (
 					<p className="w-full truncate text-subheadline-emphasized text-label-secondary-light dark:text-label-secondary-dark">
