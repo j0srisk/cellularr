@@ -114,9 +114,9 @@ export interface MediaInfo {
 	mediaAddedAt: Date | null;
 	ratingKey: string | null;
 	ratingKey4k: string | null;
-	plexUrl: string | null;
-	iOSPlexUrl: string | null;
-	serviceUrl: string | null;
+	plexUrl: string;
+	iOSPlexUrl: string;
+	serviceUrl: string;
 }
 
 export interface DownloadingItem {
@@ -232,6 +232,7 @@ export type Season = {
 	posterPath: string;
 	seasonNumber: number;
 	episodes: Episode[];
+	status?: MediaStatus;
 };
 
 export type Episode = {

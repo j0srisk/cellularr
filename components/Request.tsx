@@ -4,7 +4,7 @@ import MediaCardLandscape from './MediaCardLandscape';
 import GroupList from './ui/GroupList';
 import Row from './ui/Row';
 import Seperator from './ui/Seperator';
-import { Season, MediaType } from '@/app/types';
+import { Season, MediaType, MediaStatus } from '@/app/types';
 import { CreatePosterUrl } from '@/app/utils';
 import Button from '@/components/ui/Button';
 import Sheet from '@/components/ui/Sheet';
@@ -13,10 +13,11 @@ import { useState } from 'react';
 
 type RequestProps = {
 	type: MediaType;
+	text: string;
 	seasons?: Season[];
 };
 
-export default function Request({ type, seasons }: RequestProps) {
+export default function Request({ type, text, seasons }: RequestProps) {
 	const [requesting, setRequesting] = useState(false);
 
 	const typeText = type === MediaType.MOVIE ? 'Movie' : 'Series';
@@ -28,7 +29,7 @@ export default function Request({ type, seasons }: RequestProps) {
 		<>
 			<Button
 				className="bg-system-indigo-light dark:bg-system-indigo-dark"
-				text="Request"
+				text={text}
 				onClick={() => setRequesting(true)}
 			/>
 			{requesting && (
@@ -45,7 +46,25 @@ export default function Request({ type, seasons }: RequestProps) {
 										title={season.name}
 										details={season.airDate?.split('-')[0]}
 									>
-										<ToggleButton isToggled={true} isDisabled={false} />
+										{!season.status && <ToggleButton isToggled={false} color={'fd'} />}
+
+										{season.status === MediaStatus.UNKNOWN && (
+											<ToggleButton isToggled={false} color={'fd'} />
+										)}
+
+										{season.status === MediaStatus.PENDING ||
+										season.status === MediaStatus.PROCESSING ? (
+											<ToggleButton
+												isToggled={true}
+												isDisabled={true}
+												color={'bg-system-blue-light'}
+											/>
+										) : null}
+
+										{season.status === MediaStatus.AVAILABLE ||
+										season.status === MediaStatus.PARTIALLY_AVAILABLE ? (
+											<ToggleButton isToggled={true} isDisabled={true} />
+										) : null}
 									</MediaCardLandscape>
 									{index !== filteredSeasons.length - 1 && <Seperator />}
 								</>

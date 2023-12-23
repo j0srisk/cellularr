@@ -5,9 +5,10 @@ import { useState } from 'react';
 type ToggleButtonProps = {
 	isToggled: boolean;
 	isDisabled?: boolean;
+	color?: string;
 };
 
-export default function ToggleButton({ isToggled, isDisabled }: ToggleButtonProps) {
+export default function ToggleButton({ isToggled, isDisabled, color }: ToggleButtonProps) {
 	const [toggled, setToggled] = useState(isToggled);
 	const [disabled, setDisabled] = useState(isDisabled || false);
 
@@ -20,7 +21,9 @@ export default function ToggleButton({ isToggled, isDisabled }: ToggleButtonProp
 			}}
 			className={`flex h-[31px] w-[51px] flex-shrink-0 rounded-full p-[2px] ${
 				toggled
-					? 'bg-system-indigo-light dark:bg-system-indigo-dark'
+					? color
+						? 'bg-system-indigo-light dark:bg-system-indigo-dark'
+						: 'bg-system-green-light dark:bg-system-green-dark'
 					: 'bg-fill-secondary-light dark:bg-fill-secondary-dark'
 			}`}
 			onClick={() => {

@@ -17,6 +17,7 @@ import InformationItem from '@/components/media/InformationItem';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SeasonSelector from '@/components/media/SeasonSelector';
 import SectionTemplate from '@/components/media/SectionTemplate';
+import StatusButton from '@/components/media/StatusButton';
 import Button from '@/components/ui/Button';
 import Seperator from '@/components/ui/Seperator';
 import { redirect } from 'next/navigation';
@@ -75,8 +76,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					mediaType={tvDetails.mediaType}
 					contentRating={contentRating.rating}
 				>
-					<Button className="bg-white text-system-primary-dark" text="Play" />
-					<Request type={MediaType.TV} seasons={tvDetails.seasons} />
+					<StatusButton tvDetails={tvDetails} />
 				</Hero>
 				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
 					{tvDetails.mediaInfo?.downloadStatus[0] && (

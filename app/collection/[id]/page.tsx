@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 				>
 					<Button className="bg-white text-system-primary-dark" text="Play" />
 				</Hero>
-				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
+				<div className="pb-nav flex flex-col gap-[18px] bg-system-primary-light py-3 dark:bg-system-primary-dark">
 					{collection.parts && (
 						<SectionTemplate heading={'Movies'}>
 							<SnapCarousel>

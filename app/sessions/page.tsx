@@ -11,7 +11,7 @@ export default async function Page() {
 		<div className="pt-safe pb-nav flex h-full w-full flex-col px-4">
 			<Refresher refreshInterval={10000} />
 			<Header heading="Now Streaming" subheading={sessions.length + ' Active Sessions'} />
-			<div className="no-scrollbar flex h-full w-full flex-col justify-start gap-[18px] overflow-auto overflow-x-hidden">
+			<div className="no-scrollbar flex h-full w-full flex-col justify-start gap-[18px] overflow-auto overflow-x-hidden pt-1">
 				{sessions[0] ? (
 					<>
 						{sessions.map((session) => (

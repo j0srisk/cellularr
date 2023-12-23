@@ -81,7 +81,7 @@ export default function Page() {
 				</div>
 			</Header>
 
-			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start gap-2 overflow-y-auto overflow-x-hidden">
+			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start gap-[9px] overflow-y-auto overflow-x-hidden">
 				{searchQuery ? (
 					<>
 						{isLoading ? (

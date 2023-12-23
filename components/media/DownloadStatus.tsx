@@ -44,7 +44,7 @@ export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] 
 				</svg>
 			</button>
 			{isOpen && (
-				<div className="pt-safe pb-nav fixed top-0 z-20 flex h-full max-h-full w-full flex-col overflow-hidden bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark">
+				<div className="pt-safe pb-nav fixed top-0 z-50 flex h-full max-h-full w-full flex-col overflow-hidden bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark">
 					<Header heading="Download Status" onBack={() => setIsOpen(false)} />
 					<div className="no-scrollbar flex w-full flex-col items-center gap-[18px] overflow-auto pb-[9px]">
 						{downloadStatus.map((download: DownloadingItem, index: number) => (
