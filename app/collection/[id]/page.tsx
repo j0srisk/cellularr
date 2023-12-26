@@ -1,6 +1,6 @@
 import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio, Collection } from '@/app/types';
 import { CreateBackdropUrl } from '@/app/utils';
-import MediaCardSmall from '@/components/MediaCardSmall';
+import MediaCard from '@/components/MediaCard';
 import SnapCarousel from '@/components/SnapCarousel';
 import Hero from '@/components/media/Hero';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
@@ -59,7 +59,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 						<SectionTemplate heading={'Movies'}>
 							<SnapCarousel>
 								{collection.parts.map((media: MovieDetails) => (
-									<MediaCardSmall
+									<MediaCard
 										key={media.id}
 										title={media.title}
 										detailsArray={[media.releaseDate?.split('-')[0]]}

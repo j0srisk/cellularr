@@ -7,7 +7,7 @@ import {
 	GetRecommendedMedia,
 	GetSimilarMedia,
 } from '@/app/utils';
-import MediaCardSmall from '@/components/MediaCardSmall';
+import MediaCard from '@/components/MediaCard';
 import SnapCarousel from '@/components/SnapCarousel';
 import BadgeRow from '@/components/media/BadgeRow';
 import CastMember from '@/components/media/CastMember';
@@ -113,7 +113,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 						<SectionTemplate heading={'Videos'}>
 							<SnapCarousel>
 								{movieDetails.relatedVideos?.map((video) => (
-									<MediaCardSmall
+									<MediaCard
 										key={video.name}
 										title={video.name}
 										detailsArray={[video.type]}
@@ -130,7 +130,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
 								{similarMedia.map((media: MovieDetails) => (
-									<MediaCardSmall
+									<MediaCard
 										key={media.id}
 										title={media.title}
 										detailsArray={[media.releaseDate?.split('-')[0]]}
@@ -147,7 +147,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
 								{recommendedMedia.map((media: MovieDetails) => (
-									<MediaCardSmall
+									<MediaCard
 										key={media.id}
 										title={media.title}
 										detailsArray={[media.releaseDate?.split('-')[0]]}
@@ -173,7 +173,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 					{movieDetails.collection && (
 						<SectionTemplate heading={'Collection'}>
 							<SnapCarousel>
-								<MediaCardSmall
+								<MediaCard
 									key={movieDetails.collection.id}
 									title={movieDetails.collection.name}
 									imageUrl={CreateBackdropUrl(movieDetails.collection.backdropPath)}

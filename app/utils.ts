@@ -93,6 +93,7 @@ export async function GetSessions() {
 export async function GetMediaDetails(mediaType: MediaType, id: number) {
 	const mediaDetailsResponse = await fetch(
 		'http://localhost:3000/api/overseerrproxy/' + mediaType + '/' + id,
+		{ cache: 'no-store' },
 	);
 
 	const mediaDetails = await mediaDetailsResponse.json();

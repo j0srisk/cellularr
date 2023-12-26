@@ -7,7 +7,7 @@ import {
 	GetSimilarMedia,
 	GetSeason,
 } from '@/app/utils';
-import MediaCardSmall from '@/components/MediaCardSmall';
+import MediaCard from '@/components/MediaCard';
 import Request from '@/components/Request';
 import SnapCarousel from '@/components/SnapCarousel';
 import CastMember from '@/components/media/CastMember';
@@ -90,7 +90,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						<SeasonSelector seasons={tvDetails.seasons} />
 						<SnapCarousel>
 							{season.episodes.map((episode: Episode) => (
-								<MediaCardSmall
+								<MediaCard
 									key={episode.id}
 									className="w-[calc(66%)]"
 									heading={`Episode ${episode.episodeNumber}`}
@@ -101,7 +101,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 									<p className="line-clamp-3 w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 										{episode.overview}
 									</p>
-								</MediaCardSmall>
+								</MediaCard>
 							))}
 						</SnapCarousel>
 						<Seperator className="px-4" />
@@ -111,7 +111,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
 								{similarMedia.map((media: TvDetails) => (
-									<MediaCardSmall
+									<MediaCard
 										key={media.id}
 										className="w-[calc(50%-6px)]"
 										title={media.name}
@@ -129,7 +129,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
 								{recommendedMedia.map((media: TvDetails) => (
-									<MediaCardSmall
+									<MediaCard
 										key={media.id}
 										className="w-[calc(50%-6px)]"
 										title={media.name}

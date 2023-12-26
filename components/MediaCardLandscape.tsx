@@ -1,3 +1,4 @@
+import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
 
 type MediaCardLandscapeProps = {
@@ -17,41 +18,41 @@ export default function MediaCardLandscape({
 }: MediaCardLandscapeProps) {
 	return (
 		<div className={`flex w-full snap-start items-center gap-4 ${className}`}>
-			<div className="border-separator-opaque-light dark:border-separator-opaque-dark aspect-[2/3] h-16 flex-shrink-0 overflow-hidden rounded-md border-0">
+			<div className="relative flex aspect-[2/3] h-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border-0 border-separator-opaque-light bg-gradient-to-tr from-zinc-800 to-zinc-900 text-label-secondary-dark dark:border-separator-opaque-dark">
 				{imageUrl ? (
-					<Image
-						src={imageUrl}
-						height={300}
-						width={200}
-						alt={title || 'Media Card Landscape'}
-						className="h-full w-full object-cover object-center"
-					/>
+					<>
+						<Image
+							src={imageUrl}
+							height={300}
+							width={200}
+							alt={title || 'Media Card Landscape'}
+							className="absolute h-full w-full object-cover object-center"
+						/>
+						<Spinner className="h-[14px] w-[14px]" />
+					</>
 				) : (
-					<div className="text-label-secondary-dark flex h-full w-full items-center justify-center bg-gradient-to-tr from-zinc-800 to-zinc-900">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth={2}
-							stroke="currentColor"
-							className="h-4 w-4"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-							/>
-						</svg>
-					</div>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						strokeWidth={2}
+						className="h-4 w-4 stroke-label-secondary-dark"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+						/>
+					</svg>
 				)}
 			</div>
 
 			<div className="flex w-full items-center gap-[-4px]">
 				<div className="flex w-full flex-col items-start justify-center truncate">
-					<p className="font-body text-label-primary-light dark:text-label-primary-dark text-body w-full truncate text-left">
+					<p className="font-body w-full truncate text-left text-body text-label-primary-light dark:text-label-primary-dark">
 						{title}
 					</p>
-					<p className="text-label-secondary-light dark:text-label-secondary-dark text-subheadline w-full truncate text-left">
+					<p className="w-full truncate text-left text-subheadline text-label-secondary-light dark:text-label-secondary-dark">
 						{details}
 					</p>
 				</div>

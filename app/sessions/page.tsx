@@ -1,7 +1,7 @@
 import { FormatDuration, GetSessions } from '@/app/utils';
 import CenteredMessage from '@/components/CenteredMessage';
 import Header from '@/components/Header';
-import MediaCardSmall from '@/components/MediaCardSmall';
+import MediaCard from '@/components/MediaCard';
 import Refresher from '@/components/Refresher';
 
 export default async function Page() {
@@ -16,7 +16,7 @@ export default async function Page() {
 					<>
 						{sessions.map((session) => (
 							<>
-								<MediaCardSmall
+								<MediaCard
 									key={session.id}
 									imageUrl={'/api/tautulliproxy?cmd=pms_image_proxy&img=' + session.backdropPath}
 									title={session.title}
@@ -29,7 +29,7 @@ export default async function Page() {
 										session.state !== 'paused'
 											? FormatDuration(
 													Math.floor((session.duration * (1 - session.progress / 100)) / 1000 / 60),
-											  ) + ' left'
+												) + ' left'
 											: 'Paused'
 									}
 									progress={session.progress}
