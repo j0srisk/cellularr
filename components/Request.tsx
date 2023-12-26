@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button';
 import Sheet from '@/components/ui/Sheet';
 import ToggleButton from '@/components/ui/ToggleButton';
 import { useState } from 'react';
+import { Fragment } from 'react';
 
 type RequestProps = {
 	type: MediaType;
@@ -38,9 +39,8 @@ export default function Request({ type, text, seasons }: RequestProps) {
 						{/* Seasons / Movies */}
 						<div className="no-scrollbar flex max-h-[385px] w-full flex-grow-0 snap-y flex-col overflow-auto rounded-xl bg-system-secondary-light px-4 dark:bg-system-secondary-dark-elevated">
 							{filteredSeasons.map((season: Season, index: number) => (
-								<>
+								<Fragment key={season.id}>
 									<MediaCardLandscape
-										key={season.id}
 										className="py-4"
 										imageUrl={CreatePosterUrl(season.posterPath)}
 										title={season.name}
@@ -67,7 +67,7 @@ export default function Request({ type, text, seasons }: RequestProps) {
 										) : null}
 									</MediaCardLandscape>
 									{index !== filteredSeasons.length - 1 && <Seperator />}
-								</>
+								</Fragment>
 							))}
 						</div>
 						{/* Advanced */}

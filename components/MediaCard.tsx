@@ -1,6 +1,7 @@
 import Spinner from './ui/Spinner';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 type MediaCardProps = {
 	className?: string;
@@ -101,10 +102,10 @@ export default function MediaCard({
 					<p className="w-full truncate text-left text-body">{title}</p>
 					<p className="w-full truncate text-left text-subheadline text-label-secondary-light dark:text-label-secondary-dark">
 						{detailsArray?.map((value, index) => (
-							<span key={index}>
+							<Fragment key={index}>
 								{value}
 								{detailsArray[index + 1] !== '' && index !== detailsArray.length - 1 && ' • '}
-							</span>
+							</Fragment>
 						))}
 					</p>
 					{children}

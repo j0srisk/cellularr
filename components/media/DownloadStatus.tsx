@@ -1,10 +1,10 @@
 'use client';
 
-import Sheet from '../ui/Sheet';
 import { DownloadingItem } from '@/app/types';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
 import { useState } from 'react';
+import { Fragment } from 'react';
 
 export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] }) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -48,11 +48,8 @@ export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] 
 					<Header heading="Download Status" onBack={() => setIsOpen(false)} />
 					<div className="no-scrollbar flex w-full flex-col items-center gap-[18px] overflow-auto pb-[9px]">
 						{downloadStatus.map((download: DownloadingItem, index: number) => (
-							<>
-								<div
-									key={download.externalId}
-									className="flex w-full flex-row items-center justify-between"
-								>
+							<Fragment key={download.externalId}>
+								<div className="flex w-full flex-row items-center justify-between">
 									<div className="flex w-full flex-col">
 										<p className="w-full truncate text-left text-body">{download.episode?.title}</p>
 										<p className="w-full truncate text-left text-subheadline   text-label-secondary-light dark:text-label-secondary-dark">
@@ -89,7 +86,7 @@ export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] 
 									</div>
 								</div>
 								{index !== downloadStatus.length - 1 && <Seperator />}
-							</>
+							</Fragment>
 						))}
 					</div>
 				</div>

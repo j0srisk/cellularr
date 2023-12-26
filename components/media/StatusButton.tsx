@@ -4,7 +4,6 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link';
 
 export default function StatusButton({ tvDetails }: { tvDetails: TvDetails }) {
-	console.log(tvDetails);
 	if (!tvDetails.mediaInfo || tvDetails.mediaInfo.status === MediaStatus.UNKNOWN) {
 		return <Request type={MediaType.TV} text={'Request Series'} seasons={tvDetails.seasons} />;
 	}

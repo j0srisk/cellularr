@@ -15,28 +15,26 @@ export default async function Page() {
 				{sessions[0] ? (
 					<>
 						{sessions.map((session) => (
-							<>
-								<MediaCard
-									key={session.id}
-									imageUrl={'/api/tautulliproxy?cmd=pms_image_proxy&img=' + session.backdropPath}
-									title={session.title}
-									detailsArray={[
-										session.user,
-										session.season ? 'S' + session.season + ', E' + session.episode : session.year,
-										session.player,
-									]}
-									durationText={
-										session.state !== 'paused'
-											? FormatDuration(
-													Math.floor((session.duration * (1 - session.progress / 100)) / 1000 / 60),
-												) + ' left'
-											: 'Paused'
-									}
-									progress={session.progress}
-									iconUrl={session.userThumb}
-									href={'/' + session.mediaType + '/' + session.tmdbId}
-								/>
-							</>
+							<MediaCard
+								key={session.id}
+								imageUrl={'/api/tautulliproxy?cmd=pms_image_proxy&img=' + session.backdropPath}
+								title={session.title}
+								detailsArray={[
+									session.user,
+									session.season ? 'S' + session.season + ', E' + session.episode : session.year,
+									session.player,
+								]}
+								durationText={
+									session.state !== 'paused'
+										? FormatDuration(
+												Math.floor((session.duration * (1 - session.progress / 100)) / 1000 / 60),
+											) + ' left'
+										: 'Paused'
+								}
+								progress={session.progress}
+								iconUrl={session.userThumb}
+								href={'/' + session.mediaType + '/' + session.tmdbId}
+							/>
 						))}
 					</>
 				) : (
