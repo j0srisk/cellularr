@@ -1,11 +1,11 @@
-import { MediaType, Cast, TvDetails, Episode } from '@/app/types';
+import { Cast, Episode, Series } from '@/app/types';
 import {
 	CreateBackdropUrl,
 	FormatReleaseDate,
-	GetMediaDetails,
 	GetRecommendedMedia,
 	GetSimilarMedia,
 	GetSeason,
+	GetSeries,
 } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import Request from '@/components/Request';
@@ -24,10 +24,8 @@ import { redirect } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: number; seasonNumber: number } }) {
 	//gets movieDetails from overseerr based on the id in the url
-	const tvDetails: TvDetails = await GetMediaDetails(MediaType.TV, params.id);
 
-	//set the mediaType to tv because TvDetails doesn't return a mediaType property
-	tvDetails.mediaType = MediaType.TV;
+	const tvDetails: Series = await GetSeries(params.id);
 
 	//gets recommended media from overseerr
 	const recommendedMedia = await GetRecommendedMedia(tvDetails.mediaType, tvDetails.id);
@@ -39,31 +37,20 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 
 	if (!season) {
 		redirect('/tv/' + tvDetails.id + '/season/' + 1);
-		return <></>;
 	}
-
-	const contentRating = tvDetails.contentRatings.results.find(
-		(contentRating) => contentRating.iso_3166_1 === 'US',
-	) || { rating: 'NR' };
 
 	//gets relevant metadata details for the header
 	const tvDetailsArray = [];
 
-	if (tvDetails.genres[0]) {
-		tvDetailsArray.push(tvDetails.genres[0].name);
+	tvDetailsArray.push(tvDetails.genre);
+
+	tvDetailsArray.push(tvDetails.firstAirDate.split('-')[0]);
+
+	if (tvDetails.episodeRunTime) {
+		tvDetailsArray.push(tvDetails.episodeRunTime + ' mins');
 	}
 
-	if (tvDetails.firstAirDate) {
-		tvDetailsArray.push(tvDetails.firstAirDate.split('-')[0]);
-	}
-
-	if (tvDetails.episodeRunTime[0]) {
-		tvDetailsArray.push(tvDetails.episodeRunTime[0] + ' mins');
-	}
-
-	if (tvDetails.numberOfSeasons) {
-		tvDetailsArray.push(tvDetails.numberOfSeasons + ' seasons');
-	}
+	tvDetailsArray.push(tvDetails.numberOfSeasons + ' seasons');
 
 	return (
 		<>
@@ -74,14 +61,14 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					overview={tvDetails.overview}
 					id={tvDetails.id}
 					mediaType={tvDetails.mediaType}
-					contentRating={contentRating.rating}
+					contentRating={tvDetails.contentRating}
 				>
-					<StatusButton tvDetails={tvDetails} />
+					<p>Text</p>
 				</Hero>
 				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
-					{tvDetails.mediaInfo?.downloadStatus[0] && (
+					{tvDetails.downloads && (
 						<>
-							<DownloadStatus downloadStatus={tvDetails.mediaInfo.downloadStatus} />
+							<DownloadStatus downloads={tvDetails.downloads} />
 							<Seperator className="px-4" />
 						</>
 					)}
@@ -94,9 +81,8 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 									key={episode.id}
 									className="w-[calc(66%)]"
 									heading={`Episode ${episode.episodeNumber}`}
-									title={episode.name}
+									title={episode.title}
 									imageUrl={CreateBackdropUrl(episode.stillPath)}
-									viewWidth={66}
 								>
 									<p className="line-clamp-3 w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 										{episode.overview}
@@ -110,7 +96,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					{similarMedia[0] && (
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
-								{similarMedia.map((media: TvDetails) => (
+								{similarMedia.map((media: Series) => (
 									<MediaCard
 										key={media.id}
 										className="w-[calc(50%-6px)]"
@@ -128,7 +114,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					{recommendedMedia[0] && (
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
-								{recommendedMedia.map((media: TvDetails) => (
+								{recommendedMedia.map((media: Series) => (
 									<MediaCard
 										key={media.id}
 										className="w-[calc(50%-6px)]"
@@ -144,17 +130,14 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					)}
 					<SectionTemplate heading={'Cast'}>
 						<SnapCarousel>
-							{tvDetails.credits?.cast.map((cast: Cast) => (
+							{tvDetails.cast.map((cast: Cast) => (
 								<CastMember key={cast.id} cast={cast} />
 							))}
 						</SnapCarousel>
 						<Seperator className="px-4" />
 					</SectionTemplate>
 					<SectionTemplate heading={'Information'}>
-						<InformationItem
-							title={'Network'}
-							value={tvDetails.networks[0] ? <>{tvDetails.networks[0].name}</> : <>Unknown</>}
-						/>
+						<InformationItem title={'Network'} value={tvDetails.network} />
 						<InformationItem
 							title={'First Air Date'}
 							value={

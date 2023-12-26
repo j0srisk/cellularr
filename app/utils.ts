@@ -1,4 +1,17 @@
-import { MediaType, Session } from '@/app/types';
+import {
+	MediaType,
+	MovieDetails,
+	MediaStatus,
+	Audio,
+	Subtitle,
+	Movie,
+	File,
+	Session,
+	Collection,
+	Season,
+	Series,
+	Download,
+} from '@/app/types';
 
 export const fetcher = (...args: any[]) =>
 	fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
@@ -101,35 +114,188 @@ export async function GetMediaDetails(mediaType: MediaType, id: number) {
 	return mediaDetails;
 }
 
-export async function GetSeason(tvId: number, seasonId: number) {
-	const seasonResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/tv/' + tvId + '/season/' + seasonId,
+export async function GetMovie(id: number) {
+	const overseerrResponse = await fetch('http://localhost:3000/api/overseerrproxy/movie/' + id);
+
+	const overseerrData = await overseerrResponse.json();
+
+	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
+
+	const movie: Movie = {
+		id: overseerrData.id,
+		title: overseerrData.title,
+		overview: overseerrData.overview,
+		releaseDate: overseerrData.releaseDate,
+		posterPath: overseerrData.posterPath,
+		backdropPath: overseerrData.backdropPath,
+		relatedVideos: overseerrData.relatedVideos,
+		runtime: overseerrData.runtime,
+		budget: overseerrData.budget,
+		revenue: overseerrData.revenue,
+		rating: overseerrData.rating,
+		mediaType: MediaType.MOVIE,
+		collection: null,
+		genre: overseerrData.genres[0]?.name || null,
+		cast: overseerrData.credits.cast,
+		productionCompany: overseerrData.productionCompanies[0]?.name || null,
+		contentRating:
+			overseerrData.releases.results
+				.find((release: any) => release.iso_3166_1 === 'US')
+				?.release_dates.find((date: any) => date.certification !== '')?.certification || 'NR',
+		requestStatus: overseerrData.mediaInfo?.status || MediaStatus.UNKNOWN,
+		ratingKey: overseerrData.mediaInfo?.ratingKey || null,
+		plexUrl: overseerrData.mediaInfo?.plexUrl || null,
+		iOSPlexUrl: overseerrData.mediaInfo?.iOSPlexUrl || null,
+		file: null,
+	};
+
+	if (overseerrData.collection) {
+		movie.collection = {
+			id: overseerrData.collection.id,
+			name: overseerrData.collection.name,
+			overview: overseerrData.collection.overview,
+			posterPath: overseerrData.collection.posterPath,
+			backdropPath: overseerrData.collection.backdropPath,
+			movies: overseerrData.collection.parts,
+			mediaType: MediaType.COLLECTION,
+		};
+	}
+
+	if (movie.requestStatus === MediaStatus.AVAILABLE && movie.ratingKey) {
+		const tautulliResponse = await fetch(
+			'http://localhost:3000/api/tautulliproxy?cmd=get_metadata&rating_key=' + movie.ratingKey,
+		);
+
+		const tautulliData = (await tautulliResponse.json()).response.data;
+
+		const file: File = {
+			resolution: tautulliData.media_info[0].video_full_resolution,
+			videoCodec: tautulliData.media_info[0].video_codec,
+			audioCodec: tautulliData.media_info[0].audio_codec,
+			audioChannelLayout: tautulliData.media_info[0].audio_channel_layout,
+			dynamicRange: tautulliData.media_info[0].parts[0].streams[0].video_dynamic_range,
+			audios: [],
+			subtitles: [],
+		};
+
+		tautulliData.media_info[0].parts[0].streams.forEach((stream: any) => {
+			if (stream.type === '2') {
+				const audio: Audio = {
+					id: stream.id,
+					language: stream.audio_language,
+					languageCode: stream.audio_language_code,
+				};
+
+				file.audios.push(audio);
+			} else if (stream.type === '3') {
+				const subtitle: Subtitle = {
+					id: stream.id,
+					language: stream.subtitle_language,
+					languageCode: stream.subtitle_language_code,
+				};
+
+				file.subtitles.push(subtitle);
+			}
+		});
+
+		movie.file = file;
+	}
+
+	return movie;
+}
+
+export async function GetCollection(id: number) {
+	const overseerrResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/collection/' + id,
+		{ cache: 'no-store' },
 	);
 
-	const season = await seasonResponse.json();
+	const overseerrData = await overseerrResponse.json();
 
-	if (season.episodes === undefined) {
+	const collection: Collection = {
+		id: overseerrData.id,
+		name: overseerrData.name,
+		overview: overseerrData.overview,
+		posterPath: overseerrData.posterPath,
+		backdropPath: overseerrData.backdropPath,
+		movies: overseerrData.parts,
+		mediaType: MediaType.COLLECTION,
+	};
+
+	return collection;
+}
+
+export async function GetSeries(id: number) {
+	const overseerrResponse = await fetch('http://localhost:3000/api/overseerrproxy/tv/' + id, {
+		cache: 'no-store',
+	});
+
+	const overseerrData = await overseerrResponse.json();
+
+	const series: Series = {
+		mediaType: MediaType.TV,
+		id: overseerrData.id,
+		backdropPath: overseerrData.backdropPath,
+		posterPath: overseerrData.posterPath,
+		genre: overseerrData.genres[0]?.name || null,
+		overview: overseerrData.overview,
+		firstAirDate: overseerrData.firstAirDate,
+		lastAirDate: overseerrData.lastAirDate || null,
+		name: overseerrData.name,
+		episodeRunTime: overseerrData.episodeRunTime[0],
+		numberOfSeasons: overseerrData.numberOfSeasons,
+		numberOfEpisodes: overseerrData.numberOfEpisodes,
+		cast: overseerrData.credits.cast,
+		requestStatus: overseerrData.mediaInfo?.status || MediaStatus.UNKNOWN,
+		seasons: overseerrData.seasons,
+		network: overseerrData.networks[0]?.name || null,
+		status: overseerrData.status,
+		contentRating:
+			overseerrData.contentRatings.results.find(
+				(contentRating: any) => contentRating.iso_3166_1 === 'US',
+			).rating || 'NR',
+
+		downloads:
+			overseerrData.mediaInfo?.downloadStatus.map((download: Download) => ({
+				id: download.id,
+				estimatedCompletionTime: download.estimatedCompletionTime,
+				status: download.status,
+				size: download.size,
+				sizeLeft: download.sizeLeft,
+				episode: download.episode,
+			})) || null,
+
+		ratingKey: overseerrData.mediaInfo?.ratingKey || null,
+		plexUrl: overseerrData.mediaInfo?.plexUrl || null,
+		iOSPlexUrl: overseerrData.mediaInfo?.iOSPlexUrl || null,
+	};
+
+	return series;
+}
+
+export async function GetSeason(tvId: number, seasonId: number) {
+	const overseerrResponse = await fetch(
+		'http://localhost:3000/api/overseerrproxy/tv/' + tvId + '/season/' + seasonId,
+		{ cache: 'no-store' },
+	);
+
+	const overseerrData = await overseerrResponse.json();
+
+	if (overseerrData.episodes === undefined) {
 		return;
 	}
 
-	//adds download status to each episode
-	{
-		/*
-	const tvDetails = await GetMediaDetails(MediaType.TV, tvId.toString());
-
-	tvDetails.mediaInfo.downloadStatus.forEach((downloadStatus: any) => {
-		console.log(downloadStatus.episode);
-		if (downloadStatus.episode.seasonNumber === seasonId) {
-			season.episodes.forEach((episode: any) => {
-				console.log(episode.episodeNumber);
-				if (episode.episodeNumber === downloadStatus.episode.episodeNumber) {
-					episode.downloadStatus = downloadStatus;
-				}
-			});
-		}
-	});
-	*/
-	}
+	const season: Season = {
+		id: overseerrData.id,
+		airDate: overseerrData.airDate,
+		episodeCount: overseerrData.episodeCount,
+		name: overseerrData.name,
+		overview: overseerrData.overview,
+		posterPath: overseerrData.posterPath,
+		seasonNumber: overseerrData.seasonNumber,
+		episodes: overseerrData.episodes,
+		requestStatus: overseerrData.status,
+	};
 
 	return season;
 }

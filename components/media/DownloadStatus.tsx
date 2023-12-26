@@ -1,12 +1,12 @@
 'use client';
 
-import { DownloadingItem } from '@/app/types';
+import { DownloadingItem, Download } from '@/app/types';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
 import { useState } from 'react';
 import { Fragment } from 'react';
 
-export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] }) {
+export default function DownloadStatus({ downloads }: { downloads: Download[] }) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -47,8 +47,8 @@ export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] 
 				<div className="pt-safe pb-nav fixed top-0 z-50 flex h-full max-h-full w-full flex-col overflow-hidden bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark">
 					<Header heading="Download Status" onBack={() => setIsOpen(false)} />
 					<div className="no-scrollbar flex w-full flex-col items-center gap-[18px] overflow-auto pb-[9px]">
-						{downloadStatus.map((download: DownloadingItem, index: number) => (
-							<Fragment key={download.externalId}>
+						{downloads.map((download: Download, index: number) => (
+							<Fragment key={download.id}>
 								<div className="flex w-full flex-row items-center justify-between">
 									<div className="flex w-full flex-col">
 										<p className="w-full truncate text-left text-body">{download.episode?.title}</p>
@@ -85,7 +85,7 @@ export default function DownloadStatus({ downloadStatus }: { downloadStatus: [] 
 										</svg>
 									</div>
 								</div>
-								{index !== downloadStatus.length - 1 && <Seperator />}
+								{index !== downloads.length - 1 && <Seperator />}
 							</Fragment>
 						))}
 					</div>

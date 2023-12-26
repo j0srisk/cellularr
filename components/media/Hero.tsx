@@ -34,8 +34,12 @@ export default function Hero({
 				>
 					{metadataDetailsArray.map((metadataDetail, index) => (
 						<>
-							<p>{metadataDetail}</p>
-							{index !== metadataDetailsArray.length - 1 && <p>•</p>}
+							{metadataDetail && (
+								<>
+									<p>{metadataDetail}</p>
+									{index !== metadataDetailsArray.length - 1 && <p>•</p>}
+								</>
+							)}
 						</>
 					))}
 				</div>
@@ -43,7 +47,7 @@ export default function Hero({
 			<div className="z-30 flex w-full items-center gap-[9px] px-4">{children}</div>
 			{/* completely blured background div */}
 			<div className="relative flex w-full flex-col items-center gap-[9px] py-3">
-				<p className="z-20 line-clamp-3 px-4 text-subheadline text-label-primary-dark">
+				<p className="z-20 line-clamp-3 w-full px-4 text-left text-subheadline text-label-primary-dark">
 					{overview}
 				</p>
 				{contentRating || tautulliMetadata ? (

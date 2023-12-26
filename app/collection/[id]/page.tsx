@@ -1,33 +1,20 @@
-import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio, Collection } from '@/app/types';
-import { CreateBackdropUrl } from '@/app/utils';
+import { MediaType, Collection, Movie } from '@/app/types';
+import { CreateBackdropUrl, GetCollection } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SnapCarousel from '@/components/SnapCarousel';
 import Hero from '@/components/media/Hero';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
-import Header from '@/components/media/sections/Header';
 import Button from '@/components/ui/Button';
-import Seperator from '@/components/ui/Seperator';
 
-export default async function Page({ params }: { params: { id: string } }) {
-	//gets tmdb movie id from the url
-	const id = params.id;
-
-	//gets movie details from overseerr
-	const overseerrResponse = await fetch(
-		'http://localhost:3000/api/overseerrproxy/collection/' + id,
-		{
-			cache: 'no-cache',
-		},
-	);
-
-	const collection: Collection = await overseerrResponse.json();
+export default async function Page({ params }: { params: { id: number } }) {
+	const collection: Collection = await GetCollection(params.id);
 
 	const collectionDetails = [];
 
 	const collectionYears =
-		collection.parts
-			?.map((media: MovieDetails) => media.releaseDate?.split('-')[0])
+		collection.movies
+			?.map((movie: Movie) => movie.releaseDate?.split('-')[0])
 			.sort()
 			.filter((year) => year !== '') || [];
 
@@ -55,10 +42,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 					<Button className="bg-white text-system-primary-dark" text="Play" />
 				</Hero>
 				<div className="pb-nav flex flex-col gap-[18px] bg-system-primary-light py-3 dark:bg-system-primary-dark">
-					{collection.parts && (
+					{collection.movies && (
 						<SectionTemplate heading={'Movies'}>
 							<SnapCarousel>
-								{collection.parts.map((media: MovieDetails) => (
+								{collection.movies.map((media: Movie) => (
 									<MediaCard
 										key={media.id}
 										title={media.title}
@@ -71,15 +58,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 							</SnapCarousel>
 						</SectionTemplate>
 					)}
-
-					{/*
-					<Videos mediaDetails={movieDetails} />
-					<SimilarMedia mediaDetails={movieDetails} />
-					<RecommendedMedia mediaDetails={movieDetails} />
-					<Cast mediaDetails={movieDetails} />
-					<Information mediaDetails={movieDetails} />
-					<Languages mediaDetails={movieDetails} />
-                    */}
 				</div>
 			</ScrollTrackingBackdrop>
 		</>

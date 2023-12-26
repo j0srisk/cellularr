@@ -1,118 +1,55 @@
-import { MovieDetails, MediaType, MediaStatus, Subtitle, Audio, Cast } from '@/app/types';
+import { Movie, Cast } from '@/app/types';
 import {
 	CreateBackdropUrl,
 	FormatDuration,
 	FormatReleaseDate,
-	GetMediaDetails,
+	GetMovie,
 	GetRecommendedMedia,
 	GetSimilarMedia,
 } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SnapCarousel from '@/components/SnapCarousel';
-import BadgeRow from '@/components/media/BadgeRow';
 import CastMember from '@/components/media/CastMember';
 import Hero from '@/components/media/Hero';
 import InformationItem from '@/components/media/InformationItem';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
-import Header from '@/components/media/sections/Header';
 import Button from '@/components/ui/Button';
 import Seperator from '@/components/ui/Seperator';
 
-export default async function Page({ params }: { params: { id: string } }) {
-	//gets movieDetails from overseerr based on the id in the url
-	const movieDetails: MovieDetails = await GetMediaDetails(MediaType.MOVIE, params.id);
-
-	//set the mediaType to movie because MovieDetails doesn't return a mediaType property
-	movieDetails.mediaType = MediaType.MOVIE;
+export default async function Page({ params }: { params: { id: number } }) {
+	//gets movie from overseerr/tautulli based on the id in the url
+	const movie: Movie = await GetMovie(params.id);
 
 	//gets recommended media from overseerr
-	const recommendedMedia = await GetRecommendedMedia(movieDetails.mediaType, movieDetails.id);
+	const recommendedMedia = await GetRecommendedMedia(movie.mediaType, movie.id);
 
 	//gets similar media from overseerr
-	const similarMedia = await GetSimilarMedia(movieDetails.mediaType, movieDetails.id);
-
-	//gets relevant metadata details for the header
-	const movieDetailsArray = [];
-
-	if (movieDetails.genres[0]) {
-		movieDetailsArray.push(movieDetails.genres[0].name);
-	}
-
-	if (movieDetails.releaseDate) {
-		movieDetailsArray.push(movieDetails.releaseDate.split('-')[0]);
-	}
-
-	if (movieDetails.runtime !== 0) {
-		movieDetailsArray.push(FormatDuration(movieDetails.runtime));
-	}
-
-	//gets file metadata from tautulli if the media is available on plex
-	if (movieDetails.mediaInfo?.status === MediaStatus.AVAILABLE) {
-		const tautulliResponse = await fetch(
-			'http://localhost:3000/api/tautulliproxy?cmd=get_metadata&rating_key=' +
-				movieDetails.mediaInfo?.ratingKey,
-		);
-
-		const {
-			response: { data: tautulliData },
-		} = await tautulliResponse.json();
-
-		const tautulliMetadata = {
-			ratingKey: tautulliData.rating_key,
-			mediaType: tautulliData.media_type,
-			resolution: tautulliData.media_info[0].video_full_resolution,
-			videoCodec: tautulliData.media_info[0].video_codec,
-			audioCodec: tautulliData.media_info[0].audio_codec,
-			audioChannelLayout: tautulliData.media_info[0].audio_channel_layout,
-			contentRating: tautulliData.content_rating,
-			dynamicRange: tautulliData.media_info[0].parts[0].streams[0].video_dynamic_range,
-			audios: [],
-			subtitles: [],
-		};
-
-		movieDetails.tatutulliMetadata = tautulliMetadata;
-
-		tautulliData.media_info[0].parts[0].streams.forEach((stream: any) => {
-			if (stream.type === '2') {
-				const audio: Audio = {
-					id: stream.id,
-					language: stream.audio_language,
-					languageCode: stream.audio_language_code,
-				};
-
-				movieDetails.tatutulliMetadata.audios.push(audio);
-			} else if (stream.type === '3') {
-				const subtitle: Subtitle = {
-					id: stream.id,
-					language: stream.subtitle_language,
-					languageCode: stream.subtitle_language_code,
-				};
-
-				movieDetails.tatutulliMetadata.subtitles.push(subtitle);
-			}
-		});
-	}
+	const similarMedia = await GetSimilarMedia(movie.mediaType, movie.id);
 
 	return (
 		<>
-			<ScrollTrackingBackdrop url={CreateBackdropUrl(movieDetails.backdropPath)}>
+			<ScrollTrackingBackdrop url={CreateBackdropUrl(movie.backdropPath)}>
 				<Hero
-					title={movieDetails.title}
-					metadataDetailsArray={movieDetailsArray}
-					overview={movieDetails.overview}
-					id={movieDetails.id}
-					mediaType={movieDetails.mediaType}
-					contentRating={'PG'}
+					title={movie.title}
+					metadataDetailsArray={[
+						movie.genre,
+						movie.releaseDate.split('-')[0],
+						FormatDuration(movie.runtime),
+					]}
+					overview={movie.overview}
+					id={movie.id}
+					mediaType={movie.mediaType}
+					contentRating={movie.contentRating}
 				>
 					<Button className="bg-white text-system-primary-dark" text="Play" />
 				</Hero>
 
 				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
-					{movieDetails.relatedVideos[0] && (
+					{movie.relatedVideos[0] && (
 						<SectionTemplate heading={'Videos'}>
 							<SnapCarousel>
-								{movieDetails.relatedVideos?.map((video) => (
+								{movie.relatedVideos?.map((video) => (
 									<MediaCard
 										key={video.name}
 										title={video.name}
@@ -129,7 +66,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 					{similarMedia[0] && (
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
-								{similarMedia.map((media: MovieDetails) => (
+								{similarMedia.map((media: Movie) => (
 									<MediaCard
 										key={media.id}
 										title={media.title}
@@ -146,7 +83,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 					{recommendedMedia[0] && (
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
-								{recommendedMedia.map((media: MovieDetails) => (
+								{recommendedMedia.map((media: Movie) => (
 									<MediaCard
 										key={media.id}
 										title={media.title}
@@ -160,24 +97,24 @@ export default async function Page({ params }: { params: { id: string } }) {
 							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
-					{movieDetails.credits.cast[0] && (
+					{movie.cast[0] && (
 						<SectionTemplate heading={'Cast'}>
 							<SnapCarousel>
-								{movieDetails.credits?.cast.map((cast: Cast) => (
+								{movie.cast.map((cast: Cast) => (
 									<CastMember key={cast.id} cast={cast} />
 								))}
 							</SnapCarousel>
 							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
-					{movieDetails.collection && (
+					{movie.collection && (
 						<SectionTemplate heading={'Collection'}>
 							<SnapCarousel>
 								<MediaCard
-									key={movieDetails.collection.id}
-									title={movieDetails.collection.name}
-									imageUrl={CreateBackdropUrl(movieDetails.collection.backdropPath)}
-									href={'/collection/' + movieDetails.collection.id}
+									key={movie.collection.id}
+									title={movie.collection.name}
+									imageUrl={CreateBackdropUrl(movie.collection.backdropPath)}
+									href={'/collection/' + movie.collection.id}
 									className="w-[calc(66%)]"
 								/>
 							</SnapCarousel>
@@ -187,51 +124,33 @@ export default async function Page({ params }: { params: { id: string } }) {
 					<SectionTemplate heading={'Information'}>
 						<InformationItem
 							title={'Production Company'}
-							value={
-								movieDetails.productionCompanies[0] ? (
-									<>{movieDetails.productionCompanies[0].name}</>
-								) : (
-									<>Unknown</>
-								)
-							}
+							value={movie.productionCompany ? <>{movie.productionCompany}</> : <>Unknown</>}
 						/>
 						<InformationItem
 							title={'Release Date'}
-							value={
-								movieDetails.releaseDate ? (
-									<>{FormatReleaseDate(movieDetails.releaseDate)}</>
-								) : (
-									<>Unknown</>
-								)
-							}
+							value={movie.releaseDate ? <>{FormatReleaseDate(movie.releaseDate)}</> : <>Unknown</>}
 						/>
 						<InformationItem
 							title={'Run Time'}
-							value={
-								movieDetails.runtime ? <>{FormatDuration(movieDetails.runtime)}</> : <>Unknown</>
-							}
+							value={movie.runtime ? <>{FormatDuration(movie.runtime)}</> : <>Unknown</>}
 						/>
 						<InformationItem
 							title={'Budget'}
-							value={
-								movieDetails.budget ? <>${movieDetails.budget?.toLocaleString()}</> : <>Unknown</>
-							}
+							value={movie.budget ? <>${movie.budget?.toLocaleString()}</> : <>Unknown</>}
 						/>
 						<InformationItem
 							title={'Revenue'}
-							value={
-								movieDetails.revenue ? <>${movieDetails.revenue?.toLocaleString()}</> : <>Unknown</>
-							}
+							value={movie.revenue ? <>${movie.revenue?.toLocaleString()}</> : <>Unknown</>}
 						/>
 					</SectionTemplate>
-					{movieDetails.tatutulliMetadata && (
+					{movie.file && (
 						<SectionTemplate heading={'Languages'}>
 							<InformationItem
 								title={'Audio'}
 								value={
-									Array.from(
-										new Set(movieDetails.tatutulliMetadata.audios.map((audio) => audio.language)),
-									).join(', ') || 'None'
+									Array.from(new Set(movie.file.audios.map((audio) => audio.language))).join(
+										', ',
+									) || 'None'
 								}
 							/>
 
@@ -239,9 +158,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 								title={'Subtitles'}
 								value={
 									Array.from(
-										new Set(
-											movieDetails.tatutulliMetadata.subtitles.map((subtitle) => subtitle.language),
-										),
+										new Set(movie.file.subtitles.map((subtitle) => subtitle.language)),
 									).join(', ') || 'None'
 								}
 							/>
