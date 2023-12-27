@@ -27,8 +27,7 @@ export default async function Page() {
 					applicationCount + ' application' + (applicationCount === 1 ? '' : 's') + ' found'
 				}
 			/>
-			<div className="w-full pb-[15px] pt-[1px]"></div>
-			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto pt-4">
+			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto">
 				{yamlData ? (
 					<>
 						{yamlData.map((section: any) => (
