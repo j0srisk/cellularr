@@ -130,7 +130,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					)}
 					<SectionTemplate heading={'Cast'}>
 						<SnapCarousel>
-							{tvDetails.cast.map((cast: Cast) => (
+							{tvDetails.cast.slice(0, 25).map((cast: Cast) => (
 								<CastMember key={cast.id} cast={cast} />
 							))}
 						</SnapCarousel>
