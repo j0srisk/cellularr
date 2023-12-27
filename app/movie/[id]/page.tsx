@@ -8,6 +8,7 @@ import {
 	GetSimilarMedia,
 } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
+import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import SnapCarousel from '@/components/SnapCarousel';
 import CastMember from '@/components/media/CastMember';
 import Hero from '@/components/media/Hero';
@@ -29,6 +30,7 @@ export default async function Page({ params }: { params: { id: number } }) {
 
 	return (
 		<>
+			<SaveToRecentSearches movie={movie} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movie.backdropPath)}>
 				<Hero
 					title={movie.title}

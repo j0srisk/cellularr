@@ -9,6 +9,7 @@ import {
 } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import Request from '@/components/Request';
+import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import SnapCarousel from '@/components/SnapCarousel';
 import CastMember from '@/components/media/CastMember';
 import DownloadStatus from '@/components/media/DownloadStatus';
@@ -41,6 +42,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 
 	return (
 		<>
+			<SaveToRecentSearches series={tvDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(tvDetails.backdropPath)}>
 				<Hero
 					title={tvDetails.name}

@@ -178,3 +178,21 @@ export type Subtitle = {
 	language: string;
 	languageCode: string;
 };
+
+export type LocalStorageMediaItem = {
+	id: number;
+	mediaType: MediaType;
+	posterPath: string | null;
+	title: string;
+	year: string;
+};
+
+export type SearchResult = {
+	id: number;
+	title?: string;
+	name?: string;
+	posterPath: string | null;
+	mediaType: MediaType;
+	releaseDate?: string;
+	firstAirDate?: string;
+};
