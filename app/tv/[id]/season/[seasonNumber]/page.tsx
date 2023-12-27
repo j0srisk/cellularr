@@ -23,8 +23,7 @@ import Seperator from '@/components/ui/Seperator';
 import { redirect } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: number; seasonNumber: number } }) {
-	//gets movieDetails from overseerr based on the id in the url
-
+	//gets tvDetails from overseerr based on the id in the url
 	const tvDetails: Series = await GetSeries(params.id);
 
 	//gets recommended media from overseerr
@@ -36,28 +35,21 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 	const season = await GetSeason(tvDetails.id, params.seasonNumber);
 
 	if (!season) {
+		//redirect to first season if season number is invalid
 		redirect('/tv/' + tvDetails.id + '/season/' + 1);
 	}
-
-	//gets relevant metadata details for the header
-	const tvDetailsArray = [];
-
-	tvDetailsArray.push(tvDetails.genre);
-
-	tvDetailsArray.push(tvDetails.firstAirDate.split('-')[0]);
-
-	if (tvDetails.episodeRunTime) {
-		tvDetailsArray.push(tvDetails.episodeRunTime + ' mins');
-	}
-
-	tvDetailsArray.push(tvDetails.numberOfSeasons + ' seasons');
 
 	return (
 		<>
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(tvDetails.backdropPath)}>
 				<Hero
 					title={tvDetails.name}
-					metadataDetailsArray={tvDetailsArray}
+					metadataDetailsArray={[
+						tvDetails.genre,
+						tvDetails.firstAirDate.split('-')[0],
+						tvDetails.episodeRunTime ? tvDetails.episodeRunTime + ' mins' : null,
+						tvDetails.numberOfSeasons + ' seasons',
+					]}
 					overview={tvDetails.overview}
 					id={tvDetails.id}
 					mediaType={tvDetails.mediaType}

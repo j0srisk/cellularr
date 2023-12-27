@@ -127,6 +127,7 @@ export enum MediaType {
 	MOVIE = 'movie',
 	TV = 'tv',
 	COLLECTION = 'collection',
+	PERSON = 'person',
 }
 
 export enum MediaStatus {

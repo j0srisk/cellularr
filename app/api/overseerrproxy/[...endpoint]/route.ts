@@ -24,12 +24,13 @@ export async function GET(
 	//convert the endpoint array and searchParams to strings
 	let endpointString = endpoint.join('/');
 
-	const queryString = queryParams.toString();
+	let queryString = queryParams.toString();
+
+	//overseerr uses %20 instead of + for spaces
+	queryString = queryString.replaceAll('+', '%20');
 
 	//build the requestUrl
 	const requestUrl = process.env.OVERSEERR_URL + '/' + endpointString + '?' + queryString;
-
-	console.log(requestUrl);
 
 	const response = await fetch(requestUrl, {
 		headers: {
@@ -37,6 +38,18 @@ export async function GET(
 		} as HeadersInit,
 		cache: 'no-cache',
 	});
+
+	if (!response.ok) {
+		const errorData = await response.json();
+		return new Response(JSON.stringify(errorData), {
+			headers: {
+				'content-type': 'application/json',
+			},
+			status: response.status,
+			statusText: errorData.message,
+		});
+	}
+
 	const data = await response.json();
 
 	return new Response(JSON.stringify(data), {

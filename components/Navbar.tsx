@@ -42,7 +42,7 @@ export default function Navbar() {
 
 					<p className="text-[10px] font-[510]">Search</p>
 				</Link>
-				<Link href="/" className="flex flex-col items-center gap-[7px]">
+				<Link href="/" className="flex hidden flex-col items-center gap-[7px]">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"

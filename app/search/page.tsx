@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { Fragment } from 'react';
 
 type SearchResult = {
 	id: number;
@@ -30,37 +31,72 @@ export default function Page() {
 
 	const [search, setSearch] = useState<string | ''>(searchQuery || '');
 	const [results, setResults] = useState<SearchResult[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const router = useRouter();
 
 	//get search results from overseerr and add to results state
 	async function fetchData(query: string, page: number = 1, language: string = 'en') {
+		console.log(encodeURIComponent(query));
+
+		const url =
+			'/api/overseerrproxy/search?query=' +
+			encodeURIComponent(query) +
+			'&language=' +
+			language +
+			'&page=' +
+			page;
+
+		console.log(url);
 		const response = await fetch(
-			'/api/overseerrproxy/search?query=' + query + '&language=' + language + '&page=' + page,
+			'/api/overseerrproxy/search?query=' +
+				encodeURIComponent(query) +
+				'&language=' +
+				language +
+				'&page=' +
+				page,
 		);
+
+		if (!response.ok) {
+			throw new Error(response.statusText);
+		}
+
+		console.log(response);
 
 		const data = await response.json();
 
 		const results = data.results;
 
+		console.log(results);
+
+		const searchResults = results.filter(
+			(result: SearchResult) => result.mediaType !== MediaType.PERSON,
+		);
+
+		return searchResults;
+
 		for (let key in results) {
 			//filters persons from results
 			if (results[key].mediaType === MediaType.MOVIE || results[key].mediaType === MediaType.TV) {
 				const searchResult: SearchResult = results[key];
+
 				setResults((results) => [...results, searchResult]);
+				return searchResult;
 			}
 		}
 		setIsLoading(false);
 	}
 
 	useEffect(() => {
-		setResults([]);
-		if (searchQuery) {
-			fetchData(searchQuery);
-		}
-		setSearch(searchQuery || '');
-	}, [searchQuery]);
+		(async () => {
+			if (search) {
+				const newResults = await fetchData(search);
+
+				console.log(newResults);
+				setResults(newResults);
+			}
+		})();
+	}, [search]);
 
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4">
@@ -68,10 +104,11 @@ export default function Page() {
 				<div className="w-full pb-[15px] pt-[1px]">
 					<SearchBar
 						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-						onBlur={() => {
-							setIsLoading(true);
-							router.push('/search?query=' + search);
+						onChange={(e) => {
+							const value = e.target.value;
+							const encodedValue = encodeURIComponent(value);
+							setSearch(value);
+							router.push('/search?query=' + encodedValue);
 						}}
 						clearFunction={() => {
 							setSearch('');
@@ -113,10 +150,9 @@ export default function Page() {
 								{results.length > 0 ? (
 									<div className="flex w-full flex-col gap-[9px]">
 										{results.map((searchResult) => (
-											<>
+											<Fragment key={searchResult.id}>
 												<Link href={'/' + searchResult.mediaType + '/' + searchResult.id}>
 													<MediaCardLandscape
-														key={searchResult.id}
 														imageUrl={CreatePosterUrl(searchResult.posterPath)}
 														title={searchResult.title || searchResult.name}
 														details={
@@ -133,7 +169,7 @@ export default function Page() {
 												{results.indexOf(searchResult) !== results.length - 1 && (
 													<Seperator className="px-0" />
 												)}
-											</>
+											</Fragment>
 										))}
 									</div>
 								) : (
