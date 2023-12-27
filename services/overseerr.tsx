@@ -11,6 +11,7 @@ import {
 	Subtitle,
 } from '@/app/types';
 import tautulli from '@/services/tautulli';
+import 'server-only';
 
 async function endpoint(endpoint: string) {
 	const response = await fetch(process.env.OVERSEERR_URL + endpoint, {

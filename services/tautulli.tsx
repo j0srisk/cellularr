@@ -1,5 +1,6 @@
 import { MediaType, Session, File, Audio, Subtitle } from '@/app/types';
 import overseerr from '@/services/overseerr';
+import 'server-only';
 
 async function command(cmd: string) {
 	const response = await fetch(
