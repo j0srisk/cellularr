@@ -1,5 +1,6 @@
-import { FileMetadata, MediaType } from '@/app/types';
+import { File, MediaType } from '@/app/types';
 import BadgeRow from '@/components/media/BadgeRow';
+import { Fragment } from 'react';
 
 type HeroProps = {
 	title: string;
@@ -7,9 +8,9 @@ type HeroProps = {
 	children: React.ReactNode;
 	overview: string;
 	id: number;
-	mediaType?: MediaType;
-	contentRating?: string;
-	tautulliMetadata?: FileMetadata;
+	mediaType: MediaType;
+	contentRating: string;
+	file?: File | null;
 };
 
 export default function Hero({
@@ -20,7 +21,7 @@ export default function Hero({
 	id,
 	mediaType,
 	contentRating,
-	tautulliMetadata,
+	file,
 }: HeroProps) {
 	return (
 		<div className="relative flex h-[75vh] w-full flex-shrink-0 flex-col items-center justify-end">
@@ -33,14 +34,14 @@ export default function Hero({
 							 mb-[7px] flex w-full items-center justify-center gap-1 truncate text-footnote text-label-secondary-dark"
 				>
 					{metadataDetailsArray.map((metadataDetail, index) => (
-						<>
+						<Fragment key={index}>
 							{metadataDetail && (
 								<>
 									<p>{metadataDetail}</p>
 									{index !== metadataDetailsArray.length - 1 && <p>•</p>}
 								</>
 							)}
-						</>
+						</Fragment>
 					))}
 				</div>
 			)}
@@ -50,13 +51,8 @@ export default function Hero({
 				<p className="z-20 line-clamp-3 w-full px-4 text-left text-subheadline text-label-primary-dark">
 					{overview}
 				</p>
-				{contentRating || tautulliMetadata ? (
-					<BadgeRow
-						id={id}
-						mediaType={mediaType}
-						contentRating={contentRating}
-						tautulliMetadata={tautulliMetadata}
-					/>
+				{contentRating || file ? (
+					<BadgeRow id={id} mediaType={mediaType} contentRating={contentRating} file={file} />
 				) : null}
 				{/* blured background with 120px gradient fade at the top */}
 				<div

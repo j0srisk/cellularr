@@ -1,9 +1,9 @@
-import { MovieDetails } from '@/app/types';
+import { Movie } from '@/app/types';
 import CenteredMessage from '@/components/CenteredMessage';
 import { useEffect, useState } from 'react';
 
 export default function RecentSearches() {
-	const [recentSearches, setRecentSearches] = useState<MovieDetails[]>([]);
+	const [recentSearches, setRecentSearches] = useState<Movie[]>([]);
 
 	function clearRecentSearches() {
 		if (typeof window !== 'undefined' && window.localStorage) {
@@ -31,7 +31,7 @@ export default function RecentSearches() {
 					</button>
 				</div>
 				<div className="flex flex-col gap-[1px] bg-zinc-800 pt-[1px]">
-					{recentSearches.map((movieDetails: MovieDetails) => (
+					{recentSearches.map((movieDetails: Movie) => (
 						<></>
 					))}
 				</div>

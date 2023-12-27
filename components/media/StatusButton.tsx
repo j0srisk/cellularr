@@ -1,16 +1,16 @@
-import { MediaStatus, MediaType, TvDetails } from '@/app/types';
+import { MediaStatus, Series, MediaType } from '@/app/types';
 import Request from '@/components/Request';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
 
-export default function StatusButton({ tvDetails }: { tvDetails: TvDetails }) {
-	if (!tvDetails.mediaInfo || tvDetails.mediaInfo.status === MediaStatus.UNKNOWN) {
-		return <Request type={MediaType.TV} text={'Request Series'} seasons={tvDetails.seasons} />;
+export default function StatusButton({ series }: { series: Series }) {
+	if (series.requestStatus === MediaStatus.UNKNOWN) {
+		return <Request type={MediaType.TV} text={'Request Series'} seasons={series.seasons} />;
 	}
 
 	let allRequested = true;
-	tvDetails.seasons.forEach((season: any) => {
-		tvDetails.mediaInfo.seasons.forEach((mediaInfoSeason: any) => {
+	series.seasons.forEach((season: any) => {
+		series.seasons.forEach((mediaInfoSeason: any) => {
 			if (season.seasonNumber === mediaInfoSeason.seasonNumber) {
 				season.status = mediaInfoSeason.status;
 				if (
@@ -27,17 +27,17 @@ export default function StatusButton({ tvDetails }: { tvDetails: TvDetails }) {
 
 	if (allRequested) {
 		return (
-			<Link href={tvDetails.mediaInfo.iOSPlexUrl} className="w-full">
+			<Link href={series.iOSPlexUrl || '#'} className="w-full">
 				<Button text="Play on Plex" className="bg-white text-label-primary-light" />
 			</Link>
 		);
 	} else {
 		return (
 			<>
-				<Link href={tvDetails.mediaInfo.iOSPlexUrl} className="w-full">
+				<Link href={series.iOSPlexUrl || '#'} className="w-full">
 					<Button text="Play on Plex" className="bg-white text-label-primary-light" />
 				</Link>
-				<Request type={MediaType.TV} text={'Request More'} seasons={tvDetails.seasons} />
+				<Request type={MediaType.TV} text={'Request More'} seasons={series.seasons} />
 			</>
 		);
 	}

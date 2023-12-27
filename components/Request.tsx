@@ -15,7 +15,7 @@ import { Fragment } from 'react';
 type RequestProps = {
 	type: MediaType;
 	text: string;
-	seasons?: Season[];
+	seasons: Season[];
 };
 
 export default function Request({ type, text, seasons }: RequestProps) {
@@ -46,14 +46,14 @@ export default function Request({ type, text, seasons }: RequestProps) {
 										title={season.name}
 										details={season.airDate?.split('-')[0]}
 									>
-										{!season.status && <ToggleButton isToggled={false} color={'fd'} />}
+										{!season.requestStatus && <ToggleButton isToggled={false} color={'fd'} />}
 
-										{season.status === MediaStatus.UNKNOWN && (
+										{season.requestStatus === MediaStatus.UNKNOWN && (
 											<ToggleButton isToggled={false} color={'fd'} />
 										)}
 
-										{season.status === MediaStatus.PENDING ||
-										season.status === MediaStatus.PROCESSING ? (
+										{season.requestStatus === MediaStatus.PENDING ||
+										season.requestStatus === MediaStatus.PROCESSING ? (
 											<ToggleButton
 												isToggled={true}
 												isDisabled={true}
@@ -61,8 +61,8 @@ export default function Request({ type, text, seasons }: RequestProps) {
 											/>
 										) : null}
 
-										{season.status === MediaStatus.AVAILABLE ||
-										season.status === MediaStatus.PARTIALLY_AVAILABLE ? (
+										{season.requestStatus === MediaStatus.AVAILABLE ||
+										season.requestStatus === MediaStatus.PARTIALLY_AVAILABLE ? (
 											<ToggleButton isToggled={true} isDisabled={true} />
 										) : null}
 									</MediaCardLandscape>

@@ -37,7 +37,7 @@ export default function Page() {
 	//get search results from overseerr and add to results state
 	async function fetchData(query: string, page: number = 1, language: string = 'en') {
 		const response = await fetch(
-			'/api/overseerr/search?query=' + query + '&language=' + language + '&page=' + page,
+			'/api/overseerrproxy/search?query=' + query + '&language=' + language + '&page=' + page,
 		);
 
 		const data = await response.json();
@@ -125,8 +125,8 @@ export default function Page() {
 																	? 'Movie • ' + searchResult.releaseDate?.split('-')[0]
 																	: 'Movie'
 																: searchResult.firstAirDate
-																  ? 'Series • ' + searchResult.firstAirDate?.split('-')[0]
-																  : 'Series'
+																	? 'Series • ' + searchResult.firstAirDate?.split('-')[0]
+																	: 'Series'
 														}
 													/>
 												</Link>

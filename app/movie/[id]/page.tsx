@@ -41,6 +41,7 @@ export default async function Page({ params }: { params: { id: number } }) {
 					id={movie.id}
 					mediaType={movie.mediaType}
 					contentRating={movie.contentRating}
+					file={movie.file}
 				>
 					<Button className="bg-white text-system-primary-dark" text="Play" />
 				</Hero>

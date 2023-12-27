@@ -34,7 +34,7 @@ export async function GET(
 	const response = await fetch(requestUrl, {
 		headers: {
 			'x-api-key': process.env.OVERSEERR_API_KEY,
-		},
+		} as HeadersInit,
 		cache: 'no-cache',
 	});
 	const data = await response.json();

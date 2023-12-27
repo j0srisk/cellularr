@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 	if (
 		!queryParams ||
 		!queryParams.get('cmd') ||
-		!approvedCommands.includes(queryParams.get('cmd').toString())
+		!approvedCommands.includes(queryParams.get('cmd')!)
 	) {
 		// Return an error response if the command is not approved
 		console.log('Command not allowed');

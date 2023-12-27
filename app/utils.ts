@@ -1,10 +1,10 @@
 import {
 	MediaType,
-	MovieDetails,
 	MediaStatus,
 	Audio,
 	Subtitle,
 	Movie,
+	Episode,
 	File,
 	Session,
 	Collection,
@@ -12,9 +12,10 @@ import {
 	Series,
 	Download,
 } from '@/app/types';
+import { Fetcher } from 'swr';
 
-export const fetcher = (...args: any[]) =>
-	fetch(...args, { method: 'GET', cache: 'no-store' }).then((res) => res.json());
+const fetcher: Fetcher<any> = (url: string) =>
+	fetch(url, { cache: 'no-store' }).then((r) => r.json());
 
 export function CreatePosterUrl(posterPath: String | null) {
 	if (posterPath === null || posterPath === undefined) {
@@ -293,7 +294,15 @@ export async function GetSeason(tvId: number, seasonId: number) {
 		overview: overseerrData.overview,
 		posterPath: overseerrData.posterPath,
 		seasonNumber: overseerrData.seasonNumber,
-		episodes: overseerrData.episodes,
+		episodes: overseerrData.episodes.map((episode: any) => ({
+			id: episode.id,
+			title: episode.name,
+			airDate: episode.airDate,
+			episodeNumber: episode.episodeNumber,
+			overview: episode.overview,
+			seasonNumber: episode.seasonNumber,
+			stillPath: episode.stillPath,
+		})),
 		requestStatus: overseerrData.status,
 	};
 

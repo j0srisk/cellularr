@@ -1,4 +1,4 @@
-import { FileMetadata, Rating } from '@/app/types';
+import { Rating } from '@/app/types';
 
 type RottenTomatoesBadgeProps = {
 	criticsRating: Rating['criticsRating'];
@@ -293,7 +293,7 @@ export function RottenTomatoesBadge({ criticsRating }: RottenTomatoesBadgeProps)
 }
 
 type ContentRatingBadgeProps = {
-	contentRating: FileMetadata['contentRating'];
+	contentRating: string;
 };
 
 export function ContentRatingBadge({ contentRating }: ContentRatingBadgeProps) {
@@ -448,7 +448,7 @@ export function ContentRatingBadge({ contentRating }: ContentRatingBadgeProps) {
 }
 
 type ResolutionBadgeProps = {
-	resolution: FileMetadata['resolution'];
+	resolution: string;
 };
 
 export function ResolutionBadge({ resolution }: ResolutionBadgeProps) {
@@ -479,7 +479,7 @@ export function ResolutionBadge({ resolution }: ResolutionBadgeProps) {
 }
 
 type DynamicRangeBadgeProps = {
-	dynamicRange: FileMetadata['dynamicRange'];
+	dynamicRange: string;
 };
 
 export function DynamicRangeBadge({ dynamicRange }: DynamicRangeBadgeProps) {

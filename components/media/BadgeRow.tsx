@@ -5,7 +5,7 @@ import {
 	DynamicRangeBadge,
 	ClosedCaptionBadge,
 } from './Badges';
-import { MediaType, FileMetadata } from '@/app/types';
+import { MediaType, File } from '@/app/types';
 import { GetRatings } from '@/app/utils';
 import Link from 'next/link';
 
@@ -13,15 +13,10 @@ type BadgeRowProps = {
 	id: number;
 	mediaType: MediaType;
 	contentRating: string;
-	tautulliMetadata?: FileMetadata;
+	file?: File | null;
 };
 
-export default async function BadgeRow({
-	id,
-	mediaType,
-	contentRating,
-	tautulliMetadata,
-}: BadgeRowProps) {
+export default async function BadgeRow({ id, mediaType, contentRating, file }: BadgeRowProps) {
 	const ratings = await GetRatings(mediaType, id);
 
 	return (
@@ -35,11 +30,11 @@ export default async function BadgeRow({
 				</Link>
 			)}
 			<ContentRatingBadge contentRating={contentRating} />
-			{tautulliMetadata && (
+			{file && (
 				<>
-					<ResolutionBadge resolution={tautulliMetadata.resolution} />
-					<DynamicRangeBadge dynamicRange={tautulliMetadata.dynamicRange} />
-					{tautulliMetadata.subtitles.length > 0 && <ClosedCaptionBadge />}
+					<ResolutionBadge resolution={file.resolution} />
+					<DynamicRangeBadge dynamicRange={file.dynamicRange} />
+					{file.subtitles.length > 0 && <ClosedCaptionBadge />}
 				</>
 			)}
 		</div>

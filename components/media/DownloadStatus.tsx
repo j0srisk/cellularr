@@ -1,6 +1,6 @@
 'use client';
 
-import { DownloadingItem, Download } from '@/app/types';
+import { Download } from '@/app/types';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
 import { useState } from 'react';

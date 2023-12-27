@@ -1,9 +1,9 @@
 'use client';
 
-import { MovieDetails } from '@/app/types';
+import { Movie } from '@/app/types';
 import { useEffect } from 'react';
 
-export default function SaveToRecentSearches({ movieDetails }: { movieDetails: MovieDetails }) {
+export default function SaveToRecentSearches({ movieDetails }: { movieDetails: Movie }) {
 	useEffect(() => {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			const recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
