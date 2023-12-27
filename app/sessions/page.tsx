@@ -1,11 +1,12 @@
-import { FormatDuration, GetSessions } from '@/app/utils';
+import { FormatDuration, CreateBackdropUrl } from '@/app/utils';
 import CenteredMessage from '@/components/CenteredMessage';
 import Header from '@/components/Header';
 import MediaCard from '@/components/MediaCard';
 import Refresher from '@/components/Refresher';
+import tautulli from '@/services/tautulli';
 
 export default async function Page() {
-	const sessions = await GetSessions();
+	const sessions = await tautulli.getSessions();
 
 	return (
 		<div className="pt-safe pb-nav flex h-full w-full flex-col px-4">
@@ -17,7 +18,7 @@ export default async function Page() {
 						{sessions.map((session) => (
 							<MediaCard
 								key={session.id}
-								imageUrl={'/api/tautulliproxy?cmd=pms_image_proxy&img=' + session.backdropPath}
+								imageUrl={CreateBackdropUrl(session.backdropPath)}
 								title={session.title}
 								detailsArray={[
 									session.user,

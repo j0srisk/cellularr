@@ -1,12 +1,5 @@
 import { Cast, Episode, Series } from '@/app/types';
-import {
-	CreateBackdropUrl,
-	FormatReleaseDate,
-	GetRecommendedMedia,
-	GetSimilarMedia,
-	GetSeason,
-	GetSeries,
-} from '@/app/utils';
+import { CreateBackdropUrl, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import Request from '@/components/Request';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
@@ -21,19 +14,20 @@ import SectionTemplate from '@/components/media/SectionTemplate';
 import StatusButton from '@/components/media/StatusButton';
 import Button from '@/components/ui/Button';
 import Seperator from '@/components/ui/Seperator';
+import overseerr from '@/services/overseerr';
 import { redirect } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: number; seasonNumber: number } }) {
 	//gets tvDetails from overseerr based on the id in the url
-	const tvDetails: Series = await GetSeries(params.id);
+	const tvDetails: Series = await overseerr.getSeries(params.id);
 
 	//gets recommended media from overseerr
-	const recommendedMedia = await GetRecommendedMedia(tvDetails.mediaType, tvDetails.id);
+	const recommendedMedia = await overseerr.getRecommended(tvDetails.mediaType, tvDetails.id);
 
 	//gets similar media from overseerr
-	const similarMedia = await GetSimilarMedia(tvDetails.mediaType, tvDetails.id);
+	const similarMedia = await overseerr.getSimilar(tvDetails.mediaType, tvDetails.id);
 
-	const season = await GetSeason(tvDetails.id, params.seasonNumber);
+	const season = await overseerr.getSeason(tvDetails.id, params.seasonNumber);
 
 	if (!season) {
 		//redirect to first season if season number is invalid

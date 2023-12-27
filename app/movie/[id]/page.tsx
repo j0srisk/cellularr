@@ -1,12 +1,5 @@
 import { Movie, Cast } from '@/app/types';
-import {
-	CreateBackdropUrl,
-	FormatDuration,
-	FormatReleaseDate,
-	GetMovie,
-	GetRecommendedMedia,
-	GetSimilarMedia,
-} from '@/app/utils';
+import { CreateBackdropUrl, FormatDuration, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import SnapCarousel from '@/components/SnapCarousel';
@@ -17,16 +10,17 @@ import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Button from '@/components/ui/Button';
 import Seperator from '@/components/ui/Seperator';
+import overseerr from '@/services/overseerr';
 
 export default async function Page({ params }: { params: { id: number } }) {
 	//gets movie from overseerr/tautulli based on the id in the url
-	const movie: Movie = await GetMovie(params.id);
+	const movie: Movie = await overseerr.getMovie(params.id);
 
 	//gets recommended media from overseerr
-	const recommendedMedia = await GetRecommendedMedia(movie.mediaType, movie.id);
+	const recommendedMedia = await overseerr.getRecommended(movie.mediaType, movie.id);
 
 	//gets similar media from overseerr
-	const similarMedia = await GetSimilarMedia(movie.mediaType, movie.id);
+	const similarMedia = await overseerr.getSimilar(movie.mediaType, movie.id);
 
 	return (
 		<>

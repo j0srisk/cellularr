@@ -6,7 +6,7 @@ import {
 	ClosedCaptionBadge,
 } from './Badges';
 import { MediaType, File } from '@/app/types';
-import { GetRatings } from '@/app/utils';
+import overseerr from '@/services/overseerr';
 import Link from 'next/link';
 
 type BadgeRowProps = {
@@ -17,7 +17,7 @@ type BadgeRowProps = {
 };
 
 export default async function BadgeRow({ id, mediaType, contentRating, file }: BadgeRowProps) {
-	const ratings = await GetRatings(mediaType, id);
+	const ratings = await overseerr.getRatings(mediaType, id);
 
 	return (
 		<div className="no-scrollbar z-20 flex w-full items-center gap-[5px] overflow-x-scroll px-4 text-label-secondary-dark">

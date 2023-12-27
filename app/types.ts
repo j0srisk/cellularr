@@ -141,7 +141,7 @@ export enum MediaStatus {
 export type Session = {
 	id: string;
 	title: string;
-	mediaType: string;
+	mediaType: MediaType;
 	progress: number;
 	user: string;
 	userThumb: string;
@@ -153,7 +153,7 @@ export type Session = {
 	duration: number;
 	season?: number;
 	episode?: number;
-	tmdbId?: number;
+	tmdbId: number;
 	state: string;
 };
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { CreatePosterUrl } from '../utils';
+import { searchOverseerr } from '@/app/actions';
 import { MediaType, MediaStatus, SearchResult } from '@/app/types';
 import Header from '@/components/Header';
 import MediaCardLandscape from '@/components/MediaCardLandscape';
@@ -25,17 +26,7 @@ export default function Page() {
 
 	//get search results from overseerr and add to results state
 	async function fetchData(query: string, page: number = 1, language: string = 'en') {
-		const response = await fetch(
-			'/api/overseerrproxy/search?query=' + query + '&language=' + language + '&page=' + page,
-		);
-
-		if (!response.ok) {
-			throw new Error(response.statusText);
-		}
-
-		const data = await response.json();
-
-		const results = data.results;
+		const results = await searchOverseerr(query);
 
 		const searchResults = results.filter(
 			(result: SearchResult) => result.mediaType !== MediaType.PERSON,

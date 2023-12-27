@@ -1,14 +1,15 @@
 import { MediaType, Collection, Movie } from '@/app/types';
-import { CreateBackdropUrl, GetCollection } from '@/app/utils';
+import { CreateBackdropUrl } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SnapCarousel from '@/components/SnapCarousel';
 import Hero from '@/components/media/Hero';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Button from '@/components/ui/Button';
+import overseerr from '@/services/overseerr';
 
 export default async function Page({ params }: { params: { id: number } }) {
-	const collection: Collection = await GetCollection(params.id);
+	const collection: Collection = await overseerr.getCollection(params.id);
 
 	const collectionDetails = [];
 
