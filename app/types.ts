@@ -17,7 +17,7 @@ export type Movie = {
 	budget: number | null;
 	revenue: number | null;
 
-	requestStatus: MediaStatus | null;
+	requestStatus: MediaStatus;
 	ratingKey: number | null;
 	plexUrl: string | null;
 	iOSPlexUrl: string | null;
@@ -55,7 +55,7 @@ export type Series = {
 	status: string;
 
 	downloads: Download[] | null;
-	requestStatus: MediaStatus | null;
+	requestStatus: MediaStatus;
 	ratingKey: number | null;
 	plexUrl: string | null;
 	iOSPlexUrl: string | null;

@@ -6,9 +6,15 @@ type ToggleButtonProps = {
 	isToggled: boolean;
 	isDisabled?: boolean;
 	color?: string;
+	onToggle?: () => void;
 };
 
-export default function ToggleButton({ isToggled, isDisabled, color }: ToggleButtonProps) {
+export default function ToggleButton({
+	isToggled,
+	isDisabled,
+	color,
+	onToggle,
+}: ToggleButtonProps) {
 	const [toggled, setToggled] = useState(isToggled);
 	const [disabled, setDisabled] = useState(isDisabled || false);
 
@@ -28,6 +34,7 @@ export default function ToggleButton({ isToggled, isDisabled, color }: ToggleBut
 			}`}
 			onClick={() => {
 				setToggled(!toggled);
+				onToggle && onToggle();
 			}}
 		>
 			<div className="aspect-square h-[27px] rounded-full bg-white shadow-[0px_3px_1px_0px_rgba(0,0,0,0.06),0px_3px_8px_0px_rgba(0,0,0,0.15),0px_0px_0px_1px_rgba(0,0,0,0.04)]" />

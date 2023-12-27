@@ -1,4 +1,4 @@
-import { Cast, Episode, Series } from '@/app/types';
+import { Cast, Episode, Series, MediaStatus, Movie } from '@/app/types';
 import { CreateBackdropUrl, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import Request from '@/components/Request';
@@ -22,10 +22,10 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 	const tvDetails: Series = await overseerr.getSeries(params.id);
 
 	//gets recommended media from overseerr
-	const recommendedMedia = await overseerr.getRecommended(tvDetails.mediaType, tvDetails.id);
+	const recommendedMedia = await overseerr.getRecommendedSeries(tvDetails.id);
 
 	//gets similar media from overseerr
-	const similarMedia = await overseerr.getSimilar(tvDetails.mediaType, tvDetails.id);
+	const similarMedia = await overseerr.getSimilarSeries(tvDetails.id);
 
 	const season = await overseerr.getSeason(tvDetails.id, params.seasonNumber);
 
@@ -46,12 +46,13 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						tvDetails.episodeRunTime ? tvDetails.episodeRunTime + ' mins' : null,
 						tvDetails.numberOfSeasons + ' seasons',
 					]}
+					status={tvDetails.requestStatus}
 					overview={tvDetails.overview}
 					id={tvDetails.id}
 					mediaType={tvDetails.mediaType}
 					contentRating={tvDetails.contentRating}
 				>
-					<p>Text</p>
+					<StatusButton series={tvDetails} />
 				</Hero>
 				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
 					{tvDetails.downloads && (
@@ -81,7 +82,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						<Seperator className="px-4" />
 					</SectionTemplate>
 
-					{similarMedia[0] && (
+					{similarMedia && (
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
 								{similarMedia.map((media: Series) => (
@@ -92,6 +93,12 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 										detailsArray={[media.firstAirDate?.split('-')[0]]}
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
 										href={'/tv/' + media.id}
+										iconUrl={
+											media.requestStatus === MediaStatus.AVAILABLE ||
+											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+												: null
+										}
 									/>
 								))}
 							</SnapCarousel>
@@ -99,7 +106,7 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						</SectionTemplate>
 					)}
 
-					{recommendedMedia[0] && (
+					{recommendedMedia && (
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
 								{recommendedMedia.map((media: Series) => (
@@ -110,6 +117,12 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 										detailsArray={[media.firstAirDate?.split('-')[0]]}
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
 										href={'/tv/' + media.id}
+										iconUrl={
+											media.requestStatus === MediaStatus.AVAILABLE ||
+											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+												: null
+										}
 									/>
 								))}
 							</SnapCarousel>

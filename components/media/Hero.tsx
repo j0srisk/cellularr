@@ -1,4 +1,4 @@
-import { File, MediaType } from '@/app/types';
+import { File, MediaStatus, MediaType } from '@/app/types';
 import BadgeRow from '@/components/media/BadgeRow';
 import { Fragment } from 'react';
 
@@ -10,6 +10,7 @@ type HeroProps = {
 	id: number;
 	mediaType: MediaType;
 	contentRating: string;
+	status: MediaStatus;
 	file?: File | null;
 };
 
@@ -21,6 +22,7 @@ export default function Hero({
 	id,
 	mediaType,
 	contentRating,
+	status,
 	file,
 }: HeroProps) {
 	return (
@@ -43,6 +45,41 @@ export default function Hero({
 							)}
 						</Fragment>
 					))}
+
+					{status === MediaStatus.PENDING && (
+						<>
+							<p>•</p>
+							<p className="text-footnote-emphasized text-system-indigo-light dark:text-system-indigo-dark">
+								Pending
+							</p>
+						</>
+					)}
+					{status === MediaStatus.PROCESSING && (
+						<>
+							<p>•</p>
+							<p className="text-footnote-emphasized text-system-indigo-light dark:text-system-indigo-dark">
+								Processing
+							</p>
+						</>
+					)}
+
+					{status === MediaStatus.PARTIALLY_AVAILABLE && (
+						<>
+							<p>•</p>
+							<p className="text-footnote-emphasized text-system-green-light dark:text-system-green-dark">
+								Partially Available
+							</p>
+						</>
+					)}
+
+					{status === MediaStatus.AVAILABLE && (
+						<>
+							<p>•</p>
+							<p className="text-footnote-emphasized text-system-green-light dark:text-system-green-dark">
+								Available
+							</p>
+						</>
+					)}
 				</div>
 			)}
 			<div className="z-30 flex w-full items-center gap-[9px] px-4">{children}</div>

@@ -1,4 +1,4 @@
-import { Movie, Cast } from '@/app/types';
+import { Movie, Cast, MediaStatus } from '@/app/types';
 import { CreateBackdropUrl, FormatDuration, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
@@ -17,10 +17,10 @@ export default async function Page({ params }: { params: { id: number } }) {
 	const movie: Movie = await overseerr.getMovie(params.id);
 
 	//gets recommended media from overseerr
-	const recommendedMedia = await overseerr.getRecommended(movie.mediaType, movie.id);
+	const recommendedMedia = await overseerr.getRecommendedMovies(movie.id);
 
 	//gets similar media from overseerr
-	const similarMedia = await overseerr.getSimilar(movie.mediaType, movie.id);
+	const similarMedia = await overseerr.getSimilarMovies(movie.id);
 
 	return (
 		<>
@@ -33,6 +33,7 @@ export default async function Page({ params }: { params: { id: number } }) {
 						movie.releaseDate.split('-')[0],
 						FormatDuration(movie.runtime),
 					]}
+					status={movie.requestStatus}
 					overview={movie.overview}
 					id={movie.id}
 					mediaType={movie.mediaType}
@@ -71,6 +72,12 @@ export default async function Page({ params }: { params: { id: number } }) {
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
 										href={'/movie/' + media.id}
 										className="w-[calc(50%-6px)]"
+										iconUrl={
+											media.requestStatus === MediaStatus.AVAILABLE ||
+											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+												: null
+										}
 									/>
 								))}
 							</SnapCarousel>
@@ -88,6 +95,12 @@ export default async function Page({ params }: { params: { id: number } }) {
 										imageUrl={CreateBackdropUrl(media.backdropPath)}
 										href={'/movie/' + media.id}
 										className="w-[calc(50%-6px)]"
+										iconUrl={
+											media.requestStatus === MediaStatus.AVAILABLE ||
+											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+												: null
+										}
 									/>
 								))}
 							</SnapCarousel>

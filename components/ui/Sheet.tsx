@@ -8,8 +8,8 @@ export default function Sheet({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="pt-safe z-100 fixed left-0 top-0 flex h-screen w-screen items-end">
-			<div className="pb-safe flex max-h-full w-full flex-col gap-[18px] overflow-hidden rounded-t-[10px] bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark-elevated">
+		<div className="pt-safe z-100 fixed left-0 top-0 flex h-full w-screen flex-col justify-end bg-black bg-opacity-40">
+			<div className="pb-nav flex h-fit w-full flex-col gap-[18px] overflow-hidden rounded-t-[10px] bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark-elevated">
 				<div className="flex items-center justify-between">
 					<p className="text-title-3-emphasized text-label-primary-light dark:text-label-primary-dark">
 						{title}
@@ -29,7 +29,7 @@ export default function Sheet({
 						</div>
 					</button>
 				</div>
-				<div>{children}</div>
+				{children}
 			</div>
 		</div>
 	);
