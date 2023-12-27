@@ -1,6 +1,7 @@
 'use client';
 
 import { SearchResult, MediaType, Movie, Series } from '@/app/types';
+import Warning from 'postcss/lib/warning';
 import { useEffect } from 'react';
 
 export default function SaveToRecentSearches({
@@ -11,13 +12,12 @@ export default function SaveToRecentSearches({
 	series?: Series;
 }) {
 	useEffect(() => {
-		console.log('saving to recent searches');
 		if (!movie && !series) {
-			console.log('no movie or series');
+			console.error('SaveToRecentSearches component received no props');
 			return;
 		}
 		if (movie && series) {
-			console.log('both movie and series');
+			console.error('SaveToRecentSearches component received both movie and series props');
 			return;
 		}
 
@@ -31,30 +31,27 @@ export default function SaveToRecentSearches({
 			firstAirDate: series?.firstAirDate,
 		};
 
-		console.log(searchResult);
-
 		if (typeof window !== 'undefined' && window.localStorage) {
-			console.log('saving to local storage');
 			const recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
-			// Remove movieDetails from recent searches if it already exists
 
+			// Remove search from recent searches if it already exists
 			recentSearches.forEach((recentSearch: SearchResult) => {
 				if (recentSearch.id === searchResult.id) {
 					recentSearches.splice(recentSearches.indexOf(recentSearch), 1);
 				}
 			});
 
-			// Add movieDetails to the beginning of the array
+			// Add latest search to the beginning of the array
 			recentSearches.unshift(searchResult);
 
-			// Remove the last item in the array if it is longer than 10 items
+			// Remove the last item in the array if it is longer than X items
 			if (recentSearches.length > 8) {
 				recentSearches.splice(8);
 			}
 
 			localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
 		}
-	}, []);
+	}, [movie, series]);
 
-	return <></>;
+	return null;
 }
