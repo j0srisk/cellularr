@@ -1,0 +1,42 @@
+- Media:
+    - Plex:
+        href: http://192.168.1.93:32400
+        background: '#282A2D'
+    - Overseerr:
+        href: http://192.168.1.93:5055
+        background: '#131928'
+    - Tautulli:
+        href: http://192.168.1.93:8181
+        background: '#282A2D'
+    - Radarr:
+        href: http://192.168.1.93:7878
+    - Sonarr:
+        href: http://192.168.1.93:8989
+        background: '#00CCFF'
+    - Readarr:
+        href: http://192.168.1.93:8888
+        background: '#8F2222'
+
+- Server:
+    - Unraid:
+        icon: unraid.png
+        href: http://192.168.1.93
+        background: '#141414'
+    - Docker:
+        icon: docker.png
+        href: http://192.168.1.93/docker
+        background: '#fff'
+
+- Homebridges:
+    - Homebridge Conroe:
+        icon: homebridge.svg
+        href: http://192.168.1.93:8581
+        background: '#441E56'
+    - Homebridge Cheswood:
+        icon: homebridge.svg
+        href: http://172.16.0.100:8581
+        background: '#441E56'
+    - Homebridge Farm:
+        icon: homebridge.svg
+        href: http://100.97.33.117:8581
+        background: '#441E56'

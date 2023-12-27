@@ -1,44 +1,59 @@
+import CenteredMessage from '@/components/CenteredMessage';
 import Container from '@/components/Container';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
+import { promises as fs } from 'fs';
+import { Fragment } from 'react';
+import { parse } from 'yaml';
 
-export default function Page() {
+export default async function Page() {
+	const yamlFile = await fs.readFile(process.cwd() + '/applications.yaml', 'utf8');
+
+	const yamlData = parse(yamlFile);
+
+	let applicationCount = 0;
+
+	if (yamlData) {
+		yamlData.forEach((section: any) => {
+			applicationCount += section[Object.keys(section)[0]].length;
+		});
+	}
+
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4">
-			<Header heading="Containers" subheading="4 Containers Running" />
+			<Header
+				heading="Applications"
+				subheading={
+					applicationCount + ' application' + (applicationCount === 1 ? '' : 's') + ' found'
+				}
+			/>
+			<div className="w-full pb-[15px] pt-[1px]"></div>
 			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto pt-4">
-				<div className="flex flex-col gap-3">
-					<p className="text-title-3-emphasized">Media</p>
-					<div className="flex flex-col gap-[9px]">
-						<Container name={'Plex'} url={'http://192.168.1.93:32400'} />
-						<Seperator />
-						<Container name={'Tautulli'} url={'http://192.168.1.93:8181'} />
-						<Seperator />
-						<Container name={'Overseerr'} url={'http://192.168.1.93:5055'} />
-						<Seperator />
-						<Container name={'Radarr'} url={'http://192.168.1.93:7878'} />
-						<Seperator />
-						<Container name={'Sonarr'} url={'http://192.168.1.93:8989'} />
-						<Seperator />
-						<Container name={'Readarr'} url={'http://192.168.1.93:8888'} />
-					</div>
-				</div>
-				<div className="flex flex-col gap-3">
-					<p className="text-title-3-emphasized">Media</p>
-					<div className="flex flex-col gap-[9px]">
-						<Container name={'Plex'} url={'http://192.168.1.93:32400'} />
-						<Seperator />
-						<Container name={'Tautulli'} url={'http://192.168.1.93:8181'} />
-						<Seperator />
-						<Container name={'Overseerr'} url={'http://192.168.1.93:5055'} />
-						<Seperator />
-						<Container name={'Radarr'} url={'http://192.168.1.93:7878'} />
-						<Seperator />
-						<Container name={'Sonarr'} url={'http://192.168.1.93:8989'} />
-						<Seperator />
-						<Container name={'Readarr'} url={'http://192.168.1.93:8888'} />
-					</div>
-				</div>
+				{yamlData ? (
+					<>
+						{yamlData.map((section: any) => (
+							<div className="flex flex-col gap-3">
+								<p className="text-title-3-emphasized">{Object.keys(section)[0]}</p>
+								<div className="flex flex-col gap-[9px]">
+									{section[Object.keys(section)[0]].map((container: any) => (
+										<Fragment key={Object.keys(container)[0]}>
+											<Container
+												name={Object.keys(container)[0]}
+												icon={container[Object.keys(container)[0]].icon}
+												url={container[Object.keys(container)[0]].href}
+												backgroundColor={container[Object.keys(container)[0]].background}
+											/>
+											{section[Object.keys(section)[0]].indexOf(container) !==
+												section[Object.keys(section)[0]].length - 1 && <Seperator />}
+										</Fragment>
+									))}
+								</div>
+							</div>
+						))}
+					</>
+				) : (
+					<CenteredMessage text="No Applications Found" />
+				)}
 			</div>
 		</div>
 	);

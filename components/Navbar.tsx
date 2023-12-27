@@ -76,7 +76,7 @@ export default function Navbar() {
 						/>
 					</svg>
 
-					<p className="text-[10px] font-[510]">Containers</p>
+					<p className="text-[10px] font-[510]">Applications</p>
 				</Link>
 			</div>
 		</nav>
