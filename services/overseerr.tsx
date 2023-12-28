@@ -1,15 +1,4 @@
-import {
-	Movie,
-	MediaType,
-	MediaStatus,
-	Series,
-	Season,
-	Download,
-	Collection,
-	File,
-	Audio,
-	Subtitle,
-} from '@/app/types';
+import { Movie, MediaType, MediaStatus, Series, Season, Download, Collection } from '@/app/types';
 import tautulli from '@/services/tautulli';
 import 'server-only';
 
@@ -31,9 +20,17 @@ async function endpoint(endpoint: string, method: string = 'GET', body?: any) {
 
 	if (response.status !== 200 && response.status !== 201) {
 		const errorData = await response.json();
+		console.log(errorData);
 		if (errorData.error) {
 			throw new Error('Overseerr API: ' + errorData.error);
 		} else if (errorData.message) {
+			//ignore errors for missing ratings
+			if (
+				errorData.message === 'Unable to retrieve movie ratings.' ||
+				errorData.message === 'Rotten Tomatoes ratings not found.'
+			) {
+				return null;
+			}
 			throw new Error('Overseerr API: ' + errorData.message);
 		} else {
 			console.log(errorData);
@@ -63,6 +60,12 @@ const overseerr = {
 
 		if (movieDetails.collection) {
 			movie.collection = overseerr.convertCollection(movieDetails.collection);
+		}
+
+		const ratings = await overseerr.getRatings(MediaType.MOVIE, id);
+
+		if (ratings) {
+			movie.criticsRating = ratings;
 		}
 
 		if (movie.requestStatus === MediaStatus.AVAILABLE && movie.ratingKey) {
@@ -122,11 +125,18 @@ const overseerr = {
 					sizeLeft: download.sizeLeft,
 					episode: download.episode,
 				})) || null,
+			criticsRating: null,
 
 			ratingKey: tvDetails.mediaInfo?.ratingKey || null,
 			plexUrl: tvDetails.mediaInfo?.plexUrl || null,
 			iOSPlexUrl: tvDetails.mediaInfo?.iOSPlexUrl || null,
 		};
+
+		const ratings = await overseerr.getRatings(MediaType.TV, id);
+
+		if (ratings) {
+			series.criticsRating = ratings;
+		}
 
 		// looks up requests for series to determine which seasons have been requested
 		if (tvDetails.mediaInfo?.requests) {
@@ -241,6 +251,7 @@ const overseerr = {
 	getRatings: async (mediaType: MediaType, id: number) => {
 		const ratings = await endpoint('/' + mediaType + '/' + id + '/ratings');
 
+		console.log(ratings);
 		return ratings;
 	},
 	search: async (query: string, page: number = 1, language: string = 'en') => {
@@ -293,6 +304,7 @@ const overseerr = {
 			plexUrl: movieDetails.mediaInfo?.plexUrl || null,
 			iOSPlexUrl: movieDetails.mediaInfo?.iOSPlexUrl || null,
 			file: null,
+			criticsRating: null,
 		};
 
 		return movie;
@@ -354,6 +366,7 @@ const overseerr = {
 					sizeLeft: download.sizeLeft,
 					episode: download.episode,
 				})) || null,
+			criticsRating: null,
 
 			ratingKey: tvDetails.mediaInfo?.ratingKey || null,
 			plexUrl: tvDetails.mediaInfo?.plexUrl || null,

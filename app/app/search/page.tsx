@@ -1,16 +1,15 @@
 'use client';
 
-import { CreatePosterUrl } from '../utils';
 import { SearchOverseerr } from '@/app/actions';
 import { MediaType, MediaStatus, SearchResult } from '@/app/types';
+import { CreatePosterUrl } from '@/app/utils';
 import Header from '@/components/Header';
 import MediaCardLandscape from '@/components/MediaCardLandscape';
 import RecentSearches from '@/components/RecentSearches';
 import SearchBar from '@/components/ui/SearchBar';
 import Seperator from '@/components/ui/Seperator';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Fragment } from 'react';
 
@@ -53,11 +52,11 @@ export default function Page() {
 							const value = e.target.value;
 							const encodedValue = encodeURIComponent(value);
 							setSearch(value);
-							router.push('/search?query=' + encodedValue);
+							router.replace('/app/search?query=' + encodedValue);
 						}}
 						clearFunction={() => {
 							setSearch('');
-							router.push('/search');
+							router.replace('/search');
 						}}
 					/>
 				</div>
@@ -70,7 +69,11 @@ export default function Page() {
 							<div className="flex w-full flex-col gap-[9px]">
 								{results.map((searchResult) => (
 									<Fragment key={searchResult.id}>
-										<Link href={'/' + searchResult.mediaType + '/' + searchResult.id}>
+										<button
+											onClick={() =>
+												router.replace('/app/' + searchResult.mediaType + '/' + searchResult.id)
+											}
+										>
 											<MediaCardLandscape
 												imageUrl={CreatePosterUrl(searchResult.posterPath)}
 												title={searchResult.title || searchResult.name}
@@ -84,7 +87,7 @@ export default function Page() {
 															: 'Series'
 												}
 											/>
-										</Link>
+										</button>
 										{results.indexOf(searchResult) !== results.length - 1 && (
 											<Seperator className="px-0" />
 										)}

@@ -16,6 +16,7 @@ export type Movie = {
 	productionCompany: string | null;
 	budget: number | null;
 	revenue: number | null;
+	criticsRating: CriticRating | null;
 
 	requestStatus: MediaStatus;
 	ratingKey: number | null;
@@ -53,6 +54,7 @@ export type Series = {
 	seasons: Season[];
 	network: string;
 	status: string;
+	criticsRating: CriticRating | null;
 
 	downloads: Download[] | null;
 	requestStatus: MediaStatus;
@@ -195,4 +197,10 @@ export type SearchResult = {
 	mediaType: MediaType;
 	releaseDate?: string;
 	firstAirDate?: string;
+};
+
+export type CriticRating = {
+	criticsScore: number;
+	criticsRating: string;
+	url: string;
 };

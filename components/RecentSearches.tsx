@@ -44,7 +44,7 @@ export default function RecentSearches() {
 					<>
 						{recentSearches.map((searchResult: SearchResult) => (
 							<Fragment key={searchResult.id}>
-								<Link href={'/' + searchResult.mediaType + '/' + searchResult.id}>
+								<Link href={'/app/' + searchResult.mediaType + '/' + searchResult.id}>
 									<MediaCardLandscape
 										imageUrl={CreatePosterUrl(searchResult.posterPath)}
 										title={searchResult.title || searchResult.name}

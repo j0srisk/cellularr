@@ -1,4 +1,4 @@
-import { File, MediaStatus, MediaType } from '@/app/types';
+import { File, MediaStatus, MediaType, CriticRating } from '@/app/types';
 import BadgeRow from '@/components/media/BadgeRow';
 import { Fragment } from 'react';
 
@@ -7,10 +7,9 @@ type HeroProps = {
 	metadataDetailsArray?: (string | null)[];
 	children: React.ReactNode;
 	overview: string;
-	id: number;
-	mediaType: MediaType;
+	criticsRating?: CriticRating | null;
 	contentRating: string;
-	status: MediaStatus;
+	status?: MediaStatus;
 	file?: File | null;
 };
 
@@ -19,8 +18,7 @@ export default function Hero({
 	metadataDetailsArray,
 	children,
 	overview,
-	id,
-	mediaType,
+	criticsRating,
 	contentRating,
 	status,
 	file,
@@ -89,7 +87,7 @@ export default function Hero({
 					{overview}
 				</p>
 				{contentRating || file ? (
-					<BadgeRow id={id} mediaType={mediaType} contentRating={contentRating} file={file} />
+					<BadgeRow criticsRating={criticsRating} contentRating={contentRating} file={file} />
 				) : null}
 				{/* blured background with 120px gradient fade at the top */}
 				<div

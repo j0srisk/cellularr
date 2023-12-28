@@ -1,32 +1,26 @@
+'use client';
+
+import { GetApplications } from '@/app/actions';
 import CenteredMessage from '@/components/CenteredMessage';
 import Container from '@/components/Container';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
-import { promises as fs } from 'fs';
 import { Fragment } from 'react';
-import { parse } from 'yaml';
+import { useState, useEffect } from 'react';
 
-export default async function Page() {
-	const yamlFile = await fs.readFile(process.cwd() + '/applications.yaml', 'utf8');
+export default function ApplicationPage() {
+	const [yamlData, setYamlData] = useState<any>(null);
 
-	const yamlData = parse(yamlFile);
-
-	let applicationCount = 0;
-
-	if (yamlData) {
-		yamlData.forEach((section: any) => {
-			applicationCount += section[Object.keys(section)[0]].length;
-		});
-	}
-
+	useEffect(() => {
+		async function fetchData() {
+			const parsedYaml = await GetApplications();
+			setYamlData(parsedYaml);
+		}
+		fetchData();
+	}, []);
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4">
-			<Header
-				heading="Applications"
-				subheading={
-					applicationCount + ' application' + (applicationCount === 1 ? '' : 's') + ' found'
-				}
-			/>
+			<Header heading="Applications" subheading={'idk rn'} />
 			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto">
 				{yamlData ? (
 					<>
@@ -51,7 +45,7 @@ export default async function Page() {
 						))}
 					</>
 				) : (
-					<CenteredMessage text="No Applications Found" />
+					<></>
 				)}
 			</div>
 		</div>

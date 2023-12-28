@@ -1,3 +1,6 @@
+'use client';
+
+import { GetMovie, GetRecommendedMovies, GetSimilarMovies } from '@/app/actions';
 import { Movie, Cast, MediaStatus } from '@/app/types';
 import { CreateBackdropUrl, FormatDuration, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
@@ -10,20 +13,38 @@ import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Button from '@/components/ui/Button';
 import Seperator from '@/components/ui/Seperator';
-import overseerr from '@/services/overseerr';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-export default async function Page({ params }: { params: { id: number } }) {
-	//gets movie from overseerr/tautulli based on the id in the url
-	const movie: Movie = await overseerr.getMovie(params.id);
+export default function MoviePage() {
+	const params = useParams<{ id: string }>();
 
-	//gets recommended media from overseerr
-	const recommendedMedia = await overseerr.getRecommendedMovies(movie.id);
+	const [movie, setMovie] = useState<Movie | null>(null);
+	const [recommendedMedia, setRecommendedMedia] = useState<Movie[]>([]);
+	const [similarMedia, setSimilarMedia] = useState<Movie[]>([]);
 
-	//gets similar media from overseerr
-	const similarMedia = await overseerr.getSimilarMovies(movie.id);
+	const router = useRouter();
+
+	useEffect(() => {
+		async function fetchData() {
+			const movie: Movie = await GetMovie(parseInt(params.id));
+			const recommendedMedia = await GetRecommendedMovies(movie.id);
+			const similarMedia = await GetSimilarMovies(movie.id);
+
+			setMovie(movie);
+			setRecommendedMedia(recommendedMedia);
+			setSimilarMedia(similarMedia);
+		}
+		fetchData();
+	}, []);
+
+	if (!movie) {
+		return null;
+	}
 
 	return (
-		<>
+		<div className="animate-fade flex h-full w-full">
 			<SaveToRecentSearches movie={movie} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movie.backdropPath)}>
 				<Hero
@@ -64,20 +85,23 @@ export default async function Page({ params }: { params: { id: number } }) {
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
 								{similarMedia.map((media: Movie) => (
-									<MediaCard
+									<button
 										key={media.id}
-										title={media.title}
-										detailsArray={[media.releaseDate?.split('-')[0]]}
-										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										href={'/movie/' + media.id}
-										className="w-[calc(50%-6px)]"
-										iconUrl={
-											media.requestStatus === MediaStatus.AVAILABLE ||
-											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
-												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
-												: null
-										}
-									/>
+										onClick={() => router.replace('/app/' + media.mediaType + '/' + media.id)}
+										className="w-[calc(50%-6px)] flex-shrink-0"
+									>
+										<MediaCard
+											title={media.title}
+											detailsArray={[media.releaseDate?.split('-')[0]]}
+											imageUrl={CreateBackdropUrl(media.backdropPath)}
+											iconUrl={
+												media.requestStatus === MediaStatus.AVAILABLE ||
+												media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+													? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+													: null
+											}
+										/>
+									</button>
 								))}
 							</SnapCarousel>
 							<Seperator className="px-4" />
@@ -87,20 +111,23 @@ export default async function Page({ params }: { params: { id: number } }) {
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
 								{recommendedMedia.map((media: Movie) => (
-									<MediaCard
+									<button
 										key={media.id}
-										title={media.title}
-										detailsArray={[media.releaseDate?.split('-')[0]]}
-										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										href={'/movie/' + media.id}
-										className="w-[calc(50%-6px)]"
-										iconUrl={
-											media.requestStatus === MediaStatus.AVAILABLE ||
-											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
-												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
-												: null
-										}
-									/>
+										onClick={() => router.replace('/app/' + media.mediaType + '/' + media.id)}
+										className="w-[calc(50%-6px)] flex-shrink-0"
+									>
+										<MediaCard
+											title={media.title}
+											detailsArray={[media.releaseDate?.split('-')[0]]}
+											imageUrl={CreateBackdropUrl(media.backdropPath)}
+											iconUrl={
+												media.requestStatus === MediaStatus.AVAILABLE ||
+												media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+													? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+													: null
+											}
+										/>
+									</button>
 								))}
 							</SnapCarousel>
 							<Seperator className="px-4" />
@@ -119,13 +146,16 @@ export default async function Page({ params }: { params: { id: number } }) {
 					{movie.collection && (
 						<SectionTemplate heading={'Collection'}>
 							<SnapCarousel>
-								<MediaCard
-									key={movie.collection.id}
-									title={movie.collection.name}
-									imageUrl={CreateBackdropUrl(movie.collection.backdropPath)}
-									href={'/collection/' + movie.collection.id}
-									className="w-[calc(66%)]"
-								/>
+								<button
+									onClick={() => router.replace('/app/collection/' + movie.collection?.id)}
+									className="w-[calc(66%)] flex-shrink-0"
+								>
+									<MediaCard
+										key={movie.collection.id}
+										title={movie.collection.name}
+										imageUrl={CreateBackdropUrl(movie.collection.backdropPath)}
+									/>
+								</button>
 							</SnapCarousel>
 							<Seperator className="px-4" />
 						</SectionTemplate>
@@ -175,6 +205,6 @@ export default async function Page({ params }: { params: { id: number } }) {
 					)}
 				</div>
 			</ScrollTrackingBackdrop>
-		</>
+		</div>
 	);
 }

@@ -1,4 +1,7 @@
-import { MediaType, Collection, Movie } from '@/app/types';
+'use client';
+
+import { GetCollection } from '@/app/actions';
+import { Collection, Movie } from '@/app/types';
 import { CreateBackdropUrl } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SnapCarousel from '@/components/SnapCarousel';
@@ -6,10 +9,29 @@ import Hero from '@/components/media/Hero';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SectionTemplate from '@/components/media/SectionTemplate';
 import Button from '@/components/ui/Button';
-import overseerr from '@/services/overseerr';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-export default async function Page({ params }: { params: { id: number } }) {
-	const collection: Collection = await overseerr.getCollection(params.id);
+export default function Page() {
+	const params = useParams<{ id: string }>();
+
+	const [collection, setCollection] = useState<Collection | null>(null);
+
+	useEffect(() => {
+		async function fetchData() {
+			const collection: Collection = await GetCollection(parseInt(params.id));
+
+			setCollection(collection);
+		}
+		fetchData();
+	}, []);
+
+	const router = useRouter();
+
+	if (!collection) {
+		return null;
+	}
 
 	const collectionDetails = [];
 
@@ -30,7 +52,7 @@ export default async function Page({ params }: { params: { id: number } }) {
 	}
 
 	return (
-		<>
+		<div className="animate-fade flex h-full w-full">
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(collection.backdropPath)}>
 				<Hero
 					title={collection.name}
@@ -45,20 +67,23 @@ export default async function Page({ params }: { params: { id: number } }) {
 						<SectionTemplate heading={'Movies'}>
 							<SnapCarousel>
 								{collection.movies.map((media: Movie) => (
-									<MediaCard
+									<button
 										key={media.id}
-										title={media.title}
-										detailsArray={[media.releaseDate?.split('-')[0]]}
-										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										className="w-[calc(50%-6px)]"
-										href={'/movie/' + media.id}
-									/>
+										className="w-[calc(50%-6px)] flex-shrink-0"
+										onClick={() => router.replace('/movie/' + media.id)}
+									>
+										<MediaCard
+											title={media.title}
+											detailsArray={[media.releaseDate?.split('-')[0]]}
+											imageUrl={CreateBackdropUrl(media.backdropPath)}
+										/>
+									</button>
 								))}
 							</SnapCarousel>
 						</SectionTemplate>
 					)}
 				</div>
 			</ScrollTrackingBackdrop>
-		</>
+		</div>
 	);
 }

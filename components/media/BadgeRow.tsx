@@ -5,27 +5,27 @@ import {
 	DynamicRangeBadge,
 	ClosedCaptionBadge,
 } from './Badges';
-import { MediaType, File } from '@/app/types';
+import { MediaType, File, CriticRating } from '@/app/types';
 import overseerr from '@/services/overseerr';
 import Link from 'next/link';
 
 type BadgeRowProps = {
-	id: number;
-	mediaType: MediaType;
+	criticsRating?: CriticRating | null;
 	contentRating: string;
 	file?: File | null;
 };
 
-export default async function BadgeRow({ id, mediaType, contentRating, file }: BadgeRowProps) {
-	const ratings = await overseerr.getRatings(mediaType, id);
-
+export default function BadgeRow({ criticsRating, contentRating, file }: BadgeRowProps) {
 	return (
 		<div className="no-scrollbar z-20 flex w-full items-center gap-[5px] overflow-x-scroll px-4 text-label-secondary-dark">
-			{ratings && ratings.criticsRating && (
-				<Link href={ratings.url ? ratings.url : '#'} className="flex items-center gap-1">
-					<RottenTomatoesBadge criticsRating={ratings.criticsRating} />
+			{criticsRating && (
+				<Link
+					href={criticsRating.url ? criticsRating.url : '#'}
+					className="flex items-center gap-1"
+				>
+					<RottenTomatoesBadge criticsRating={criticsRating.criticsRating} />
 					<p className="h-fit w-fit text-footnote uppercase">
-						{ratings.criticsScore ? <>{ratings.criticsScore}%</> : <>--</>}
+						{criticsRating.criticsScore ? <>{criticsRating.criticsScore}%</> : <>--</>}
 					</p>
 				</Link>
 			)}
