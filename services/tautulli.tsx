@@ -26,7 +26,7 @@ const tautulli = {
 			const guid =
 				tautulliSession.grandparent_guids.find((guid: string) => guid.startsWith('tmdb://')) ||
 				tautulliSession.guids.find((guid: string) => guid.startsWith('tmdb://'));
-			const tmdbId = guid.substring('tmdb://'.length);
+			const tmdbId = guid?.substring('tmdb://'.length);
 
 			const mediaType = tautulliSession.media_type === 'episode' ? MediaType.TV : MediaType.MOVIE;
 

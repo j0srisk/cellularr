@@ -20,20 +20,21 @@ async function endpoint(endpoint: string, method: string = 'GET', body?: any) {
 
 	if (response.status !== 200 && response.status !== 201) {
 		const errorData = await response.json();
-		console.log(errorData);
 		if (errorData.error) {
 			throw new Error('Overseerr API: ' + errorData.error);
 		} else if (errorData.message) {
 			//ignore errors for missing ratings
 			if (
 				errorData.message === 'Unable to retrieve movie ratings.' ||
+				errorData.message === 'Unable to retrieve series ratings.' ||
 				errorData.message === 'Rotten Tomatoes ratings not found.'
 			) {
 				return null;
 			}
+			console.error(errorData);
 			throw new Error('Overseerr API: ' + errorData.message);
 		} else {
-			console.log(errorData);
+			console.error(errorData);
 			throw new Error('Overseerr API: Unknown error');
 		}
 	}
@@ -251,7 +252,6 @@ const overseerr = {
 	getRatings: async (mediaType: MediaType, id: number) => {
 		const ratings = await endpoint('/' + mediaType + '/' + id + '/ratings');
 
-		console.log(ratings);
 		return ratings;
 	},
 	search: async (query: string, page: number = 1, language: string = 'en') => {
@@ -267,8 +267,6 @@ const overseerr = {
 			mediaId: id,
 			seasons: seasons || null,
 		};
-
-		console.log(requestBody);
 
 		const request = await endpoint('/request', 'POST', requestBody);
 
