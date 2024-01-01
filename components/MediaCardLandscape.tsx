@@ -47,8 +47,8 @@ export default function MediaCardLandscape({
 				)}
 			</div>
 
-			<div className="flex w-full items-center gap-[-4px]">
-				<div className="flex w-full flex-col items-start justify-center truncate">
+			<div className="flex w-full items-center gap-[-4px] truncate">
+				<div className="flex w-full flex-col items-start justify-center">
 					<p className="font-body w-full truncate text-left text-body text-label-primary-light dark:text-label-primary-dark">
 						{title}
 					</p>
