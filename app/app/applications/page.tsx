@@ -13,12 +13,25 @@ export default function ApplicationPage() {
 	const [applicationCount, setApplicationCount] = useState<number>(0);
 
 	useEffect(() => {
+		//get sessions from session storage first
+		if (typeof window !== 'undefined' && window.sessionStorage) {
+			const sessionStorageYamlData = JSON.parse(sessionStorage.getItem('yamlData') || '[]');
+			const sessionStorageApplicationCount = sessionStorage.getItem('applicationCount');
+			console.log(sessionStorageApplicationCount);
+			setYamlData(sessionStorageYamlData);
+			setApplicationCount(parseInt(sessionStorageApplicationCount || '0'));
+		}
+
 		async function fetchData() {
 			const parsedYaml = await GetApplications();
 			setYamlData(parsedYaml);
-			setApplicationCount(
-				parsedYaml.reduce((acc: number, curr: any) => acc + curr[Object.keys(curr)[0]].length, 0),
+			sessionStorage.setItem('yamlData', JSON.stringify(parsedYaml));
+			const applicationCount = parsedYaml.reduce(
+				(acc: number, curr: any) => acc + curr[Object.keys(curr)[0]].length,
+				0,
 			);
+			setApplicationCount(applicationCount);
+			sessionStorage.setItem('applicationCount', applicationCount.toString());
 		}
 		fetchData();
 	}, []);

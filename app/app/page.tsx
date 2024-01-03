@@ -25,6 +25,8 @@ export default function SessionPage() {
 		async function fetchData() {
 			const sessions = await GetActiveSessions();
 			setSessions(sessions);
+
+			//save sessions to session storage
 			sessionStorage.setItem('sessions', JSON.stringify(sessions));
 		}
 		fetchData();
