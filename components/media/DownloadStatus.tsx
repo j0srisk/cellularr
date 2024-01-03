@@ -1,6 +1,5 @@
 'use client';
 
-import { GetDownloads } from '@/app/actions';
 import { Download, MediaType } from '@/app/types';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
@@ -24,8 +23,9 @@ export default function DownloadStatus({
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			if (isOpen) {
-				const newDownloads = await GetDownloads(mediaType, mediaId);
-				setDownloads(newDownloads);
+				//removed GetDownloads function from actions
+				//const newDownloads = await GetDownloads(mediaType, mediaId);
+				//setDownloads(newDownloads);
 			}
 		}, 10000);
 
