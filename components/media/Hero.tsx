@@ -1,4 +1,4 @@
-import { File, MediaStatus, MediaType, CriticRating } from '@/app/types';
+import { File, MediaStatus, CriticRating } from '@/app/types';
 import BadgeRow from '@/components/media/BadgeRow';
 import { Fragment } from 'react';
 

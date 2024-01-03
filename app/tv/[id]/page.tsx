@@ -1,6 +1,10 @@
-import { redirect } from 'next/navigation';
+'use client';
 
-export default async function Page({ params }: { params: { id: number } }) {
+import { useParams, useRouter } from 'next/navigation';
+
+export default function Page() {
+	const params = useParams<{ id: string }>();
+	const router = useRouter();
 	//just redirect to the first season if no season number is provided
-	redirect('/tv/' + params.id + '/season/' + 1);
+	router.replace('/tv/' + params.id + '/season/' + 1);
 }

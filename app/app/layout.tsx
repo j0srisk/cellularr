@@ -1,6 +1,6 @@
 'use client';
 
-import Navbar from '@/components/spa/Navbar';
+import Navbar from '@/components/ui/Navbar';
 
 export default function Page({ children }: { children: React.ReactNode }) {
 	return (

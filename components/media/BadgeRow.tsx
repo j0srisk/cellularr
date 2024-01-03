@@ -1,12 +1,11 @@
-import { RottenTomatoesBadge } from './Badges';
+import { File, CriticRating } from '@/app/types';
 import {
+	RottenTomatoesBadge,
 	ContentRatingBadge,
 	ResolutionBadge,
 	DynamicRangeBadge,
 	ClosedCaptionBadge,
-} from './Badges';
-import { MediaType, File, CriticRating } from '@/app/types';
-import overseerr from '@/services/overseerr';
+} from '@/components/media/Badges';
 import Link from 'next/link';
 
 type BadgeRowProps = {

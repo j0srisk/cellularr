@@ -1,8 +1,3 @@
-import { Fetcher } from 'swr';
-
-const fetcher: Fetcher<any> = (url: string) =>
-	fetch(url, { cache: 'no-store' }).then((r) => r.json());
-
 export function CreatePosterUrl(posterPath: String | null) {
 	if (posterPath === null || posterPath === undefined) {
 		return;

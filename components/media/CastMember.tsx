@@ -1,6 +1,6 @@
-import Spinner from '../ui/Spinner';
 import { Cast } from '@/app/types';
 import { CreateProfileUrl } from '@/app/utils';
+import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
 
 export default function CastMember({ cast }: { cast: Cast }) {

@@ -49,7 +49,7 @@ export default function SessionPage() {
 						{sessions.map((session) => (
 							<button
 								key={session.id}
-								onClick={() => router.replace('/app/' + session.mediaType + '/' + session.tmdbId)}
+								onClick={() => router.replace('/' + session.mediaType + '/' + session.tmdbId)}
 							>
 								<MediaCard
 									imageUrl={CreateBackdropUrl(session.backdropPath)}

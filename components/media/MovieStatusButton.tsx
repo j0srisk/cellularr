@@ -1,5 +1,4 @@
-import { Movie } from '@/app/types';
-import { MediaStatus, MediaType } from '@/app/types';
+import { MediaStatus, MediaType, Movie } from '@/app/types';
 import Request from '@/components/Request';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';

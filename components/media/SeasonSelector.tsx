@@ -1,8 +1,7 @@
 'use client';
 
 import { Season } from '@/app/types';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 export default function SeasonSelector({ seasons }: { seasons: Season[] }) {
 	const router = useRouter();

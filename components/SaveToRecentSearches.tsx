@@ -1,7 +1,6 @@
 'use client';
 
 import { SearchResult, MediaType, Movie, Series } from '@/app/types';
-import Warning from 'postcss/lib/warning';
 import { useEffect } from 'react';
 
 export default function SaveToRecentSearches({

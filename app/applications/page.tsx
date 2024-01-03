@@ -1,7 +1,6 @@
 'use client';
 
 import { GetApplications } from '@/app/actions';
-import CenteredMessage from '@/components/CenteredMessage';
 import Container from '@/components/Container';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';

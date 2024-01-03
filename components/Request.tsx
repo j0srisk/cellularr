@@ -1,18 +1,17 @@
 'use client';
 
-import MediaCardLandscape from './MediaCardLandscape';
-import GroupList from './ui/GroupList';
-import Row from './ui/Row';
-import Seperator from './ui/Seperator';
 import { requestMedia } from '@/app/actions';
 import { Season, MediaType, MediaStatus, Movie } from '@/app/types';
 import { CreatePosterUrl } from '@/app/utils';
+import MediaCardLandscape from '@/components/MediaCardLandscape';
 import Button from '@/components/ui/Button';
+import GroupList from '@/components/ui/GroupList';
+import Row from '@/components/ui/Row';
+import Seperator from '@/components/ui/Seperator';
 import Sheet from '@/components/ui/Sheet';
 import ToggleButton from '@/components/ui/ToggleButton';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Fragment } from 'react';
+import { useState, Fragment } from 'react';
 
 type RequestProps = {
 	type: MediaType;

@@ -1,11 +1,10 @@
-import { Movie, SearchResult, MediaType } from '@/app/types';
+import { SearchResult, MediaType } from '@/app/types';
 import { CreatePosterUrl } from '@/app/utils';
 import CenteredMessage from '@/components/CenteredMessage';
 import MediaCardLandscape from '@/components/MediaCardLandscape';
 import Seperator from '@/components/ui/Seperator';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Fragment } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 
 export default function RecentSearches() {
 	const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);

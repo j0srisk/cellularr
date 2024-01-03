@@ -1,7 +1,6 @@
-import './globals.css';
-import Navbar from '@/components/Navbar';
+import '@/app/globals.css';
+import Navbar from '@/components/ui/Navbar';
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 
 //const inter = Inter({ subsets: ['latin'] });
 
@@ -28,7 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			className="overscroll-y-none bg-system-primary-light text-label-primary-light dark:bg-system-primary-dark dark:text-label-primary-dark"
 			lang="en"
 		>
-			<body className="h-[100vh] overflow-hidden">{children}</body>
+			<body className="h-[100vh] overflow-hidden">
+				{children}
+				<Navbar />
+			</body>
 		</html>
 	);
 }

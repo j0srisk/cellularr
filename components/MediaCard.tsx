@@ -1,4 +1,4 @@
-import Spinner from './ui/Spinner';
+import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment } from 'react';
@@ -12,7 +12,6 @@ type MediaCardProps = {
 	durationText?: string;
 	progress?: number;
 	iconUrl?: string | null;
-	viewWidth?: number;
 	href?: string;
 	children?: React.ReactNode;
 };
@@ -26,7 +25,6 @@ export default function MediaCard({
 	durationText,
 	progress,
 	iconUrl,
-	viewWidth,
 	href,
 	children,
 }: MediaCardProps) {

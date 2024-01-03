@@ -1,41 +1,53 @@
-import { Cast, Episode, Series, MediaStatus, MediaType } from '@/app/types';
+'use client';
+
+import { GetSeason, GetSeries, GetRecommendedSeries, GetSimilarSeries } from '@/app/actions';
+import { Cast, Episode, Series, MediaStatus, Season, MediaType } from '@/app/types';
 import { CreateBackdropUrl, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
-import Request from '@/components/Request';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import SnapCarousel from '@/components/SnapCarousel';
 import CastMember from '@/components/media/CastMember';
-import DownloadStatus from '@/components/media/DownloadStatus';
 import Hero from '@/components/media/Hero';
 import InformationItem from '@/components/media/InformationItem';
 import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
 import SeasonSelector from '@/components/media/SeasonSelector';
 import SectionTemplate from '@/components/media/SectionTemplate';
-import StatusButton from '@/components/media/StatusButton';
-import Button from '@/components/ui/Button';
+import StatusButton from '@/components/media/SeriesStatusButton';
 import Seperator from '@/components/ui/Seperator';
-import overseerr from '@/services/overseerr';
-import { redirect } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-export default async function Page({ params }: { params: { id: number; seasonNumber: number } }) {
-	//gets tvDetails from overseerr based on the id in the url
-	const tvDetails: Series = await overseerr.getSeries(params.id);
+export default function Page() {
+	const params = useParams<{ id: string; seasonNumber: string }>();
+	const [tvDetails, setTvDetails] = useState<Series | null>(null);
+	const [recommendedMedia, setRecommendedMedia] = useState<Series[]>([]);
+	const [similarMedia, setSimilarMedia] = useState<Series[]>([]);
+	const [season, setSeason] = useState<Season | null>(null);
 
-	//gets recommended media from overseerr
-	const recommendedMedia = await overseerr.getRecommendedSeries(tvDetails.id);
+	const router = useRouter();
 
-	//gets similar media from overseerr
-	const similarMedia = await overseerr.getSimilarSeries(tvDetails.id);
+	useEffect(() => {
+		async function fetchData() {
+			const tvDetails: Series = await GetSeries(parseInt(params.id));
+			const recommendedMedia = await GetRecommendedSeries(tvDetails.id);
+			const similarMedia = await GetSimilarSeries(tvDetails.id);
+			const season = await GetSeason(tvDetails.id, parseInt(params.seasonNumber));
 
-	const season = await overseerr.getSeason(tvDetails.id, params.seasonNumber);
+			setTvDetails(tvDetails);
 
-	if (!season) {
-		//redirect to first season if season number is invalid
-		redirect('/tv/' + tvDetails.id + '/season/' + 1);
+			setRecommendedMedia(recommendedMedia);
+			setSimilarMedia(similarMedia);
+			setSeason(season ? season : null);
+		}
+		fetchData();
+	}, [params.seasonNumber, params.id]);
+
+	if (!tvDetails || !season) {
+		return null;
 	}
 
 	return (
-		<>
+		<div className="flex h-full w-full animate-fade">
 			<SaveToRecentSearches series={tvDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(tvDetails.backdropPath)}>
 				<Hero
@@ -58,64 +70,70 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 						<SeasonSelector seasons={tvDetails.seasons} />
 						<SnapCarousel>
 							{season.episodes.map((episode: Episode) => (
-								<MediaCard
-									key={episode.id}
-									className="w-[calc(66%)]"
-									heading={`Episode ${episode.episodeNumber}`}
-									title={episode.title}
-									imageUrl={CreateBackdropUrl(episode.stillPath)}
-								>
-									<p className="line-clamp-3 w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
-										{episode.overview}
-									</p>
-								</MediaCard>
+								<div key={episode.id} className="w-[calc(66%)] flex-shrink-0">
+									<MediaCard
+										heading={`Episode ${episode.episodeNumber}`}
+										title={episode.title}
+										imageUrl={CreateBackdropUrl(episode.stillPath)}
+									>
+										<p className="line-clamp-3 w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+											{episode.overview}
+										</p>
+									</MediaCard>
+								</div>
 							))}
 						</SnapCarousel>
 						<Seperator className="px-4" />
 					</SectionTemplate>
 
-					{similarMedia && (
+					{similarMedia[0] && (
 						<SectionTemplate heading={'Similar'}>
 							<SnapCarousel>
 								{similarMedia.map((media: Series) => (
-									<MediaCard
+									<button
 										key={media.id}
-										className="w-[calc(50%-6px)]"
-										title={media.name}
-										detailsArray={[media.firstAirDate?.split('-')[0]]}
-										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										href={'/tv/' + media.id}
-										iconUrl={
-											media.requestStatus === MediaStatus.AVAILABLE ||
-											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
-												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
-												: null
-										}
-									/>
+										onClick={() => router.replace('/' + media.mediaType + '/' + media.id)}
+										className="w-[calc(50%-6px)] flex-shrink-0"
+									>
+										<MediaCard
+											title={media.name}
+											detailsArray={[media.firstAirDate?.split('-')[0]]}
+											imageUrl={CreateBackdropUrl(media.backdropPath)}
+											iconUrl={
+												media.requestStatus === MediaStatus.AVAILABLE ||
+												media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+													? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+													: null
+											}
+										/>
+									</button>
 								))}
 							</SnapCarousel>
 							<Seperator className="px-4" />
 						</SectionTemplate>
 					)}
 
-					{recommendedMedia && (
+					{recommendedMedia[0] && (
 						<SectionTemplate heading={'Recommended'}>
 							<SnapCarousel>
 								{recommendedMedia.map((media: Series) => (
-									<MediaCard
+									<button
 										key={media.id}
-										className="w-[calc(50%-6px)]"
-										title={media.name}
-										detailsArray={[media.firstAirDate?.split('-')[0]]}
-										imageUrl={CreateBackdropUrl(media.backdropPath)}
-										href={'/tv/' + media.id}
-										iconUrl={
-											media.requestStatus === MediaStatus.AVAILABLE ||
-											media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
-												? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
-												: null
-										}
-									/>
+										onClick={() => router.replace('/' + media.mediaType + '/' + media.id)}
+										className="w-[calc(50%-6px)] flex-shrink-0"
+									>
+										<MediaCard
+											title={media.name}
+											detailsArray={[media.firstAirDate?.split('-')[0]]}
+											imageUrl={CreateBackdropUrl(media.backdropPath)}
+											iconUrl={
+												media.requestStatus === MediaStatus.AVAILABLE ||
+												media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
+													? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
+													: null
+											}
+										/>
+									</button>
 								))}
 							</SnapCarousel>
 							<Seperator className="px-4" />
@@ -184,6 +202,6 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					</SectionTemplate>
 				</div>
 			</ScrollTrackingBackdrop>
-		</>
+		</div>
 	);
 }
