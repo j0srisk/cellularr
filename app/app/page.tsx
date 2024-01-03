@@ -15,10 +15,17 @@ export default function SessionPage() {
 	const router = useRouter();
 
 	useEffect(() => {
+		//get sessions from session storage first
+		if (typeof window !== 'undefined' && window.sessionStorage) {
+			const sessionStorageSessions = JSON.parse(sessionStorage.getItem('sessions') || '[]');
+			setSessions(sessionStorageSessions);
+		}
+
 		//fetch active sessions
 		async function fetchData() {
 			const sessions = await GetActiveSessions();
 			setSessions(sessions);
+			sessionStorage.setItem('sessions', JSON.stringify(sessions));
 		}
 		fetchData();
 
