@@ -42,14 +42,14 @@ export default function Page() {
 			setSeason(season ? season : null);
 		}
 		fetchData();
-	}, []);
+	}, [params.seasonNumber, params.id]);
 
 	if (!tvDetails || !season) {
 		return null;
 	}
 
 	return (
-		<div className="animate-fade flex h-full w-full">
+		<div className="flex h-full w-full animate-fade">
 			<SaveToRecentSearches series={tvDetails} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(tvDetails.backdropPath)}>
 				<Hero

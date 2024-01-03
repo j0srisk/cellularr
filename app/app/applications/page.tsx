@@ -10,17 +10,21 @@ import { useState, useEffect } from 'react';
 
 export default function ApplicationPage() {
 	const [yamlData, setYamlData] = useState<any>(null);
+	const [applicationCount, setApplicationCount] = useState<number>(0);
 
 	useEffect(() => {
 		async function fetchData() {
 			const parsedYaml = await GetApplications();
 			setYamlData(parsedYaml);
+			setApplicationCount(
+				parsedYaml.reduce((acc: number, curr: any) => acc + curr[Object.keys(curr)[0]].length, 0),
+			);
 		}
 		fetchData();
 	}, []);
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4">
-			<Header heading="Applications" subheading={'idk rn'} />
+			<Header heading="Applications" subheading={applicationCount + ' applications found'} />
 			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto">
 				{yamlData ? (
 					<>

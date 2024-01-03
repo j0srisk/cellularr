@@ -5,7 +5,7 @@ import GroupList from './ui/GroupList';
 import Row from './ui/Row';
 import Seperator from './ui/Seperator';
 import { requestMedia } from '@/app/actions';
-import { Season, MediaType, MediaStatus } from '@/app/types';
+import { Season, MediaType, MediaStatus, Movie } from '@/app/types';
 import { CreatePosterUrl } from '@/app/utils';
 import Button from '@/components/ui/Button';
 import Sheet from '@/components/ui/Sheet';
@@ -18,10 +18,11 @@ type RequestProps = {
 	type: MediaType;
 	id: number;
 	text: string;
-	seasons: Season[];
+	movie?: Movie;
+	seasons?: Season[];
 };
 
-export default function Request({ type, id, text, seasons }: RequestProps) {
+export default function Request({ type, id, text, movie, seasons }: RequestProps) {
 	const [requesting, setRequesting] = useState(false);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [selectedSeasons, setSelectedSeasons] = useState<Season[]>([]);
@@ -31,7 +32,7 @@ export default function Request({ type, id, text, seasons }: RequestProps) {
 	const typeText = type === MediaType.MOVIE ? 'Movie' : 'Series';
 
 	//removes season 0 from seasons array
-	const filteredSeasons = seasons.filter((season) => season.seasonNumber !== 0);
+	const filteredSeasons = seasons?.filter((season) => season.seasonNumber !== 0);
 
 	return (
 		<>
@@ -45,7 +46,7 @@ export default function Request({ type, id, text, seasons }: RequestProps) {
 					<div className="z-40 flex h-full w-full flex-col gap-[18px] overflow-hidden">
 						{/* Seasons / Movies */}
 						<div className="no-scrollbar flex max-h-[385px] w-full flex-shrink snap-y flex-col overflow-auto rounded-xl bg-system-secondary-light px-4 dark:bg-system-secondary-dark-elevated">
-							{filteredSeasons.map((season: Season, index: number) => (
+							{filteredSeasons?.map((season: Season, index: number) => (
 								<Fragment key={season.id}>
 									<MediaCardLandscape
 										className="py-4"
@@ -84,6 +85,14 @@ export default function Request({ type, id, text, seasons }: RequestProps) {
 									{index !== filteredSeasons.length - 1 && <Seperator />}
 								</Fragment>
 							))}
+							{type === MediaType.MOVIE && movie && (
+								<MediaCardLandscape
+									className="py-4"
+									imageUrl={CreatePosterUrl(movie.posterPath)}
+									title={movie.title}
+									details={movie.releaseDate?.split('-')[0]}
+								></MediaCardLandscape>
+							)}
 						</div>
 						{/* Advanced */}
 						<GroupList header="Advanced">
@@ -94,27 +103,27 @@ export default function Request({ type, id, text, seasons }: RequestProps) {
 
 						{/* Request Button */}
 						<Button
-							style={{ opacity: selectedSeasons.length === 0 ? 0.5 : 1 }}
+							style={{ opacity: selectedSeasons.length === 0 ? (movie ? 1 : 0.5) : 1 }}
 							className="bg-system-indigo-light dark:bg-system-indigo-dark"
 							text={
 								selectedSeasons.length === 0
-									? 'Select a season'
+									? movie
+										? 'Request Movie'
+										: 'Select a season'
 									: 'Request ' + selectedSeasons.length + ' seasons'
 							}
-							disabled={selectedSeasons.length === 0 || isProcessing}
+							disabled={(!movie && selectedSeasons.length === 0) || isProcessing}
 							onClick={() => {
 								setIsProcessing(true);
-								requestMedia(
-									type,
-									id,
-									selectedSeasons.map((season) => season.seasonNumber),
-								).then((response) => {
-									console.log(response);
-									router.refresh();
-									setIsProcessing(false);
-									setSelectedSeasons([]);
-									setRequesting(false);
-								});
+								requestMedia(type, id, selectedSeasons?.map((season) => season.seasonNumber)).then(
+									(response) => {
+										console.log(response);
+										router.refresh();
+										setIsProcessing(false);
+										setSelectedSeasons([]);
+										setRequesting(false);
+									},
+								);
 							}}
 						/>
 					</div>

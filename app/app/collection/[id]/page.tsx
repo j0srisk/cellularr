@@ -25,7 +25,7 @@ export default function Page() {
 			setCollection(collection);
 		}
 		fetchData();
-	}, []);
+	}, [params.id]);
 
 	const router = useRouter();
 
@@ -52,7 +52,7 @@ export default function Page() {
 	}
 
 	return (
-		<div className="animate-fade flex h-full w-full">
+		<div className="flex h-full w-full animate-fade">
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(collection.backdropPath)}>
 				<Hero
 					title={collection.name}

@@ -4,6 +4,7 @@ import { GetMovie, GetRecommendedMovies, GetSimilarMovies } from '@/app/actions'
 import { Movie, Cast, MediaStatus } from '@/app/types';
 import { CreateBackdropUrl, FormatDuration, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
+import StatusButton from '@/components/MovieStatusButton';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
 import SnapCarousel from '@/components/SnapCarousel';
 import CastMember from '@/components/media/CastMember';
@@ -37,14 +38,14 @@ export default function MoviePage() {
 			setSimilarMedia(similarMedia);
 		}
 		fetchData();
-	}, []);
+	}, [params.id]);
 
 	if (!movie) {
 		return null;
 	}
 
 	return (
-		<div className="animate-fade flex h-full w-full">
+		<div className="flex h-full w-full animate-fade">
 			<SaveToRecentSearches movie={movie} />
 			<ScrollTrackingBackdrop url={CreateBackdropUrl(movie.backdropPath)}>
 				<Hero
@@ -60,7 +61,7 @@ export default function MoviePage() {
 					contentRating={movie.contentRating}
 					file={movie.file}
 				>
-					<Button className="bg-white text-system-primary-dark" text="Play" />
+					<StatusButton movie={movie} />
 				</Hero>
 
 				<div className="pb-nav flex flex-col gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
