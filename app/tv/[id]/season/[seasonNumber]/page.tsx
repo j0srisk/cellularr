@@ -1,4 +1,4 @@
-import { Cast, Episode, Series, MediaStatus, Movie } from '@/app/types';
+import { Cast, Episode, Series, MediaStatus, MediaType } from '@/app/types';
 import { CreateBackdropUrl, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import Request from '@/components/Request';
@@ -54,13 +54,6 @@ export default async function Page({ params }: { params: { id: number; seasonNum
 					<StatusButton series={tvDetails} />
 				</Hero>
 				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
-					{tvDetails.downloads && (
-						<>
-							<DownloadStatus downloads={tvDetails.downloads} />
-							<Seperator className="px-4" />
-						</>
-					)}
-
 					<SectionTemplate>
 						<SeasonSelector seasons={tvDetails.seasons} />
 						<SnapCarousel>

@@ -1,7 +1,7 @@
 'use client';
 
 import { GetSeason, GetSeries, GetRecommendedSeries, GetSimilarSeries } from '@/app/actions';
-import { Cast, Episode, Series, MediaStatus, Season } from '@/app/types';
+import { Cast, Episode, Series, MediaStatus, Season, MediaType } from '@/app/types';
 import { CreateBackdropUrl, FormatReleaseDate } from '@/app/utils';
 import MediaCard from '@/components/MediaCard';
 import SaveToRecentSearches from '@/components/SaveToRecentSearches';
@@ -68,13 +68,6 @@ export default function Page() {
 					<StatusButton series={tvDetails} />
 				</Hero>
 				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
-					{tvDetails.downloads && (
-						<>
-							<DownloadStatus downloads={tvDetails.downloads} />
-							<Seperator className="px-4" />
-						</>
-					)}
-
 					<SectionTemplate>
 						<SeasonSelector seasons={tvDetails.seasons} />
 						<SnapCarousel>

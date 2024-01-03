@@ -85,53 +85,7 @@ const overseerr = {
 	getSeries: async (id: number) => {
 		const tvDetails = await endpoint('/tv/' + id);
 
-		const series: Series = {
-			mediaType: MediaType.TV,
-			id: tvDetails.id,
-			backdropPath: tvDetails.backdropPath,
-			posterPath: tvDetails.posterPath,
-			genre: tvDetails.genres ? tvDetails.genres[0]?.name : null,
-			overview: tvDetails.overview,
-			firstAirDate: tvDetails.firstAirDate,
-			lastAirDate: tvDetails.lastAirDate || null,
-			name: tvDetails.name,
-			episodeRunTime: tvDetails.episodeRunTime ? tvDetails.episodeRunTime[0] : null,
-			numberOfSeasons: tvDetails.numberOfSeasons,
-			numberOfEpisodes: tvDetails.numberOfEpisodes,
-			cast: tvDetails.credits ? tvDetails.credits.cast : null,
-			requestStatus: tvDetails.mediaInfo?.status || MediaStatus.UNKNOWN,
-			seasons: tvDetails.seasons?.map((season: any) => ({
-				id: season.id,
-				airDate: season.airDate,
-				episodeCount: season.episodeCount,
-				name: season.name,
-				overview: season.overview,
-				posterPath: season.posterPath,
-				seasonNumber: season.seasonNumber,
-				requestStatus: MediaStatus.UNKNOWN,
-			})),
-			network: tvDetails.networks ? tvDetails.networks[0]?.name : null,
-			status: tvDetails.status,
-			contentRating:
-				tvDetails.contentRatings?.results?.find(
-					(contentRating: any) => contentRating.iso_3166_1 === 'US',
-				)?.rating || 'NR',
-
-			downloads:
-				tvDetails.mediaInfo?.downloadStatus.map((download: Download) => ({
-					id: download.id,
-					estimatedCompletionTime: download.estimatedCompletionTime,
-					status: download.status,
-					size: download.size,
-					sizeLeft: download.sizeLeft,
-					episode: download.episode,
-				})) || null,
-			criticsRating: null,
-
-			ratingKey: tvDetails.mediaInfo?.ratingKey || null,
-			plexUrl: tvDetails.mediaInfo?.plexUrl || null,
-			iOSPlexUrl: tvDetails.mediaInfo?.iOSPlexUrl || null,
-		};
+		const series = overseerr.convertSeries(tvDetails);
 
 		const ratings = await overseerr.getRatings(MediaType.TV, id);
 

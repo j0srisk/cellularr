@@ -45,8 +45,8 @@ export default function SaveToRecentSearches({
 			recentSearches.unshift(searchResult);
 
 			// Remove the last item in the array if it is longer than X items
-			if (recentSearches.length > 8) {
-				recentSearches.splice(8);
+			if (recentSearches.length > 5) {
+				recentSearches.splice(5);
 			}
 
 			localStorage.setItem('recentSearches', JSON.stringify(recentSearches));

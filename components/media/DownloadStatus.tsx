@@ -1,13 +1,36 @@
 'use client';
 
-import { Download } from '@/app/types';
+import { GetDownloads } from '@/app/actions';
+import { Download, MediaType } from '@/app/types';
 import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Fragment } from 'react';
 
-export default function DownloadStatus({ downloads }: { downloads: Download[] }) {
+type DownloadStatusProps = {
+	mediaType: MediaType;
+	mediaId: number;
+	initalDownloads: Download[];
+};
+
+export default function DownloadStatus({
+	mediaType,
+	mediaId,
+	initalDownloads,
+}: DownloadStatusProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [downloads, setDownloads] = useState<Download[]>(initalDownloads);
+
+	useEffect(() => {
+		const interval = setInterval(async () => {
+			if (isOpen) {
+				const newDownloads = await GetDownloads(mediaType, mediaId);
+				setDownloads(newDownloads);
+			}
+		}, 10000);
+
+		return () => clearInterval(interval);
+	}, [isOpen, mediaType, mediaId]);
 
 	return (
 		<>
@@ -47,8 +70,8 @@ export default function DownloadStatus({ downloads }: { downloads: Download[] })
 				<div className="pt-safe pb-nav fixed top-0 z-50 flex h-full max-h-full w-full flex-col overflow-hidden bg-system-primary-light px-4 py-3 dark:bg-system-primary-dark">
 					<Header heading="Download Status" onBack={() => setIsOpen(false)} />
 					<div className="no-scrollbar flex w-full flex-col items-center gap-[18px] overflow-auto pb-[9px]">
-						{downloads.map((download: Download, index: number) => (
-							<Fragment key={download.id}>
+						{downloads?.map((download: Download, index: number) => (
+							<Fragment key={index}>
 								<div className="flex w-full flex-row items-center justify-between">
 									<div className="flex w-full flex-col">
 										<p className="w-full truncate text-left text-body">{download.episode?.title}</p>
@@ -62,7 +85,7 @@ export default function DownloadStatus({ downloads }: { downloads: Download[] })
 										<svg className="h-full w-full" viewBox="0 0 100 100">
 											<circle
 												className="stroke-current text-fill-tetiary-light dark:text-fill-tetiary-dark"
-												stroke-width="10"
+												strokeWidth="10"
 												cx="50"
 												cy="50"
 												r="40"
@@ -71,13 +94,13 @@ export default function DownloadStatus({ downloads }: { downloads: Download[] })
 
 											<circle
 												className="progress-ring__circle  stroke-current text-system-blue-light dark:text-system-blue-dark"
-												stroke-width="10"
-												stroke-linecap="round"
+												strokeWidth="10"
+												strokeLinecap="round"
 												cx="50"
 												cy="50"
 												r="40"
 												fill="transparent"
-												stroke-dashoffset={`calc(400 - (400 * ${(
+												strokeDashoffset={`calc(400 - (400 * ${(
 													(1 - download.sizeLeft / download.size) *
 													60
 												).toFixed(2)}) / 100)`}

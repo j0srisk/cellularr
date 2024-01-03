@@ -66,6 +66,13 @@ export async function GetSeason(id: number, seasonNumber: number) {
 	return season;
 }
 
+export async function GetDownloads(mediaType: MediaType, id: number) {
+	console.log('Getting downloads for ' + mediaType + ' ' + id);
+	const downloads = await overseerr.getDownloads(mediaType, id);
+
+	return downloads;
+}
+
 export async function GetActiveSessions() {
 	const sessions = await tautulli.getSessions();
 
