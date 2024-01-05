@@ -8,26 +8,27 @@ import { Fragment } from 'react';
 import { useState, useEffect } from 'react';
 
 export default function ApplicationPage() {
-	const [yamlData, setYamlData] = useState<any>(null);
+	const [applications, setApplications] = useState<any>(null);
 	const [applicationCount, setApplicationCount] = useState<number>(0);
 
 	useEffect(() => {
 		//get sessions from session storage first
 		if (typeof window !== 'undefined' && window.sessionStorage) {
-			const sessionStorageYamlData = JSON.parse(sessionStorage.getItem('yamlData') || '[]');
+			const sessionStorageApplications = JSON.parse(sessionStorage.getItem('applications') || '[]');
 			const sessionStorageApplicationCount = sessionStorage.getItem('applicationCount');
-			setYamlData(sessionStorageYamlData);
+			setApplications(sessionStorageApplications);
 			setApplicationCount(parseInt(sessionStorageApplicationCount || '0'));
 		}
 
 		async function fetchData() {
-			const parsedYaml = await GetApplications();
-			setYamlData(parsedYaml);
-			sessionStorage.setItem('yamlData', JSON.stringify(parsedYaml));
-			const applicationCount = parsedYaml?.reduce(
-				(acc: number, curr: any) => acc + curr[Object.keys(curr)[0]].length,
-				0,
-			);
+			const applications = await GetApplications();
+			setApplications(applications);
+			sessionStorage.setItem('applications', JSON.stringify(applications));
+			const applicationCount =
+				applications?.reduce(
+					(acc: number, curr: any) => acc + curr[Object.keys(curr)[0]].length,
+					0,
+				) || 0;
 			setApplicationCount(applicationCount);
 			sessionStorage.setItem('applicationCount', (applicationCount ?? 0).toString());
 		}
@@ -37,9 +38,9 @@ export default function ApplicationPage() {
 		<div className="pt-safe flex h-full w-full flex-col px-4">
 			<Header heading="Applications" subheading={applicationCount + ' applications found'} />
 			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto">
-				{yamlData ? (
+				{applications ? (
 					<>
-						{yamlData.map((section: any) => (
+						{applications.map((section: any) => (
 							<div key={Object.keys(section)[0]} className="flex flex-col gap-3">
 								<p className="text-title-3-emphasized">{Object.keys(section)[0]}</p>
 								<div className="flex flex-col gap-[9px]">

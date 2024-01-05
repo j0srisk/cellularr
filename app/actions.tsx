@@ -1,6 +1,6 @@
 'use server';
 
-import { demoSessions } from '@/app/config/demoData';
+import { demoApplications, demoSessions } from '@/app/config/demoData';
 import { MediaType } from '@/app/types';
 import overseerr from '@/services/overseerr';
 import tautulli from '@/services/tautulli';
@@ -79,10 +79,16 @@ export async function GetActiveSessions() {
 }
 
 export async function GetApplications() {
+	if (process.env.DEMO_MODE === 'true') {
+		console.log('DEMO MODE: using demo applications');
+		return demoApplications;
+	}
+
 	try {
 		let yamlFilePath = '/app/config/applications.yaml';
 
 		//if not running in docker, use local config file
+		//todo: maybe remove this check?
 		if (!process.env.DOCKER) {
 			yamlFilePath = process.cwd() + '/app/config/applications.yaml';
 		}
