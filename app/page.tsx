@@ -17,7 +17,9 @@ export default function SessionPage() {
 	useEffect(() => {
 		//get sessions from session storage first
 		if (typeof window !== 'undefined' && window.sessionStorage) {
-			const sessionStorageSessions = JSON.parse(sessionStorage.getItem('sessions') || '[]');
+			const storedSessions = sessionStorage.getItem('sessions');
+			const sessionStorageSessions =
+				storedSessions && storedSessions !== 'undefined' ? JSON.parse(storedSessions) : [];
 			setSessions(sessionStorageSessions);
 		}
 

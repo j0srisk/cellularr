@@ -4,10 +4,13 @@ import CenteredMessage from '@/components/CenteredMessage';
 import MediaCardLandscape from '@/components/MediaCardLandscape';
 import Seperator from '@/components/ui/Seperator';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, Fragment } from 'react';
 
 export default function RecentSearches() {
 	const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);
+
+	const router = useRouter();
 
 	function clearRecentSearches() {
 		if (typeof window !== 'undefined' && window.localStorage) {
@@ -43,7 +46,11 @@ export default function RecentSearches() {
 					<>
 						{recentSearches.map((searchResult: SearchResult) => (
 							<Fragment key={searchResult.id}>
-								<Link href={'/app/' + searchResult.mediaType + '/' + searchResult.id}>
+								<button
+									onClick={() =>
+										router.replace('/' + searchResult.mediaType + '/' + searchResult.id)
+									}
+								>
 									<MediaCardLandscape
 										imageUrl={CreatePosterUrl(searchResult.posterPath)}
 										title={searchResult.title || searchResult.name}
@@ -57,7 +64,7 @@ export default function RecentSearches() {
 													: 'Series'
 										}
 									/>
-								</Link>
+								</button>
 
 								{recentSearches.indexOf(searchResult) !== recentSearches.length - 1 && (
 									<Seperator className="px-0" />

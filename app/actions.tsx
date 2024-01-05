@@ -73,9 +73,22 @@ export async function GetActiveSessions() {
 }
 
 export async function GetApplications() {
-	const yamlFile = await fs.readFile(process.cwd() + '/applications.yaml', 'utf8');
+	try {
+		let yamlFilePath = '/app/config/applications.yaml';
 
-	const yamlData = parse(yamlFile);
+		//if not running in docker, use local config file
+		if (!process.env.DOCKER) {
+			yamlFilePath = process.cwd() + '/app/config/applications.yaml';
+		}
 
-	return yamlData;
+		const yamlFile = await fs.readFile(yamlFilePath, 'utf8');
+		const yamlData = parse(yamlFile);
+		return yamlData;
+	} catch (error: any) {
+		if (error.code === 'ENOENT') {
+			return null;
+		} else {
+			throw error;
+		}
+	}
 }

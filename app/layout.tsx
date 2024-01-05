@@ -1,4 +1,4 @@
-import '@/app/globals.css';
+import './globals.css';
 import Navbar from '@/components/ui/Navbar';
 import type { Metadata, Viewport } from 'next';
 

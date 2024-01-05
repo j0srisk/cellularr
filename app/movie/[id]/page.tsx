@@ -174,11 +174,11 @@ export default function MoviePage() {
 						/>
 						<InformationItem
 							title={'Budget'}
-							value={movie.budget ? <>${movie.budget?.toLocaleString()}</> : <>Unknown</>}
+							value={movie.budget ? <>${movie.budget?.toString()}</> : <>Unknown</>}
 						/>
 						<InformationItem
 							title={'Revenue'}
-							value={movie.revenue ? <>${movie.revenue?.toLocaleString()}</> : <>Unknown</>}
+							value={movie.revenue ? <>${movie.revenue?.toString()}</> : <>Unknown</>}
 						/>
 					</SectionTemplate>
 					{movie.file && (

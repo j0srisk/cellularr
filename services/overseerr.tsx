@@ -3,6 +3,9 @@ import tautulli from '@/services/tautulli';
 import 'server-only';
 
 async function endpoint(endpoint: string, method: string = 'GET', body?: any) {
+	if (!process.env.OVERSEERR_URL || !process.env.OVERSEERR_API_KEY) {
+		throw new Error('Overseerr API: Overseerr URL or API key not set');
+	}
 	const options: RequestInit = {
 		headers: {
 			'x-api-key': process.env.OVERSEERR_API_KEY,

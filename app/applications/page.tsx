@@ -16,7 +16,6 @@ export default function ApplicationPage() {
 		if (typeof window !== 'undefined' && window.sessionStorage) {
 			const sessionStorageYamlData = JSON.parse(sessionStorage.getItem('yamlData') || '[]');
 			const sessionStorageApplicationCount = sessionStorage.getItem('applicationCount');
-			console.log(sessionStorageApplicationCount);
 			setYamlData(sessionStorageYamlData);
 			setApplicationCount(parseInt(sessionStorageApplicationCount || '0'));
 		}
@@ -25,12 +24,12 @@ export default function ApplicationPage() {
 			const parsedYaml = await GetApplications();
 			setYamlData(parsedYaml);
 			sessionStorage.setItem('yamlData', JSON.stringify(parsedYaml));
-			const applicationCount = parsedYaml.reduce(
+			const applicationCount = parsedYaml?.reduce(
 				(acc: number, curr: any) => acc + curr[Object.keys(curr)[0]].length,
 				0,
 			);
 			setApplicationCount(applicationCount);
-			sessionStorage.setItem('applicationCount', applicationCount.toString());
+			sessionStorage.setItem('applicationCount', (applicationCount ?? 0).toString());
 		}
 		fetchData();
 	}, []);
