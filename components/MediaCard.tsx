@@ -29,8 +29,8 @@ export default function MediaCard({
 	children,
 }: MediaCardProps) {
 	return (
-		<div className={`flex flex-shrink-0 snap-start scroll-ml-4 flex-col gap-1 ${className}`}>
-			<div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-gradient-to-tr from-zinc-800 to-zinc-900 text-label-secondary-dark">
+		<div className={`flex h-full flex-shrink-0 snap-start scroll-ml-4 flex-col gap-1 ${className}`}>
+			<div className="relative flex aspect-video flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-tr from-zinc-800 to-zinc-900 text-label-secondary-dark">
 				{progress || durationText || iconUrl ? (
 					<div className="absolute inset-0 z-20 flex h-full w-full items-end bg-gradient-to-t from-black/50 p-2">
 						<div className="flex h-8 w-full gap-4">
@@ -90,7 +90,7 @@ export default function MediaCard({
 				)}
 			</div>
 			{title && (
-				<div className="flex w-full flex-col items-start justify-center">
+				<div className="flex h-full w-full flex-col items-start justify-start">
 					<p className="w-full truncate text-left text-footnote-emphasized uppercase text-label-secondary-light dark:text-label-secondary-dark">
 						{heading}
 					</p>
