@@ -19,7 +19,7 @@ async function endpoint(endpoint: string, method: string = 'GET', body?: any) {
 		options.body = JSON.stringify(body);
 	}
 
-	const response = await fetch(process.env.OVERSEERR_URL + endpoint, options);
+	const response = await fetch(process.env.OVERSEERR_URL + '/api/v1' + endpoint, options);
 
 	if (response.status !== 200 && response.status !== 201) {
 		const errorData = await response.json();
