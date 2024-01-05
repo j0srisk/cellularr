@@ -1,5 +1,6 @@
 'use server';
 
+import { demoSessions } from '@/app/config/demoData';
 import { MediaType } from '@/app/types';
 import overseerr from '@/services/overseerr';
 import tautulli from '@/services/tautulli';
@@ -67,6 +68,11 @@ export async function GetSeason(id: number, seasonNumber: number) {
 }
 
 export async function GetActiveSessions() {
+	if (process.env.DEMO_MODE === 'true') {
+		console.log('DEMO MODE: using demo sessions');
+		return demoSessions;
+	}
+
 	const sessions = await tautulli.getSessions();
 
 	return sessions;

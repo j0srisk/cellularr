@@ -1,7 +1,8 @@
 'use client';
 
 import { GetActiveSessions } from '@/app/actions';
-import { Session } from '@/app/types';
+import { demoSessions } from '@/app/config/demoData';
+import { Session, MediaType } from '@/app/types';
 import { FormatDuration, CreateBackdropUrl } from '@/app/utils';
 import CenteredMessage from '@/components/CenteredMessage';
 import Header from '@/components/Header';
