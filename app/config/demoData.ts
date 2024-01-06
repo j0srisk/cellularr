@@ -7,7 +7,7 @@ export const demoSessions: Session[] = [
 		mediaType: MediaType.MOVIE,
 		progress: 43,
 		user: 'EchoExplorer77',
-		userThumb: 'https://plex.tv/users/8af8e9a7aae2c3d4/avatar?c=1704454441',
+		userThumb: 'https://plex.tv/users/da330ea7bbb26dfc/avatar?c=1704493767',
 		player: 'Apple TV',
 		year: '2010',
 		posterPath: '/vuifSABRpSnxCAOxEnWpNbZSXpp.jpg',
@@ -25,7 +25,7 @@ export const demoSessions: Session[] = [
 		mediaType: MediaType.TV,
 		progress: 72,
 		user: 'GalacticGeek101',
-		userThumb: 'https://plex.tv/users/8af8e9a7aae2c3d4/avatar?c=1704454441',
+		userThumb: 'https://plex.tv/users/045f142aee35e61a/avatar?c=1703694171',
 		player: 'Samsung Smart TV',
 		year: '2014',
 		posterPath: '/6U9CPeD8obHzweikFhiLhpc7YBT.jpg',
@@ -61,7 +61,7 @@ export const demoSessions: Session[] = [
 		mediaType: MediaType.MOVIE,
 		progress: 93,
 		user: 'r0b0t1',
-		userThumb: 'https://plex.tv/users/8af8e9a7aae2c3d4/avatar?c=1704454441',
+		userThumb: 'https://plex.tv/users/da330ea7bbb26dfc/avatar?c=1704493767',
 		player: 'Samsung Smart Fridge',
 		year: '2017',
 		posterPath: '/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg',
@@ -80,36 +80,37 @@ export const demoApplications: any[] = [
 		Media: [
 			{
 				Plex: {
-					href: 'http://192.168.1.93:32400',
+					href: 'https://app.plex.tv',
 					background: '#282A2D',
 				},
 			},
 			{
 				Overseerr: {
-					href: 'http://192.168.1.93:5055',
+					href: 'https://overseerr.dev',
 					background: '#131928',
 				},
 			},
 			{
 				Tautulli: {
-					href: 'http://192.168.1.93:8181',
+					href: 'https://tautulli.com',
 					background: '#282A2D',
 				},
 			},
 			{
 				Radarr: {
-					href: 'http://192.168.1.93:7878',
+					href: 'https://radarr.video',
+					background: '#fff',
 				},
 			},
 			{
 				Sonarr: {
-					href: 'http://192.168.1.93:8989',
+					href: 'https://sonarr.tv',
 					background: '#00CCFF',
 				},
 			},
 			{
 				Readarr: {
-					href: 'http://192.168.1.93:8888',
+					href: 'https://readarr.com',
 					background: '#8F2222',
 				},
 			},
@@ -120,40 +121,15 @@ export const demoApplications: any[] = [
 			{
 				Unraid: {
 					icon: 'unraid.png',
-					href: 'http://192.168.1.93',
+					href: 'https://unraid.net',
 					background: '#141414',
 				},
 			},
 			{
 				Docker: {
 					icon: 'docker.png',
-					href: 'http://192.168.1.93/docker',
+					href: 'https://www.docker.com',
 					background: '#fff',
-				},
-			},
-		],
-	},
-	{
-		Homebridges: [
-			{
-				'Homebridge Conroe': {
-					icon: 'homebridge.svg',
-					href: 'http://192.168.1.93:8581',
-					background: '#441E56',
-				},
-			},
-			{
-				'Homebridge Cheswood': {
-					icon: 'homebridge.svg',
-					href: 'http://172.16.0.100:8581',
-					background: '#441E56',
-				},
-			},
-			{
-				'Homebridge Farm': {
-					icon: 'homebridge.svg',
-					href: 'http://100.97.33.117:8581',
-					background: '#441E56',
 				},
 			},
 		],
