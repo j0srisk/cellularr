@@ -3,12 +3,17 @@
 import { Season } from '@/app/types';
 import { useRouter, useParams } from 'next/navigation';
 
-export default function SeasonSelector({ seasons }: { seasons: Season[] }) {
+export default function SeasonSelector({
+	selectedSeason,
+	seasons,
+	handleSeasonChange,
+}: {
+	selectedSeason: Season;
+	seasons: Season[];
+	handleSeasonChange: (seasonNumber: number) => void;
+}) {
 	const router = useRouter();
 	const params = useParams<{ id: string; seasonNumber: string }>();
-	const selectedSeason = seasons.find(
-		(season) => season.seasonNumber == Number(params.seasonNumber),
-	);
 
 	return (
 		<div className="w-full px-4">
@@ -29,7 +34,7 @@ export default function SeasonSelector({ seasons }: { seasons: Season[] }) {
 					defaultValue={selectedSeason?.seasonNumber}
 					className="absolute inset-0 h-full w-full opacity-0"
 					onChange={(e) => {
-						router.replace('/tv/' + params.id + '/season/' + e.target.value, { scroll: false });
+						handleSeasonChange(parseInt(e.target.value));
 					}}
 				>
 					{seasons.map((season) => (

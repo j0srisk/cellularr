@@ -1,4 +1,3 @@
-import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
 
 type MediaCardLandscapeProps = {
@@ -28,7 +27,6 @@ export default function MediaCardLandscape({
 							alt={title || 'Media Card Landscape'}
 							className="absolute h-full w-full object-cover object-center"
 						/>
-						<Spinner className="h-[14px] w-[14px]" />
 					</>
 				) : (
 					<svg

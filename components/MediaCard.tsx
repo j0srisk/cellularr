@@ -1,4 +1,3 @@
-import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment } from 'react';
@@ -64,11 +63,10 @@ export default function MediaCard({
 						<Image
 							src={imageUrl}
 							alt={title}
-							width={500}
-							height={500}
+							width={1000}
+							height={1000}
 							className="absolute top-0 h-full w-full object-cover object-center"
 						/>
-						<Spinner className="h-7 w-7" />
 					</>
 				) : (
 					<>

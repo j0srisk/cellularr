@@ -1,6 +1,5 @@
 import { Cast } from '@/app/types';
 import { CreateProfileUrl } from '@/app/utils';
-import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
 
 export default function CastMember({ cast }: { cast: Cast }) {
@@ -16,9 +15,8 @@ export default function CastMember({ cast }: { cast: Cast }) {
 							height={150}
 							width={150}
 							alt="icon"
-							className="absolute h-full w-full object-cover object-center"
+							className="absolute h-full w-full object-cover object-center opacity-0 transition-opacity group-hover:opacity-100"
 						/>
-						<Spinner className="h-7 w-7" />
 					</>
 				) : (
 					<svg
