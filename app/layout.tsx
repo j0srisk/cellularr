@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			className="overscroll-y-none bg-system-primary-light text-label-primary-light dark:bg-system-primary-dark dark:text-label-primary-dark"
 			lang="en"
 		>
-			<body className="h-[100vh] overflow-hidden">
+			<body className="flex h-[100vh] justify-center overflow-hidden">
 				{children}
 				<Navbar />
 			</body>
