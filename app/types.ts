@@ -130,6 +130,7 @@ export enum MediaType {
 	TV = 'tv',
 	COLLECTION = 'collection',
 	PERSON = 'person',
+	MUSIC = 'music',
 }
 
 export enum MediaStatus {
@@ -144,6 +145,7 @@ export type Session = {
 	id: string;
 	title: string;
 	mediaType: MediaType;
+	transcodeProgress: number | null;
 	progress: number;
 	user: string;
 	userThumb: string;
@@ -157,6 +159,7 @@ export type Session = {
 	episode?: number;
 	tmdbId: number;
 	state: string;
+	city: string | null;
 };
 
 export interface Rating {

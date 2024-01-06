@@ -52,7 +52,11 @@ export default function SessionPage() {
 						{sessions.map((session) => (
 							<button
 								key={session.id}
-								onClick={() => router.replace('/' + session.mediaType + '/' + session.tmdbId)}
+								onClick={() => {
+									if (session.mediaType !== MediaType.MUSIC) {
+										router.replace('/' + session.mediaType + '/' + session.tmdbId);
+									}
+								}}
 							>
 								<MediaCard
 									imageUrl={CreateBackdropUrl(session.backdropPath)}
@@ -61,6 +65,7 @@ export default function SessionPage() {
 										session.user,
 										session.season ? 'S' + session.season + ', E' + session.episode : session.year,
 										session.player,
+										session.city ? session.city : '',
 									]}
 									durationText={
 										session.state !== 'paused'

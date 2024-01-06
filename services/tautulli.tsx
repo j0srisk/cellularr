@@ -32,7 +32,23 @@ const tautulli = {
 				tautulliSession.guids.find((guid: string) => guid.startsWith('tmdb://'));
 			const tmdbId = guid?.substring('tmdb://'.length);
 
-			const mediaType = tautulliSession.media_type === 'episode' ? MediaType.TV : MediaType.MOVIE;
+			let mediaType;
+
+			switch (tautulliSession.media_type) {
+				case 'episode':
+					mediaType = MediaType.TV;
+					break;
+				case 'movie':
+					mediaType = MediaType.MOVIE;
+					break;
+				case 'track':
+					mediaType = MediaType.MUSIC;
+					break;
+				default:
+					mediaType = MediaType.MOVIE;
+			}
+
+			const city = await tautulli.getCity(tautulliSession.ip_address);
 
 			const overseerrMedia = await overseerr.getMedia(mediaType, parseInt(tmdbId));
 
@@ -40,6 +56,7 @@ const tautulli = {
 				id: tautulliSession.session_key,
 				title: tautulliSession.grandparent_title || tautulliSession.title,
 				mediaType: mediaType,
+				transcodeProgress: tautulliSession.transcode_progress || null,
 				progress: tautulliSession.progress_percent,
 				user: tautulliSession.friendly_name,
 				userThumb: tautulliSession.user_thumb,
@@ -53,6 +70,7 @@ const tautulli = {
 				tmdbId: parseInt(tmdbId),
 				season: tautulliSession.parent_media_index,
 				episode: tautulliSession.media_index,
+				city: city || null,
 			};
 
 			activeSessions.push(session);
@@ -101,6 +119,17 @@ const tautulli = {
 		});
 
 		return file;
+	},
+	getCity: async function (ipAddress: string) {
+		const geolocationDetails = await command('get_geoip_lookup&ip_address=' + ipAddress);
+
+		const city = geolocationDetails.response.data.city;
+
+		if (!city || city === 'Unknown') {
+			return null;
+		}
+
+		return city;
 	},
 };
 
