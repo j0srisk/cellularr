@@ -15,7 +15,7 @@ export default function CastMember({ cast }: { cast: Cast }) {
 							height={150}
 							width={150}
 							alt="icon"
-							className="absolute h-full w-full object-cover object-center opacity-0 transition-opacity group-hover:opacity-100"
+							className="absolute h-full w-full object-cover object-center transition-opacity group-hover:opacity-100"
 						/>
 					</>
 				) : (
