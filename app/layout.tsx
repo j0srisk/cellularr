@@ -15,6 +15,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+	title: 'Cellularr',
 	appleWebApp: {
 		capable: true,
 		statusBarStyle: 'black-translucent',

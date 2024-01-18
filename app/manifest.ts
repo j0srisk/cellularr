@@ -2,9 +2,9 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: 'Unraid Dashboard',
-		short_name: 'Unraid',
-		description: 'Next.js App',
+		name: 'Cellularr',
+		short_name: 'Cellularr',
+		description: 'Cellularr Progressive Web App',
 		start_url: '/',
 		scope: '/',
 		display: 'fullscreen',
