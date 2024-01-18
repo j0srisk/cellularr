@@ -35,7 +35,7 @@ export default function ApplicationPage() {
 		fetchData();
 	}, []);
 	return (
-		<div className="pt-safe flex h-full w-full flex-col px-4">
+		<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
 			<Header heading="Applications" subheading={applicationCount + ' applications found'} />
 			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto">
 				{applications ? (

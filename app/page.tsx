@@ -44,7 +44,7 @@ export default function SessionPage() {
 	}, []);
 
 	return (
-		<div className="pt-safe flex h-full w-full max-w-screen-lg flex-col  px-4">
+		<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
 			<Header heading="Now Streaming" subheading={sessions.length + ' Active Sessions'} />
 			<div className="no-scrollbar pb-nav grid w-full gap-[18px] overflow-auto overflow-x-hidden md:grid-cols-3">
 				{sessions[0] ? (
@@ -57,7 +57,7 @@ export default function SessionPage() {
 										router.replace('/' + session.mediaType + '/' + session.tmdbId);
 									}
 								}}
-								className="bg-black"
+								className=""
 							>
 								<MediaCard
 									imageUrl={CreateBackdropUrl(session.backdropPath)}

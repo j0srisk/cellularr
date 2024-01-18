@@ -43,7 +43,7 @@ export default function Page() {
 	}, [search]);
 
 	return (
-		<div className="pt-safe flex h-full w-full flex-col px-4">
+		<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
 			<Header heading="Search">
 				<div className="w-full pb-[15px] pt-[1px]">
 					<SearchBar
