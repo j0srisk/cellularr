@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center" id="title">Cellularr</h1>
 
-## Getting Started
+<p id="description">Cellularr serves as a comprehensive media manager tailored for Plex-based home servers, specifically designed for iOS devices. The app seamlessly integrates with existing local Tautulli and Overseerr instances, offering a convenient platform to view streaming data and request new media. Installable as a progressive web application to provide a native-like iOS application experience.</p>
 
-First, run the development server:
+<h2>🐋 Docker Image</h2>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[Docker Hub](https://hub.docker.com/repository/docker/txrisk27/cellularr/general)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h2>🚀 Demo</h2>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[Live Link](https://cellularr.josephrisk.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<h2>Project Screenshots:</h2>
 
-## Learn More
+<img src="https://github.com/j0srisk/new-portfolio-site/blob/main/src/assets/projects/cellularr.png?raw=true" alt="project-screenshot" height="auto">
+  
+<h2>🧐 Features</h2>
 
-To learn more about Next.js, take a look at the following resources:
+Here're some of the project's best features:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+*   Installable as Progressive Web Application
+*   API keys secured in backend
+*   Easy deployment with Docker
+  
+<h2>💻 Built with</h2>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Technologies used in the project:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+*   Next.js
+*   TailwindCSS
+*   Typescript
+*   Docker
+*   Demo Deployed with Vercel
