@@ -322,6 +322,12 @@ export async function postRequest(
 	return 'success';
 }
 
+export async function getActiveSessions() {
+	const sessions = await tautulli.getSessions();
+
+	return sessions;
+}
+
 export async function getFiles(ratingKey: number) {
 	const files = await tautulli.getFiles(ratingKey);
 

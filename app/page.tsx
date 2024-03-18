@@ -1,48 +1,27 @@
 'use client';
 
-import { GetActiveSessions } from '@/app/actions';
-import { demoSessions } from '@/app/config/demoData';
+import { getActiveSessions } from '@/app/actionss';
 import { Session, MediaType } from '@/app/types';
-import { FormatDuration, CreateBackdropUrl, CreatePosterUrl } from '@/app/utils';
 import CenteredMessage from '@/components/CenteredMessage';
 import Header from '@/components/Header';
-import MediaCard from '@/components/MediaCard';
 import SessionCard from '@/components/SessionCard';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 export default function SessionPage() {
-	const [sessions, setSessions] = useState<Session[]>([]);
+	const { data: sessions } = useSWR('sessions', getActiveSessions, {
+		refreshInterval: 5000,
+	});
 
 	const router = useRouter();
 
-	useEffect(() => {
-		//get sessions from session storage first
-		if (typeof window !== 'undefined' && window.sessionStorage) {
-			const storedSessions = sessionStorage.getItem('sessions');
-			const sessionStorageSessions =
-				storedSessions && storedSessions !== 'undefined' ? JSON.parse(storedSessions) : [];
-			setSessions(sessionStorageSessions);
-		}
-
-		//fetch active sessions
-		async function fetchData() {
-			const sessions = await GetActiveSessions();
-			setSessions(sessions);
-
-			//save sessions to session storage
-			sessionStorage.setItem('sessions', JSON.stringify(sessions));
-		}
-		fetchData();
-
-		//update sessions every 10 seconds
-		const interval = setInterval(fetchData, 10000);
-
-		//cleanup to prevent memory leaks
-		return () => {
-			clearInterval(interval);
-		};
-	}, []);
+	if (!sessions) {
+		return (
+			<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
+				<Header heading="Now Streaming" subheading="Loading..." />
+			</div>
+		);
+	}
 
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
