@@ -167,9 +167,14 @@ export type Season = {
 	episodeCount: number;
 };
 
-export type Radarr = {
+export type ArrServer = {
 	id: number;
 	name: string;
+	isDefault: boolean;
 	activeProfileId: number;
-	activeProfileName: string;
+};
+
+export type ArrProfile = {
+	id: number;
+	name: string;
 };

@@ -10,7 +10,8 @@ import {
 	RottenTomatoes,
 	SeriesMetadata,
 	Season,
-	Radarr,
+	ArrServer,
+	ArrProfile,
 } from '@/app/typess';
 import { MovieDetails } from '@/services/overseerr/interface';
 import overseerr from '@/services/overseerr/overseerr';
@@ -262,21 +263,43 @@ export async function getSeriesRatings(id: number) {
 	return ratings;
 }
 
-export async function getRadarrs() {
-	const overseerrResponse = await overseerr.endpoint('/settings/radarr');
+export async function getArrServers() {
+	const overseerrResponse = await overseerr.endpoint('/service/radarr');
 
-	const radarrs: Radarr[] = overseerrResponse.radarr.map((radarr: any) => {
+	const arrServers: ArrServer[] = overseerrResponse.map((arrServer: any) => {
 		return {
-			id: radarr.id,
-			name: radarr.name,
-			activeProfileId: radarr.activeProfileId,
-			activeProfileName: radarr.activeProfileName,
+			id: arrServer.id,
+			name: arrServer.name,
+			isDefault: arrServer.isDefault,
+			activeProfileId: arrServer.activeProfileId,
 		};
 	});
 
-	console.log(radarrs);
+	return arrServers;
+}
 
-	return radarrs;
+export async function getArrProfiles(id: number) {
+	const overseerrResponse = await overseerr.endpoint('/service/radarr/' + id);
+
+	const arrProfiles: ArrProfile[] = overseerrResponse.profiles.map((arrProfile: any) => {
+		return {
+			id: arrProfile.id,
+			name: arrProfile.name,
+		};
+	});
+
+	return arrProfiles;
+}
+
+export async function postRequest(
+	mediaType: MediaType,
+	id: number,
+	serverId: number,
+	profileId: number,
+) {
+	console.log(mediaType, id, serverId, profileId);
+
+	return 'success';
 }
 
 export async function getFiles(ratingKey: number) {
