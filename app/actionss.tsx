@@ -66,7 +66,7 @@ export async function getMovie(id: number) {
 			serviceUrl: overseerrResponse.mediaInfo.serviceUrl,
 		};
 
-		// movie is available in plex
+		// movie is also available in plex
 		if (overseerrResponse.mediaInfo.status === 5) {
 			const files = await getFiles(overseerrResponse.mediaInfo.ratingKey);
 
@@ -291,13 +291,33 @@ export async function getArrProfiles(id: number) {
 	return arrProfiles;
 }
 
+export async function getUsers() {
+	//TODO: Get more than 10 users
+	const overseerrResponse = await overseerr.endpoint('/user');
+
+	const defaultUserReponse = await overseerr.endpoint('/auth/me');
+
+	const users = overseerrResponse.results.map((user: any) => {
+		return {
+			id: user.id,
+			username: user.plexUsername ? user.plexUsername : user.username,
+			email: user.email,
+			avatar: user.avatar,
+			isDefault: user.id === defaultUserReponse.id,
+		};
+	});
+
+	return users;
+}
+
 export async function postRequest(
 	mediaType: MediaType,
 	id: number,
 	serverId: number,
 	profileId: number,
+	userId: number,
 ) {
-	console.log(mediaType, id, serverId, profileId);
+	console.log(mediaType, id, serverId, profileId, userId);
 
 	return 'success';
 }

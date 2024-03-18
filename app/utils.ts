@@ -1,3 +1,5 @@
+import { Movie, MediaDetail } from './typess';
+
 export function CreatePosterUrl(posterPath?: String) {
 	if (posterPath === null || posterPath === undefined) {
 		return;
@@ -45,4 +47,42 @@ export function FormatReleaseDate(releaseDate: string) {
 		month: 'long',
 		day: 'numeric',
 	});
+}
+
+export function createMovieDetails(movie: Movie) {
+	const movieDetails: MediaDetail[] = [];
+
+	movieDetails.push({ key: 'Release Status', values: [movie.metadata.status] });
+	movieDetails.push({ key: 'Release Date', values: [movie.metadata.releaseDate] });
+
+	if (movie.metadata.budget) {
+		movieDetails.push({ key: 'Budget', values: ['$' + movie.metadata.budget.toLocaleString()] });
+	}
+
+	if (movie.metadata.revenue) {
+		movieDetails.push({
+			key: 'Revenue',
+			values: ['$' + movie.metadata.revenue.toLocaleString()],
+		});
+	}
+
+	if (movie.files) {
+		if (movie.files[0].fullResolution) {
+			movieDetails.push({ key: 'Resolution', values: [movie.files[0].fullResolution] });
+		}
+		if (movie.files[0].size) {
+			movieDetails.push({
+				key: 'File Size',
+				values: [`${(movie.files[0].size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
+			});
+		}
+		if (movie.files[0].subtitles.length > 0) {
+			movieDetails.push({
+				key: 'Subtitles',
+				values: movie.files[0].subtitles.map((subtitle) => subtitle.language),
+			});
+		}
+	}
+
+	return movieDetails;
 }

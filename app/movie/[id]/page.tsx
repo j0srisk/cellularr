@@ -1,15 +1,13 @@
 'use client';
 
 import { getMovie } from '@/app/actionss';
+import { Cast, RelatedMediaMetadata, MediaType } from '@/app/typess';
 import {
-	Movie,
-	Cast,
-	RelatedMediaMetadata,
-	MediaDetail,
-	MediaStatus,
-	MediaType,
-} from '@/app/typess';
-import { CreateBackdropUrl, FormatDuration, CreatePosterUrl } from '@/app/utils';
+	CreateBackdropUrl,
+	FormatDuration,
+	CreatePosterUrl,
+	createMovieDetails,
+} from '@/app/utils';
 import Carousel from '@/components/Carousel';
 import MediaDetailsCard from '@/components/MediaDetailsCard';
 import Request from '@/components/NewRequest';
@@ -17,16 +15,17 @@ import PersonCard from '@/components/PersonCard';
 import PosterCard from '@/components/PosterCard';
 import Poster from '@/components/PosterCard';
 import Section from '@/components/Section';
-import { CertificationBadge, RottenTomatoesCriticsRatingBadge } from '@/components/media/Badges';
+import { CertificationBadge } from '@/components/media/Badges';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import { useState, useCallback } from 'react';
+import useSWR from 'swr';
 
 export default function MoviePage() {
 	const params = useParams<{ id: string }>();
 
-	const [movie, setMovie] = useState<Movie>();
-	const [movieDetails, setMovieDetails] = useState<MediaDetail[]>([]);
+	const { data: movie } = useSWR('movie', () => getMovie(parseInt(params.id)));
+
 	const [backdropHeight, setBackdropHeight] = useState(0);
 	const [requestPanel, setRequestPanel] = useState(false);
 
@@ -38,79 +37,6 @@ export default function MoviePage() {
 		}
 	}, []);
 
-	useEffect(() => {
-		const handleScroll = () => {
-			const currentPosition = window.scrollY;
-			console.log('Scroll position:', currentPosition);
-			setScrollPosition(currentPosition);
-		};
-
-		window.addEventListener('scroll', handleScroll);
-
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
-	}, []);
-
-	const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-		const currentPosition = event.currentTarget.scrollTop;
-		console.log('Scroll position:', currentPosition);
-		setScrollPosition(currentPosition);
-	};
-
-	useEffect(() => {
-		async function fetchData() {
-			const movie = await getMovie(parseInt(params.id));
-
-			const movieDetails: MediaDetail[] = [
-				{ key: 'Release Status', values: [movie.metadata.status] },
-				{ key: 'Release Date', values: [movie.metadata.releaseDate] },
-				...(movie.metadata.budget
-					? [{ key: 'Budget', values: ['$' + movie.metadata.budget.toLocaleString()] }]
-					: []),
-				...(movie.metadata.revenue
-					? [{ key: 'Revenue', values: ['$' + movie.metadata.revenue.toLocaleString()] }]
-					: []),
-			];
-
-			if (movie.files) {
-				movieDetails.push({
-					key: 'Resolution',
-					values: [movie.files[0].fullResolution],
-				});
-				movieDetails.push({
-					key: 'File Size',
-					values: [`${(movie.files[0].size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
-				});
-				if (movie.files[0].subtitles.length > 0) {
-					movieDetails.push({
-						key: 'Subtitles',
-						values: movie.files[0].subtitles.map((subtitle) => subtitle.language),
-					});
-				}
-			}
-
-			{
-				/*
-			if (movie.metadata.budget)
-				movieDetails.push({
-					key: 'Budget',
-					values: ['$' + movie.metadata.budget.toLocaleString()],
-				});
-			if (movie.metadata.revenue)
-				movieDetails.push({
-					key: 'Revenue',
-					values: ['$' + movie.metadata.revenue.toLocaleString()],
-				});
-			*/
-			}
-
-			setMovie(movie);
-			setMovieDetails(movieDetails);
-		}
-		fetchData();
-	}, [params.id]);
-
 	if (!movie) {
 		return null;
 	}
@@ -118,8 +44,8 @@ export default function MoviePage() {
 	return (
 		<div className="pb-nav no-scrollbar flex h-full w-full animate-fade flex-col overflow-auto">
 			<div className="relative flex h-fit w-full flex-shrink-0 bg-gradient-to-b from-transparent to-system-primary-light dark:to-system-primary-dark">
-				<div ref={divRef} className="pt-safe h-fit w-full">
-					<div className="flex flex-col items-center justify-center gap-2 px-4 py-8">
+				<div ref={divRef} className="h-fit w-full">
+					<div className="flex h-full flex-col items-center justify-center gap-2 p-4 pt-[30vw]">
 						<Poster
 							title={movie.metadata.title}
 							year={movie.metadata.releaseDate.split('-')[0]}
@@ -173,9 +99,12 @@ export default function MoviePage() {
 									</button>
 									{requestPanel && (
 										<Request
-											movie={movie}
-											closeFunction={() => setRequestPanel(false)}
+											mediaType={MediaType.MOVIE}
+											id={movie.metadata.id}
+											title={movie.metadata.title}
+											backdropUrl={CreateBackdropUrl(movie.metadata.backdropPath)}
 											backdropHeight={backdropHeight}
+											closeFunction={() => setRequestPanel(false)}
 										/>
 									)}
 								</>
@@ -217,7 +146,7 @@ export default function MoviePage() {
 					</Section>
 				)}
 				<Section className="px-4">
-					<MediaDetailsCard ratings={movie.ratings} details={movieDetails} />
+					<MediaDetailsCard ratings={movie.ratings} details={createMovieDetails(movie)} />
 				</Section>
 				<Section heading="Cast">
 					<Carousel className="px-4">
@@ -232,23 +161,20 @@ export default function MoviePage() {
 						))}
 					</Carousel>
 				</Section>
-				{movie.recommendations && (
-					<Section heading="Recommended Films">
-						<Carousel className="px-4">
-							{movie.recommendations.map((metadata: RelatedMediaMetadata) => (
-								<PosterCard
-									key={metadata.id}
-									title={metadata.title}
-									year={metadata.releaseDate.split('-')[0]}
-									imageURL={CreatePosterUrl(metadata.posterPath)}
-									className="w-32"
-									onClick={() => router.replace('/' + metadata.mediaType + '/' + metadata.id)}
-								/>
-							))}
-						</Carousel>
-					</Section>
-				)}
-
+				<Section heading="Recommended Films">
+					<Carousel className="px-4">
+						{movie.recommendations.map((metadata: RelatedMediaMetadata) => (
+							<PosterCard
+								key={metadata.id}
+								title={metadata.title}
+								year={metadata.releaseDate.split('-')[0]}
+								imageURL={CreatePosterUrl(metadata.posterPath)}
+								className="w-32"
+								onClick={() => router.replace('/' + metadata.mediaType + '/' + metadata.id)}
+							/>
+						))}
+					</Carousel>
+				</Section>
 				<Section heading="Similar Films">
 					<Carousel className="px-4">
 						{movie.similar.map((metadata: RelatedMediaMetadata) => (

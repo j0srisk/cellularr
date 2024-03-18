@@ -45,10 +45,10 @@ export type Series = {
 
 export type MovieMetadata = RelatedMediaMetadata & {
 	backdropPath: string;
-	budget: number;
+	budget?: number;
 	overview: string;
 	releaseDate: string;
-	revenue: number | null;
+	revenue?: number;
 	runtime: number;
 	status: string;
 	tagline?: string;
@@ -177,4 +177,12 @@ export type ArrServer = {
 export type ArrProfile = {
 	id: number;
 	name: string;
+};
+
+export type User = {
+	id: number;
+	username: string;
+	email: string;
+	avatar: string;
+	isDefault: boolean;
 };

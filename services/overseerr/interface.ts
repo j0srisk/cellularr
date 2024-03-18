@@ -5,7 +5,7 @@ export interface MovieDetails {
 	budget: number;
 	overview: string;
 	releaseDate: string;
-	revenue: number | null;
+	revenue: number;
 	runtime: number;
 	status: string;
 	tagline: string;

@@ -14,6 +14,16 @@ const config: Config = {
 					'34px',
 					{ lineHeight: '41px', letterSpacing: '-0.4px', fontWeight: '700' },
 				],
+				'title-1': ['28px', { lineHeight: '34px', letterSpacing: '-0.4px' }],
+				'title-1-emphasized': [
+					'28px',
+					{ lineHeight: '34px', letterSpacing: '-0.4px', fontWeight: '700' },
+				],
+				'title-2': ['22px', { lineHeight: '28px', letterSpacing: '-0.4px' }],
+				'title-2-emphasized': [
+					'22px',
+					{ lineHeight: '28px', fontWeight: '700', letterSpacing: '-0.4px' },
+				],
 				'title-3': ['20px', { lineHeight: '25px', letterSpacing: '-0.4px' }],
 				'title-3-emphasized': [
 					'20px',
@@ -23,6 +33,11 @@ const config: Config = {
 				'body-emphasized': [
 					'17px',
 					{ lineHeight: '22px', fontWeight: '590', letterSpacing: '-0.4px' },
+				],
+				callout: ['16px', { lineHeight: '21px', letterSpacing: '-0.4px' }],
+				'callout-emphasized': [
+					'16px',
+					{ lineHeight: '21px', fontWeight: '590', letterSpacing: '-0.4px' },
 				],
 				subheadline: ['15px', { lineHeight: '20px', letterSpacing: '-0.4px' }],
 				'subheadline-emphasized': [
