@@ -1,5 +1,6 @@
 import { MediaType, Session, File, Audio, Subtitle } from '@/app/types';
-import overseerr from '@/services/overseerr';
+import overseerr from '@/services/overseerr/overseerr';
+import { MediaFile } from '@/services/tautulli/interface';
 import 'server-only';
 
 async function command(cmd: string) {
@@ -48,13 +49,18 @@ const tautulli = {
 					mediaType = MediaType.MOVIE;
 			}
 
-			const city = await tautulli.getCity(tautulliSession.ip_address);
+			const { city, region } = (await tautulli.getLocation(tautulliSession.ip_address)) || {
+				city: null,
+				region: null,
+			};
 
 			const overseerrMedia = await overseerr.getMedia(mediaType, parseInt(tmdbId));
 
 			const session: Session = {
 				id: tautulliSession.session_key,
-				title: tautulliSession.grandparent_title || tautulliSession.title,
+				grandparentTitle: tautulliSession.grandparent_title,
+				parentTitle: tautulliSession.parent_title,
+				title: tautulliSession.title,
 				mediaType: mediaType,
 				transcodeProgress: tautulliSession.transcode_progress || null,
 				progress: tautulliSession.progress_percent,
@@ -71,12 +77,22 @@ const tautulli = {
 				season: tautulliSession.parent_media_index,
 				episode: tautulliSession.media_index,
 				city: city || null,
+				region: region || null,
 			};
 
 			activeSessions.push(session);
 		}
 
 		return activeSessions;
+	},
+	getFiles: async function (ratingKey: number) {
+		const fileDetails = await command('get_metadata&rating_key=' + ratingKey).then(
+			(res) => res.response.data,
+		);
+
+		const files: MediaFile[] = fileDetails.media_info;
+
+		return files;
 	},
 	getFile: async function (ratingKey: number) {
 		const fileDetails = await command('get_metadata&rating_key=' + ratingKey).then(
@@ -120,16 +136,18 @@ const tautulli = {
 
 		return file;
 	},
-	getCity: async function (ipAddress: string) {
+	getLocation: async function (ipAddress: string) {
 		const geolocationDetails = await command('get_geoip_lookup&ip_address=' + ipAddress);
 
 		const city = geolocationDetails.response.data.city;
+
+		const region = geolocationDetails.response.data.region;
 
 		if (!city || city === 'Unknown') {
 			return null;
 		}
 
-		return city;
+		return { city, region };
 	},
 };
 

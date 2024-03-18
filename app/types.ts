@@ -143,6 +143,8 @@ export enum MediaStatus {
 
 export type Session = {
 	id: string;
+	grandparentTitle: string | null;
+	parentTitle: string | null;
 	title: string;
 	mediaType: MediaType;
 	transcodeProgress: number | null;
@@ -160,6 +162,7 @@ export type Session = {
 	tmdbId: number;
 	state: string;
 	city: string | null;
+	region: string | null;
 };
 
 export interface Rating {

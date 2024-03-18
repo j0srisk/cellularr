@@ -3,10 +3,11 @@
 import { GetActiveSessions } from '@/app/actions';
 import { demoSessions } from '@/app/config/demoData';
 import { Session, MediaType } from '@/app/types';
-import { FormatDuration, CreateBackdropUrl } from '@/app/utils';
+import { FormatDuration, CreateBackdropUrl, CreatePosterUrl } from '@/app/utils';
 import CenteredMessage from '@/components/CenteredMessage';
 import Header from '@/components/Header';
 import MediaCard from '@/components/MediaCard';
+import SessionCard from '@/components/SessionCard';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -59,25 +60,7 @@ export default function SessionPage() {
 								}}
 								className=""
 							>
-								<MediaCard
-									imageUrl={CreateBackdropUrl(session.backdropPath)}
-									title={session.title}
-									detailsArray={[
-										session.user,
-										session.season ? 'S' + session.season + ', E' + session.episode : session.year,
-										session.player,
-										session.city ? session.city : '',
-									]}
-									durationText={
-										session.state !== 'paused'
-											? FormatDuration(
-													Math.floor((session.duration * (1 - session.progress / 100)) / 1000 / 60),
-												) + ' left'
-											: 'Paused'
-									}
-									progress={session.progress}
-									iconUrl={session.userThumb}
-								/>
+								<SessionCard key={session.id} session={session} />
 							</button>
 						))}
 					</>

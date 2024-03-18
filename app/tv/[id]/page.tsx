@@ -1,222 +1,172 @@
 'use client';
 
-import { GetSeason, GetSeries, GetRecommendedSeries, GetSimilarSeries } from '@/app/actions';
-import { Cast, Episode, Series, MediaStatus, Season, MediaType } from '@/app/types';
-import { CreateBackdropUrl, FormatReleaseDate } from '@/app/utils';
-import MediaCard from '@/components/MediaCard';
-import SaveToRecentSearches from '@/components/SaveToRecentSearches';
-import SnapCarousel from '@/components/SnapCarousel';
-import CastMember from '@/components/media/CastMember';
-import Hero from '@/components/media/Hero';
-import InformationItem from '@/components/media/InformationItem';
-import ScrollTrackingBackdrop from '@/components/media/ScrollTrackingBackdrop';
-import SeasonSelector from '@/components/media/SeasonSelector';
-import SectionTemplate from '@/components/media/SectionTemplate';
-import StatusButton from '@/components/media/SeriesStatusButton';
-import Seperator from '@/components/ui/Seperator';
+import { getSeries } from '@/app/actionss';
+import { Series, Cast, RelatedMediaMetadata, MediaDetail, MediaStatus } from '@/app/typess';
+import { CreateBackdropUrl, FormatDuration, CreatePosterUrl } from '@/app/utils';
+import Card from '@/components/Card';
+import Carousel from '@/components/Carousel';
+import MediaDetailsCard from '@/components/MediaDetailsCard';
+import PersonCard from '@/components/PersonCard';
+import PosterCard from '@/components/PosterCard';
+import Poster from '@/components/PosterCard';
+import Section from '@/components/Section';
+import { CertificationBadge, RottenTomatoesCriticsRatingBadge } from '@/components/media/Badges';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-export default function Page() {
-	const params = useParams<{ id: string; seasonNumber: string }>();
-	const [tvDetails, setTvDetails] = useState<Series | null>(null);
-	const [recommendedMedia, setRecommendedMedia] = useState<Series[]>([]);
-	const [similarMedia, setSimilarMedia] = useState<Series[]>([]);
-	const [season, setSeason] = useState<Season | null>(null);
+export default function MoviePage() {
+	const params = useParams<{ id: string }>();
 
+	const [series, setSeries] = useState<Series>();
+	const [seriesDetails, setSeriesDetails] = useState<MediaDetail[]>([]);
 	const router = useRouter();
 
 	useEffect(() => {
 		async function fetchData() {
-			const tvDetails: Series = await GetSeries(parseInt(params.id));
-			const recommendedMedia = await GetRecommendedSeries(tvDetails.id);
-			const similarMedia = await GetSimilarSeries(tvDetails.id);
-			const season = await GetSeason(tvDetails.id, 1);
+			const series = await getSeries(parseInt(params.id));
 
-			setTvDetails(tvDetails);
-			setRecommendedMedia(recommendedMedia);
-			setSimilarMedia(similarMedia);
-			setSeason(season ? season : null);
+			const seriesDetails: MediaDetail[] = [
+				{ key: 'Status', values: [series.metadata.status] },
+				{ key: 'Series Type', values: [series.metadata.type] },
+				{ key: 'First Episode', values: [series.metadata.firstAirDate] },
+				{ key: 'Lastest Episode', values: [series.metadata.lastAirDate] },
+				{ key: 'Network', values: series.metadata.networks.map((network) => network.name) },
+			];
+
+			setSeries(series);
+			setSeriesDetails(seriesDetails);
 		}
 		fetchData();
-	}, [params.seasonNumber, params.id]);
+	}, [params.id]);
 
-	async function handleSeasonChange(seasonNumber: number) {
-		if (!tvDetails) {
-			return;
-		}
-		const season = await GetSeason(tvDetails.id, seasonNumber);
-		setSeason(season ? season : null);
-	}
-
-	if (!tvDetails || !season) {
+	if (!series) {
 		return null;
 	}
 
 	return (
-		<div className="flex h-full w-full animate-fade">
-			<SaveToRecentSearches series={tvDetails} />
-			<ScrollTrackingBackdrop url={CreateBackdropUrl(tvDetails.backdropPath)}>
-				<Hero
-					title={tvDetails.name}
-					metadataDetailsArray={[
-						tvDetails.genre,
-						tvDetails.firstAirDate.split('-')[0],
-						tvDetails.episodeRunTime ? tvDetails.episodeRunTime + ' mins' : null,
-						tvDetails.numberOfSeasons + ' seasons',
-					]}
-					status={tvDetails.requestStatus}
-					overview={tvDetails.overview}
-					criticsRating={tvDetails.criticsRating}
-					contentRating={tvDetails.contentRating}
-				>
-					<StatusButton series={tvDetails} />
-				</Hero>
-				<div className="pb-nav flex flex-col items-center gap-3 bg-system-primary-light py-3 dark:bg-system-primary-dark">
-					<SectionTemplate
-						heading={tvDetails.seasons.length > 1 ? null : tvDetails.seasons[0].name}
-					>
-						{tvDetails.seasons.length > 1 && (
-							<SeasonSelector
-								selectedSeason={season}
-								seasons={tvDetails.seasons}
-								handleSeasonChange={handleSeasonChange}
-							/>
-						)}
-						<SnapCarousel>
-							{season?.episodes?.map((episode: Episode) => (
-								<div key={episode.id} className="w-[calc(66%)] flex-shrink-0">
-									<MediaCard
-										heading={`Episode ${episode.episodeNumber}`}
-										title={episode.title}
-										imageUrl={CreateBackdropUrl(episode.stillPath)}
-									>
-										<p className="line-clamp-3 w-full text-left text-footnote text-label-secondary-light dark:text-label-secondary-dark">
-											{episode.overview}
-										</p>
-									</MediaCard>
-								</div>
-							))}
-						</SnapCarousel>
-						<Seperator className="px-4" />
-					</SectionTemplate>
+		<div className="pb-nav no-scrollbar flex h-full w-full animate-fade flex-col overflow-auto">
+			<div className="relative flex w-full flex-shrink-0 bg-gradient-to-b from-transparent to-system-primary-light dark:to-system-primary-dark">
+				<div className="pt-safe w-full">
+					<div className="flex flex-col items-center justify-center gap-2 px-4 py-8">
+						<Poster
+							title={series.metadata.name}
+							year={series.metadata.firstAirDate.split('-')[0]}
+							imageURL={CreatePosterUrl(series.metadata.posterPath)}
+							className="z-10 w-2/5 max-w-[300px] border-none"
+						/>
 
-					{similarMedia[0] && (
-						<SectionTemplate heading={'Similar'}>
-							<SnapCarousel>
-								{similarMedia.map((media: Series) => (
-									<button
-										key={media.id}
-										onClick={() => router.replace('/' + media.mediaType + '/' + media.id)}
-										className="w-[calc(50%-6px)] flex-shrink-0"
-									>
-										<MediaCard
-											title={media.name}
-											detailsArray={[media.firstAirDate?.split('-')[0]]}
-											imageUrl={CreateBackdropUrl(media.backdropPath)}
-											iconUrl={
-												media.requestStatus === MediaStatus.AVAILABLE ||
-												media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
-													? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
-													: null
-											}
-										/>
-									</button>
-								))}
-							</SnapCarousel>
-							<Seperator className="px-4" />
-						</SectionTemplate>
-					)}
-
-					{recommendedMedia[0] && (
-						<SectionTemplate heading={'Recommended'}>
-							<SnapCarousel>
-								{recommendedMedia.map((media: Series) => (
-									<button
-										key={media.id}
-										onClick={() => router.replace('/' + media.mediaType + '/' + media.id)}
-										className="w-[calc(50%-6px)] flex-shrink-0"
-									>
-										<MediaCard
-											title={media.name}
-											detailsArray={[media.firstAirDate?.split('-')[0]]}
-											imageUrl={CreateBackdropUrl(media.backdropPath)}
-											iconUrl={
-												media.requestStatus === MediaStatus.AVAILABLE ||
-												media.requestStatus === MediaStatus.PARTIALLY_AVAILABLE
-													? 'https://raw.githubusercontent.com/walkxcode/dashboard-icons/1385e150f515795aa078bdbae2b8cdafb7567368/svg/plex.svg'
-													: null
-											}
-										/>
-									</button>
-								))}
-							</SnapCarousel>
-							<Seperator className="px-4" />
-						</SectionTemplate>
-					)}
-					<SectionTemplate heading={'Cast'}>
-						<SnapCarousel>
-							{tvDetails.cast.slice(0, 25).map((cast: Cast) => (
-								<CastMember key={cast.id} cast={cast} />
-							))}
-						</SnapCarousel>
-						<Seperator className="px-4" />
-					</SectionTemplate>
-					<SectionTemplate heading={'Information'}>
-						<InformationItem title={'Network'} value={tvDetails.network} />
-						<InformationItem
-							title={'First Air Date'}
-							value={
-								tvDetails.firstAirDate ? (
-									<>{FormatReleaseDate(tvDetails.firstAirDate)}</>
-								) : (
-									<>Unknown</>
-								)
-							}
-						/>
-						{tvDetails.status === 'Ended' && tvDetails.lastAirDate && (
-							<InformationItem
-								title={'Last Air Date'}
-								value={
-									tvDetails.lastAirDate ? (
-										<>{FormatReleaseDate(tvDetails.lastAirDate)}</>
-									) : (
-										<>Unknown</>
-									)
-								}
-							/>
+						<p className="text-center text-large-title-emphasized leading-[34px]">
+							{series.metadata.name}
+						</p>
+						<div className="flex items-center gap-2 text-label-secondary-light dark:text-label-secondary-dark">
+							<p className="text-subheadline">{series.metadata.firstAirDate.split('-')[0]}</p>
+						</div>
+						{series.info?.iOSPlexUrl && (
+							<Link
+								href={series.info.iOSPlexUrl}
+								className="flex w-1/2 items-center justify-center gap-2 rounded-lg border border-system-orange-dark bg-system-orange-light/80 p-3 shadow-sm"
+							>
+								<p className="text-subheadline-emphasized">Play on Plex</p>
+								<svg
+									className="h-4 w-4 fill-current stroke-current"
+									viewBox="0 0 32 32"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path d="M15.527 0h-9.287l10.239 16-10.239 16h9.287l10.233-16-10.233-16z" />
+								</svg>
+							</Link>
 						)}
-						<InformationItem
-							title={'Status'}
-							value={tvDetails.status ? <>{tvDetails.status}</> : <>Unknown</>}
-						/>
-						<InformationItem
-							title={'Number of Seasons'}
-							value={
-								tvDetails.numberOfSeasons ? (
-									<>
-										{tvDetails.numberOfSeasons} Season{tvDetails.numberOfSeasons > 1 && 's'}
-									</>
-								) : (
-									<>Unknown</>
-								)
-							}
-						/>
-						<InformationItem
-							title={'Total Episodes'}
-							value={
-								tvDetails.numberOfEpisodes ? (
-									<>
-										{tvDetails.numberOfEpisodes} Episode{tvDetails.numberOfEpisodes > 1 && 's'}
-									</>
-								) : (
-									<>Unknown</>
-								)
-							}
-						/>
-					</SectionTemplate>
+						{!series.info && (
+							<button className="flex w-1/2 items-center justify-center gap-2 rounded-lg border border-system-indigo-dark bg-system-indigo-light/80 p-3 shadow-sm">
+								<p className="text-subheadline-emphasized">Request</p>
+							</button>
+						)}
+					</div>
 				</div>
-			</ScrollTrackingBackdrop>
+				<div
+					className="absolute -z-10 h-full w-full bg-blue-500 bg-cover bg-center blur"
+					style={{ backgroundImage: `url(${CreateBackdropUrl(series.metadata.backdropPath)})` }}
+				/>
+			</div>
+			<div className="flex flex-col gap-6 bg-system-primary-light dark:bg-system-primary-dark">
+				{series.metadata.tagline && (
+					<Section>
+						<p className="px-4 text-large-title italic text-label-secondary-light dark:text-label-secondary-dark">
+							{series.metadata.tagline}
+						</p>
+					</Section>
+				)}
+				{series.metadata.overview && (
+					<Section heading="Overview">
+						<p className="px-4 text-body">{series.metadata.overview}</p>
+					</Section>
+				)}
+				<Section className="px-4">
+					<MediaDetailsCard ratings={series.ratings} details={seriesDetails} />
+				</Section>
+				<Section heading="Seasons">
+					<div className="flex flex-col gap-2 px-4">
+						{series.seasons.map((season) => (
+							<Card
+								key={season.id}
+								className="w-full flex-row items-center justify-between p-2 py-4"
+							>
+								<p className="text-subheadline-emphasized">{season.name}</p>
+
+								<p className="text-right text-subheadline text-label-secondary-light dark:text-label-secondary-dark">
+									{season.episodeCount} episodes
+								</p>
+							</Card>
+						))}
+					</div>
+				</Section>
+				<Section heading="Cast">
+					<Carousel className="px-4">
+						{series.metadata.cast.map((cast: Cast) => (
+							<PersonCard
+								key={cast.id}
+								name={cast.name}
+								character={cast.character}
+								imageURL={CreatePosterUrl(cast.profilePath)}
+								className="w-32"
+							/>
+						))}
+					</Carousel>
+				</Section>
+				{series.recommendations && (
+					<Section heading="Recommended Series">
+						<Carousel className="px-4">
+							{series.recommendations.map((metadata: RelatedMediaMetadata) => (
+								<PosterCard
+									key={metadata.id}
+									title={metadata.title}
+									year={metadata.releaseDate.split('-')[0]}
+									imageURL={CreatePosterUrl(metadata.posterPath)}
+									className="w-32"
+									onClick={() => router.replace('/' + metadata.mediaType + '/' + metadata.id)}
+								/>
+							))}
+						</Carousel>
+					</Section>
+				)}
+				{series.similar && (
+					<Section heading="Similar Series">
+						<Carousel className="px-4">
+							{series.similar.map((metadata: RelatedMediaMetadata) => (
+								<PosterCard
+									key={metadata.id}
+									title={metadata.title}
+									year={metadata.releaseDate.split('-')[0]}
+									imageURL={CreatePosterUrl(metadata.posterPath)}
+									className="w-32"
+									onClick={() => router.replace('/' + metadata.mediaType + '/' + metadata.id)}
+								/>
+							))}
+						</Carousel>
+					</Section>
+				)}
+			</div>
 		</div>
 	);
 }

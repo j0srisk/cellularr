@@ -7,7 +7,7 @@ export default function Navbar() {
 	const Router = useRouter();
 
 	return (
-		<nav className="pb-safe fixed bottom-0 z-50 w-full bg-system-primary-light/75 text-[#999] bg-blend-hard-light backdrop-blur-[25px] dark:bg-system-primary-dark/75">
+		<nav className="pb-safe fixed bottom-0 z-30 w-full bg-system-primary-light/75 text-[#999] bg-blend-hard-light backdrop-blur-[25px] dark:bg-system-primary-dark/75">
 			<Seperator />
 			<div className="flex w-full flex-wrap items-center justify-between px-6 py-[7px]">
 				<button

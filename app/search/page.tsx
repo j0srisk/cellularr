@@ -1,43 +1,29 @@
 'use client';
 
-import { SearchOverseerr } from '@/app/actions';
-import { MediaType, SearchResult } from '@/app/types';
+import { getSearchResults } from '@/app/actionss';
 import { CreatePosterUrl } from '@/app/utils';
 import Header from '@/components/Header';
-import MediaCardLandscape from '@/components/MediaCardLandscape';
-import RecentSearches from '@/components/RecentSearches';
+import PersonCard from '@/components/PersonCard';
+import PosterCard from '@/components/PosterCard';
 import SearchBar from '@/components/ui/SearchBar';
-import Seperator from '@/components/ui/Seperator';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Fragment } from 'react';
 
 export default function Page() {
 	const searchParams = useSearchParams();
 	const searchQuery = searchParams.get('query');
 
 	const [search, setSearch] = useState<string | ''>(searchQuery || '');
-	const [results, setResults] = useState<SearchResult[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [results, setResults] = useState([]);
 
 	const router = useRouter();
-
-	//get search results from overseerr and add to results state
-	async function fetchData(query: string, page: number = 1, language: string = 'en') {
-		const results = await SearchOverseerr(query);
-
-		const searchResults = results.filter(
-			(result: SearchResult) => result.mediaType !== MediaType.PERSON,
-		);
-
-		return searchResults;
-	}
 
 	useEffect(() => {
 		(async () => {
 			if (search) {
-				setResults(await fetchData(search));
+				const searchResultsResponse = await getSearchResults(search);
+				setResults(searchResultsResponse.results);
 			}
 		})();
 	}, [search]);
@@ -64,44 +50,28 @@ export default function Page() {
 
 			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start gap-[9px] overflow-y-auto overflow-x-hidden">
 				{searchQuery ? (
-					<>
-						{results.length > 0 ? (
-							<div className="flex w-full flex-col gap-[9px]">
-								{results.map((searchResult) => (
-									<Fragment key={searchResult.id}>
-										<button
-											onClick={() =>
-												router.replace('/' + searchResult.mediaType + '/' + searchResult.id)
-											}
-										>
-											<MediaCardLandscape
-												imageUrl={CreatePosterUrl(searchResult.posterPath)}
-												title={searchResult.title || searchResult.name}
-												details={
-													searchResult.mediaType === MediaType.MOVIE
-														? searchResult.releaseDate
-															? 'Movie • ' + searchResult.releaseDate?.split('-')[0]
-															: 'Movie'
-														: searchResult.firstAirDate
-															? 'Series • ' + searchResult.firstAirDate?.split('-')[0]
-															: 'Series'
-												}
-											/>
-										</button>
-										{results.indexOf(searchResult) !== results.length - 1 && (
-											<Seperator className="px-0" />
-										)}
-									</Fragment>
-								))}
-							</div>
-						) : (
-							<div className="flex h-full w-full items-center justify-center">
-								<p className="font-semibold opacity-60">No Results</p>
-							</div>
+					<div className="grid w-full grid-cols-3 gap-2">
+						{results.map((searchResult: any) =>
+							searchResult.mediaType === 'person' ? (
+								<PersonCard
+									key={searchResult.id}
+									name={searchResult.name}
+									imageURL={CreatePosterUrl(searchResult.profilePath)}
+								/>
+							) : (
+								<PosterCard
+									key={searchResult.id}
+									title={searchResult.originalTitle}
+									imageURL={CreatePosterUrl(searchResult.posterPath)}
+									onClick={() => {
+										router.push('/' + searchResult.mediaType + '/' + searchResult.id);
+									}}
+								/>
+							),
 						)}
-					</>
+					</div>
 				) : (
-					<RecentSearches />
+					<p>Discover</p>
 				)}
 			</div>
 		</div>

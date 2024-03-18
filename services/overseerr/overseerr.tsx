@@ -1,5 +1,6 @@
 import { Movie, MediaType, MediaStatus, Series, Season, Download, Collection } from '@/app/types';
-import tautulli from '@/services/tautulli';
+import { MovieDetails, MovieRatings } from '@/services/overseerr/interface';
+import tautulli from '@/services/tautulli/tautulli';
 import 'server-only';
 
 async function endpoint(endpoint: string, method: string = 'GET', body?: any) {
@@ -46,6 +47,8 @@ async function endpoint(endpoint: string, method: string = 'GET', body?: any) {
 }
 
 const overseerr = {
+	endpoint: endpoint,
+
 	getMedia: async (mediaType: MediaType, id: number) => {
 		if (mediaType === MediaType.MOVIE) {
 			return await overseerr.getMovie(id);
@@ -77,6 +80,16 @@ const overseerr = {
 		}
 
 		return movie;
+	},
+	getMovieDetails: async (id: number) => {
+		const movieDetails: MovieDetails = await endpoint('/movie/' + id);
+
+		return movieDetails;
+	},
+	getMovieRatings: async (id: number) => {
+		const movieRatings: MovieRatings = await endpoint('/movie/' + id + '/ratings');
+
+		return movieRatings;
 	},
 	getCollection: async (id: number) => {
 		const collectionDetails = await endpoint('/collection/' + id);

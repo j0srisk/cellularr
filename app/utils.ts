@@ -1,11 +1,11 @@
-export function CreatePosterUrl(posterPath: String | null) {
+export function CreatePosterUrl(posterPath?: String) {
 	if (posterPath === null || posterPath === undefined) {
 		return;
 	}
 	return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + posterPath;
 }
 
-export function CreateBackdropUrl(backdropPath: String | null) {
+export function CreateBackdropUrl(backdropPath?: String) {
 	if (backdropPath === null || backdropPath === undefined) {
 		return;
 	}

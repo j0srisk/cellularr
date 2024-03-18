@@ -2,8 +2,9 @@
 
 import { demoApplications, demoSessions } from '@/app/config/demoData';
 import { MediaType } from '@/app/types';
-import overseerr from '@/services/overseerr';
-import tautulli from '@/services/tautulli';
+import { MovieDetails } from '@/services/overseerr/interface';
+import overseerr from '@/services/overseerr/overseerr';
+import tautulli from '@/services/tautulli/tautulli';
 import { promises as fs } from 'fs';
 import { parse } from 'yaml';
 
@@ -23,6 +24,18 @@ export async function GetMovie(id: number) {
 	const movie = await overseerr.getMovie(id);
 
 	return movie;
+}
+
+export async function getMovieDetails(id: number) {
+	const movieDetails: MovieDetails = await overseerr.getMovieDetails(id);
+
+	return movieDetails;
+}
+
+export async function getMovieRatings(id: number) {
+	const movieRatings = await overseerr.getMovieRatings(id);
+
+	return movieRatings;
 }
 
 export async function GetRecommendedMovies(id: number) {
@@ -76,6 +89,12 @@ export async function GetActiveSessions() {
 	const sessions = await tautulli.getSessions();
 
 	return sessions;
+}
+
+export async function getFiles(ratingKey: number) {
+	const files = await tautulli.getFiles(ratingKey);
+
+	return files;
 }
 
 export async function GetApplications() {
