@@ -34,6 +34,7 @@ export type SeriesMetadata = {
 	name: string;
 	overview: string;
 	tagline?: string;
+	trailerUrl?: string;
 	posterPath?: string;
 	backdropPath?: string;
 	numberOfSeasons: number;
@@ -44,7 +45,7 @@ export type SeriesMetadata = {
 	status: string;
 	type: string;
 	cast: Cast[];
-	contentRatings: ContentRating[];
+	certification: string;
 };
 
 export type Series = {
@@ -53,15 +54,12 @@ export type Series = {
 	seasons: Season[];
 	ratings: Ratings;
 	info?: MediaInfo;
-	similar?: RelatedMediaMetadata[];
-	recommendations?: RelatedMediaMetadata[];
+	similar?: MediaMetadata[];
+	recommendations?: MediaMetadata[];
 };
 
-export type MovieMetadata = RelatedMediaMetadata & {
-	backdropPath: string;
+export type MovieMetadata = MediaMetadata & {
 	budget?: number;
-	overview: string;
-	releaseDate: string;
 	revenue?: number;
 	runtime: number;
 	status: string;
@@ -74,7 +72,7 @@ export type MovieMetadata = RelatedMediaMetadata & {
 	releases: Release[];
 };
 
-export type RelatedMediaMetadata = {
+export type MediaMetadata = {
 	mediaType: MediaType;
 	id: number;
 	title: string;
@@ -149,8 +147,8 @@ export type Movie = {
 	ratings: Ratings;
 	info?: MediaInfo;
 	files?: File[];
-	recommendations: RelatedMediaMetadata[];
-	similar: RelatedMediaMetadata[];
+	recommendations: MediaMetadata[];
+	similar: MediaMetadata[];
 };
 
 export type RelatedMedia = {
@@ -160,7 +158,7 @@ export type RelatedMedia = {
 	posterPath: string;
 };
 
-export type MediaDetail = {
+export type MediaFact = {
 	key: string;
 	values: string[];
 };
@@ -208,7 +206,10 @@ export type User = {
 
 export type Collection = {
 	id: number;
+	mediaType: MediaType.COLLECTION;
 	name: string;
+	overview?: string;
 	posterPath?: string;
 	backdropPath?: string;
+	parts: MediaMetadata[];
 };

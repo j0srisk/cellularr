@@ -1,4 +1,4 @@
-import { Movie, MediaDetail, MediaStatus } from '@/app/typess';
+import { Movie, Series, MediaStatus, MediaFact } from '@/app/typess';
 import ISO6391 from 'iso-639-1';
 
 export function CreatePosterUrl(posterPath?: String) {
@@ -19,7 +19,7 @@ export function CreateProfileUrl(profilePath: String | null) {
 	return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + profilePath;
 }
 
-export function FormatDuration(durationInMinutes: number) {
+export function formatDuration(durationInMinutes: number) {
 	const hours = Math.floor(durationInMinutes / 60);
 	const minutes = durationInMinutes % 60;
 
@@ -35,7 +35,7 @@ export function FormatDuration(durationInMinutes: number) {
 	return hours + hourString + ' ' + minutes + minuteString;
 }
 
-export function FormatReleaseDate(releaseDate: string) {
+export function formatReleaseDate(releaseDate: string) {
 	const dateParts = releaseDate.split('-');
 	const year = parseInt(dateParts[0]);
 	const month = parseInt(dateParts[1]) - 1;
@@ -48,49 +48,49 @@ export function FormatReleaseDate(releaseDate: string) {
 	return formattedDate;
 }
 
-export function createMovieDetails(movie: Movie) {
-	const movieDetails: MediaDetail[] = [];
+export function createMovieFacts(movie: Movie) {
+	const movieFacts: MediaFact[] = [];
 
 	if (movie.metadata.status) {
-		movieDetails.push({ key: 'Release Status', values: [movie.metadata.status] });
+		movieFacts.push({ key: 'Release Status', values: [movie.metadata.status] });
 	}
 
 	if (movie.metadata.releaseDate) {
-		movieDetails.push({
+		movieFacts.push({
 			key: 'Release Date',
-			values: [FormatReleaseDate(movie.metadata.releaseDate)],
+			values: [formatReleaseDate(movie.metadata.releaseDate)],
 		});
 	}
 
 	if (movie.metadata.originalLanguage) {
 		const language = ISO6391.getName(movie.metadata.originalLanguage);
 		if (language) {
-			movieDetails.push({ key: 'Original Language', values: [language] });
+			movieFacts.push({ key: 'Original Language', values: [language] });
 		}
 	}
 
 	if (movie.metadata.budget) {
-		movieDetails.push({ key: 'Budget', values: ['$' + movie.metadata.budget.toLocaleString()] });
+		movieFacts.push({ key: 'Budget', values: ['$' + movie.metadata.budget.toLocaleString()] });
 	}
 
 	if (movie.metadata.revenue) {
-		movieDetails.push({
+		movieFacts.push({
 			key: 'Revenue',
 			values: ['$' + movie.metadata.revenue.toLocaleString()],
 		});
 	}
 
-	movieDetails.push({
+	movieFacts.push({
 		key: 'Request Status',
 		values: movie.info ? [MediaStatus[movie.info?.requestStatus]] : ['Unrequested'],
 	});
 
 	if (movie.files) {
 		if (movie.files[0].fullResolution) {
-			movieDetails.push({ key: 'Resolution', values: [movie.files[0].fullResolution] });
+			movieFacts.push({ key: 'Resolution', values: [movie.files[0].fullResolution] });
 		}
 		if (movie.files[0].size) {
-			movieDetails.push({
+			movieFacts.push({
 				key: 'File Size',
 				values: [`${(movie.files[0].size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
 			});
@@ -98,11 +98,40 @@ export function createMovieDetails(movie: Movie) {
 		const uniqueLanguages = Array.from(
 			new Set(movie.files[0].subtitles.map((subtitle) => subtitle.language)),
 		);
-		movieDetails.push({
+		movieFacts.push({
 			key: 'Subtitles',
 			values: uniqueLanguages[0] ? uniqueLanguages : ['None'],
 		});
 	}
 
-	return movieDetails;
+	return movieFacts;
+}
+
+export function createSeriesFacts(series: Series) {
+	const seriesFacts: MediaFact[] = [];
+
+	if (series.metadata.status) {
+		seriesFacts.push({ key: 'Status', values: [series.metadata.status] });
+	}
+
+	if (series.metadata.firstAirDate) {
+		seriesFacts.push({
+			key: 'First Air Date',
+			values: [formatReleaseDate(series.metadata.firstAirDate)],
+		});
+	}
+
+	if (series.metadata.lastAirDate) {
+		seriesFacts.push({
+			key: 'Last Air Date',
+			values: [formatReleaseDate(series.metadata.lastAirDate)],
+		});
+	}
+
+	seriesFacts.push({
+		key: 'Request Status',
+		values: series.info ? [MediaStatus[series.info?.requestStatus]] : ['Unrequested'],
+	});
+
+	return seriesFacts;
 }

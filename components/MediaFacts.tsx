@@ -1,15 +1,9 @@
-import { MediaDetail, Ratings } from '@/app/typess';
+import { MediaFact, Ratings } from '@/app/typess';
 import Card from '@/components/Card';
 import { RottenTomatoesCriticsRatingBadge } from '@/components/media/Badges';
 import { Fragment } from 'react';
 
-type MediaDetailsProps = {
-	ratings?: Ratings;
-	details: MediaDetail[];
-};
-
-export default function MediaDetailsCard({ ratings, details }: MediaDetailsProps) {
-	console.log(ratings);
+export default function MediaFacts({ ratings, facts }: { ratings: Ratings; facts: MediaFact[] }) {
 	return (
 		<Card>
 			{ratings && Object.keys(ratings).length > 0 && (
@@ -28,12 +22,12 @@ export default function MediaDetailsCard({ ratings, details }: MediaDetailsProps
 				</>
 			)}
 
-			{details.map((detail, index: number) => (
+			{facts.map((fact, index: number) => (
 				<Fragment key={index}>
 					<div className="flex w-full items-start justify-between p-4 py-2">
-						<p className="text-subheadline-emphasized">{detail.key}</p>
+						<p className="text-subheadline-emphasized">{fact.key}</p>
 						<div>
-							{detail.values.map((value, index) => (
+							{fact.values.map((value, index) => (
 								<p
 									key={index}
 									className="w-full text-right text-subheadline text-label-secondary-light dark:text-label-secondary-dark"
@@ -43,7 +37,7 @@ export default function MediaDetailsCard({ ratings, details }: MediaDetailsProps
 							))}
 						</div>
 					</div>
-					{index < details.length - 1 && <div className="h-[1px] w-full bg-fill-tetiary-light" />}
+					{index < facts.length - 1 && <div className="h-[1px] w-full bg-fill-tetiary-light" />}
 				</Fragment>
 			))}
 		</Card>

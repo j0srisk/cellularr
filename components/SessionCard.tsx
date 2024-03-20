@@ -1,9 +1,9 @@
 import { Session, MediaType } from '@/app/types';
-import { FormatDuration, CreatePosterUrl } from '@/app/utils';
+import { formatDuration, CreatePosterUrl } from '@/app/utils';
 import Image from 'next/image';
 
 export default function SessionCard({ session }: { session: Session }) {
-	const formattedDuration = FormatDuration(
+	const formattedDuration = formatDuration(
 		Math.floor((session.duration * (1 - session.progress / 100)) / 1000 / 60),
 	);
 

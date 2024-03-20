@@ -5,13 +5,14 @@ import {
 	Movie,
 	Series,
 	File,
-	RelatedMediaMetadata,
+	MediaMetadata,
 	Ratings,
 	RottenTomatoes,
 	SeriesMetadata,
 	Season,
 	ArrServer,
 	ArrProfile,
+	Collection,
 } from '@/app/typess';
 import { MovieDetails } from '@/services/overseerr/interface';
 import overseerr from '@/services/overseerr/overseerr';
@@ -128,7 +129,7 @@ export async function getMovieRatings(id: number) {
 export async function getRecommendedMovies(id: number) {
 	const res = await overseerr.endpoint('/movie/' + id + '/recommendations');
 
-	const medias: RelatedMediaMetadata[] = res.results.map((media: any) => {
+	const medias: MediaMetadata[] = res.results.map((media: any) => {
 		return {
 			mediaType: MediaType.MOVIE,
 			id: media.id,
@@ -146,7 +147,7 @@ export async function getRecommendedMovies(id: number) {
 export async function getSimilarMovies(id: number) {
 	const res = await overseerr.endpoint('/movie/' + id + '/similar');
 
-	const medias: RelatedMediaMetadata[] = res.results.map((media: any) => {
+	const medias: MediaMetadata[] = res.results.map((media: any) => {
 		return {
 			mediaType: MediaType.MOVIE,
 			id: media.id,
@@ -174,6 +175,8 @@ export async function getSeries(id: number) {
 			posterPath: overseerrResponse.posterPath,
 			overview: overseerrResponse.overview,
 			tagline: overseerrResponse.tagline,
+			trailerUrl: overseerrResponse.relatedVideos.find((video: any) => video.type === 'Trailer')
+				?.url,
 			numberOfSeasons: overseerrResponse.numberOfSeasons,
 			numberOfEpisodes: overseerrResponse.numberOfEpisodes,
 			firstAirDate: overseerrResponse.firstAirDate,
@@ -182,7 +185,9 @@ export async function getSeries(id: number) {
 			status: overseerrResponse.status,
 			type: overseerrResponse.type,
 			cast: overseerrResponse.credits.cast,
-			contentRatings: overseerrResponse.contentRatings,
+			certification:
+				overseerrResponse.contentRatings.results.find((rating: any) => rating.iso_3166_1 === 'US')
+					?.rating ?? '',
 		},
 		seasons: overseerrResponse.seasons.map((season: any) => {
 			return {
@@ -218,7 +223,7 @@ export async function getSeries(id: number) {
 export async function getRecommendedSeries(id: number) {
 	const res = await overseerr.endpoint('/tv/' + id + '/similar');
 
-	const medias: RelatedMediaMetadata[] = res.results.map((media: any) => {
+	const medias: MediaMetadata[] = res.results.map((media: any) => {
 		return {
 			mediaType: MediaType.TV,
 			id: media.id,
@@ -236,7 +241,7 @@ export async function getRecommendedSeries(id: number) {
 export async function getSimilarSeries(id: number) {
 	const res = await overseerr.endpoint('/tv/' + id + '/recommendations');
 
-	const medias: RelatedMediaMetadata[] = res.results.map((media: any) => {
+	const medias: MediaMetadata[] = res.results.map((media: any) => {
 		return {
 			mediaType: MediaType.TV,
 			id: media.id,
@@ -269,6 +274,32 @@ export async function getSeriesRatings(id: number) {
 	ratings.rottenTomatoes = rottenTomatoes;
 
 	return ratings;
+}
+
+export async function getCollection(id: number) {
+	const overseerResponse = await overseerr.endpoint('/collection/' + id);
+
+	const collection: Collection = {
+		id: overseerResponse.id,
+		mediaType: MediaType.COLLECTION,
+		name: overseerResponse.name,
+		overview: overseerResponse.overview,
+		posterPath: overseerResponse.posterPath,
+		backdropPath: overseerResponse.backdropPath,
+		parts: overseerResponse.parts.map((part: any) => {
+			return {
+				id: part.id,
+				mediaType: part.mediaType,
+				title: part.title,
+				releaseDate: part.releaseDate,
+				overview: part.overview,
+				posterPath: part.posterPath,
+				backdropPath: part.backdropPath,
+			};
+		}),
+	};
+
+	return collection;
 }
 
 export async function getArrServers() {

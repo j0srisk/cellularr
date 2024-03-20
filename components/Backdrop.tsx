@@ -9,7 +9,7 @@ export default function Backdrop({
 }) {
 	return (
 		<span
-			className="fixed top-0 -z-10 w-full bg-cover bg-center"
+			className="fixed top-0 -z-10 w-full bg-cover bg-center blur-sm"
 			style={{
 				backgroundImage: `url(${backdropUrl}`,
 				height: backdropHeight,

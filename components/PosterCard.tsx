@@ -4,13 +4,12 @@ import { twMerge } from 'tailwind-merge';
 
 type PosterProps = {
 	title: string;
-	year?: string;
 	imageURL?: string;
 	className?: string;
 	onClick?: () => void;
 };
 
-export default function PosterCard({ title, year, imageURL, className, onClick }: PosterProps) {
+export default function PosterCard({ title, imageURL, className, onClick }: PosterProps) {
 	return (
 		<Card
 			className={twMerge([
@@ -19,17 +18,6 @@ export default function PosterCard({ title, year, imageURL, className, onClick }
 			])}
 			onClick={onClick}
 		>
-			<div className="absolute hidden h-full w-full flex-col justify-between gap-1 bg-black bg-opacity-75 p-2">
-				<div className="flex flex-col gap-1">
-					{year && <p className="text-subheadline">{year}</p>}
-					<p className="text-body-emphasized">{title}</p>
-				</div>
-				<div className="flex justify-center rounded-md bg-system-indigo-light px-2 py-1 shadow-none dark:bg-system-indigo-dark">
-					<p className="text-subheadline-emphasized text-label-primary-light dark:text-label-primary-dark">
-						Request
-					</p>
-				</div>
-			</div>
 			{imageURL ? (
 				<Image src={imageURL} alt={title} height={450} width={300} className="object-cover" />
 			) : (
