@@ -9,11 +9,12 @@ type MediaDetailsProps = {
 };
 
 export default function MediaDetailsCard({ ratings, details }: MediaDetailsProps) {
+	console.log(ratings);
 	return (
 		<Card>
-			{ratings && (
+			{ratings && Object.keys(ratings).length > 0 && (
 				<>
-					<div className="flex items-center justify-center gap-6 p-3">
+					<div className="flex items-center justify-center gap-6 p-4 py-3">
 						{ratings?.rottenTomatoes && (
 							<div className="flex items-center gap-2">
 								<RottenTomatoesCriticsRatingBadge
@@ -29,7 +30,7 @@ export default function MediaDetailsCard({ ratings, details }: MediaDetailsProps
 
 			{details.map((detail, index: number) => (
 				<Fragment key={index}>
-					<div className="flex w-full items-start justify-between p-2">
+					<div className="flex w-full items-start justify-between p-4 py-2">
 						<p className="text-subheadline-emphasized">{detail.key}</p>
 						<div>
 							{detail.values.map((value, index) => (

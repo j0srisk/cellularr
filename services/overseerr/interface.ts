@@ -10,13 +10,33 @@ export interface MovieDetails {
 	status: string;
 	tagline: string;
 	title: string;
+	originalLanguage: string;
+	relatedVideos: RelatedVideo[];
 	credits: {
 		cast: Cast[];
 	};
 	releases: {
 		results: Release[];
 	};
+	collection: Collection;
 	mediaInfo?: MediaInfo;
+}
+
+export interface RelatedVideo {
+	site: string;
+	key: string;
+	name: string;
+	size: number;
+	type: string;
+	url: string;
+}
+
+export interface Collection {
+	id: number;
+	name: string;
+	overview: string;
+	posterPath: string;
+	backdropPath: string;
 }
 
 export interface Cast {

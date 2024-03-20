@@ -7,11 +7,25 @@ export enum MediaType {
 }
 
 export enum MediaStatus {
-	UNKNOWN = 1,
-	PENDING = 2,
-	PROCESSING = 3,
-	PARTIALLY_AVAILABLE = 4,
-	AVAILABLE = 5,
+	'Unknown' = 1,
+	'Pending' = 2,
+	'Processing' = 3,
+	'Partially Available' = 4,
+	'Available' = 5,
+}
+
+export enum UnitedStatesCertification {
+	'G' = 'G',
+	'PG' = 'PG',
+	'PG-13' = 'PG-13',
+	'R' = 'R',
+	'NC-17' = 'NC-17',
+	'TV-MA' = 'TV-MA',
+	'TV-14' = 'TV-14',
+	'TV-PG' = 'TV-PG',
+	'TV-G' = 'TV-G',
+	'TV-Y7' = 'TV-Y7',
+	'TV-Y' = 'TV-Y',
 }
 
 export type SeriesMetadata = {
@@ -52,7 +66,10 @@ export type MovieMetadata = RelatedMediaMetadata & {
 	runtime: number;
 	status: string;
 	tagline?: string;
-	title: string;
+	trailerUrl?: string;
+	originalLanguage: string;
+	certification: string;
+	collection?: Collection;
 	cast: Cast[];
 	releases: Release[];
 };
@@ -71,7 +88,7 @@ export type MediaInfo = {
 	mediaType: MediaType;
 	id: number;
 	tmdbId: number;
-	status: number;
+	requestStatus: MediaStatus;
 	ratingKey: number;
 	plexUrl: string;
 	iOSPlexUrl: string;
@@ -122,6 +139,8 @@ export type RottenTomatoes = {
 	url?: string;
 	criticsScore?: number;
 	criticsRating?: string;
+	audienceScore?: number;
+	audienceRating?: string;
 };
 
 export type Movie = {
@@ -185,4 +204,11 @@ export type User = {
 	email: string;
 	avatar: string;
 	isDefault: boolean;
+};
+
+export type Collection = {
+	id: number;
+	name: string;
+	posterPath?: string;
+	backdropPath?: string;
 };

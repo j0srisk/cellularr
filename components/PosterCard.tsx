@@ -14,7 +14,7 @@ export default function PosterCard({ title, year, imageURL, className, onClick }
 	return (
 		<Card
 			className={twMerge([
-				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center overflow-hidden rounded-xl hover:cursor-pointer',
+				'group relative inline-block aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center overflow-hidden rounded-xl hover:cursor-pointer',
 				className,
 			])}
 			onClick={onClick}

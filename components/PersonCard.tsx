@@ -43,6 +43,9 @@ export default function PersonCard({
 					)}
 				</div>
 			</div>
+			{
+				// TODO: Account for longer character names
+			}
 			<div className="flex w-full flex-col items-center gap-1 px-2">
 				<p className="w-full truncate text-center text-subheadline-emphasized">{name}</p>
 				{character && (

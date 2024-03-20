@@ -73,10 +73,14 @@ export default function SessionCard({ session }: { session: Session }) {
 					/>
 				</div>
 
-				<div className="flex h-fit min-h-[54px] flex-col items-start">
-					<p className="text-footnote">{session.user}</p>
-					<p className="text-footnote">{session.player}</p>
-					<p className="text-footnote">
+				<div className="flex h-fit min-h-[54px] flex-col items-start justify-center">
+					<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+						{session.user}
+					</p>
+					<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+						{session.player}
+					</p>
+					<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 						{session.city && session.region
 							? `${session.city}, ${session.region}`
 							: session.city || session.region}

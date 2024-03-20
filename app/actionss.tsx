@@ -45,7 +45,19 @@ export async function getMovie(id: number) {
 			status: overseerrResponse.status,
 			tagline: overseerrResponse.tagline,
 			title: overseerrResponse.title,
+			trailerUrl: overseerrResponse.relatedVideos.find((video) => video.type === 'Trailer')?.url,
+			originalLanguage: overseerrResponse.originalLanguage,
 			cast: overseerrResponse.credits.cast,
+			collection: overseerrResponse.collection,
+			certification: Array.isArray(overseerrResponse.releases.results)
+				? overseerrResponse.releases.results
+						.find((release) => release.iso_3166_1 === 'US')
+						?.release_dates.find((date) => date.type === 3 && date.certification)?.certification ??
+					overseerrResponse.releases.results
+						.find((release) => release.iso_3166_1 === 'US')
+						?.release_dates.find((date) => date.certification)?.certification ??
+					''
+				: '',
 			releases: overseerrResponse.releases.results,
 		},
 		ratings: await getMovieRatings(id),
@@ -59,7 +71,7 @@ export async function getMovie(id: number) {
 			mediaType: MediaType.MOVIE,
 			id: overseerrResponse.mediaInfo.id,
 			tmdbId: overseerrResponse.mediaInfo.tmdbId,
-			status: overseerrResponse.mediaInfo.status,
+			requestStatus: overseerrResponse.mediaInfo.status,
 			ratingKey: overseerrResponse.mediaInfo.ratingKey,
 			plexUrl: overseerrResponse.mediaInfo.plexUrl,
 			iOSPlexUrl: overseerrResponse.mediaInfo.iOSPlexUrl,
@@ -69,8 +81,6 @@ export async function getMovie(id: number) {
 		// movie is also available in plex
 		if (overseerrResponse.mediaInfo.status === 5) {
 			const files = await getFiles(overseerrResponse.mediaInfo.ratingKey);
-
-			console.log(files[0].parts[0].streams);
 
 			const movieFiles: File[] = files.map((file) => {
 				return {
@@ -194,15 +204,13 @@ export async function getSeries(id: number) {
 			mediaType: MediaType.TV,
 			id: overseerrResponse.mediaInfo.id,
 			tmdbId: overseerrResponse.mediaInfo.tmdbId,
-			status: overseerrResponse.mediaInfo.status,
+			requestStatus: overseerrResponse.mediaInfo.status,
 			ratingKey: overseerrResponse.mediaInfo.ratingKey,
 			plexUrl: overseerrResponse.mediaInfo.plexUrl,
 			iOSPlexUrl: overseerrResponse.mediaInfo.iOSPlexUrl,
 			serviceUrl: overseerrResponse.mediaInfo.serviceUrl,
 		};
 	}
-
-	console.log(series);
 
 	return series;
 }
