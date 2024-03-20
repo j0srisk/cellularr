@@ -1,9 +1,16 @@
 import { MediaFact, Ratings } from '@/app/typess';
 import Card from '@/components/Card';
 import { RottenTomatoesCriticsRatingBadge } from '@/components/media/Badges';
+import { Rating } from '@/services/overseerr/types/common';
 import { Fragment } from 'react';
 
-export default function MediaFacts({ ratings, facts }: { ratings: Ratings; facts: MediaFact[] }) {
+export default function MediaFacts({
+	ratings,
+	facts,
+}: {
+	ratings: { rottenTomatoes: Rating } | null;
+	facts: MediaFact[];
+}) {
 	return (
 		<Card>
 			{ratings && Object.keys(ratings).length > 0 && (

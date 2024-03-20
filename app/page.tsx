@@ -1,19 +1,16 @@
 'use client';
 
-import { getActiveSessions } from '@/app/actionss';
-import { Session, MediaType } from '@/app/types';
+import { getActiveSessions } from '@/app/actions';
+import { MediaType } from '@/app/typess';
+import SessionCard from '@/components/ Sessions/SessionCard/SessionCard';
 import CenteredMessage from '@/components/CenteredMessage';
 import Header from '@/components/Header';
-import SessionCard from '@/components/SessionCard';
-import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 
 export default function SessionPage() {
 	const { data: sessions } = useSWR('sessions', getActiveSessions, {
 		refreshInterval: 5000,
 	});
-
-	const router = useRouter();
 
 	if (!sessions) {
 		return (
@@ -30,15 +27,7 @@ export default function SessionPage() {
 				{sessions[0] ? (
 					<>
 						{sessions.map((session) => (
-							<button
-								key={session.id}
-								onClick={() => {
-									if (session.mediaType !== MediaType.MUSIC) {
-										router.replace('/' + session.mediaType + '/' + session.tmdbId);
-									}
-								}}
-								className=""
-							>
+							<button key={session.id} className="">
 								<SessionCard key={session.id} session={session} />
 							</button>
 						))}

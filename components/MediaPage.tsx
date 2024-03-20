@@ -1,14 +1,6 @@
 'use client';
 
-import {
-	Cast,
-	MediaType,
-	MediaFact,
-	Ratings,
-	MediaMetadata,
-	Collection,
-	MediaStatus,
-} from '@/app/typess';
+import { MediaType, MediaFact } from '@/app/typess';
 import { CreateBackdropUrl, CreatePosterUrl } from '@/app/utils';
 import Backdrop from '@/components/Backdrop';
 import Button from '@/components/Button';
@@ -16,6 +8,7 @@ import Card from '@/components/Card';
 import Carousel from '@/components/Carousel';
 import MediaAttributes from '@/components/MediaAttributes';
 import MediaFacts from '@/components/MediaFacts';
+import MediaSlider from '@/components/MediaSlider';
 import Request from '@/components/NewRequest';
 import PersonCard from '@/components/PersonCard';
 import PosterCard from '@/components/PosterCard';
@@ -23,28 +16,32 @@ import Poster from '@/components/PosterCard';
 import Section from '@/components/Section';
 import SystemBackground from '@/components/SystemBackground';
 import useBackdropScale from '@/hooks/useBackdropScale';
+import { Collection } from '@/services/overseerr/types/collection';
+import { MediaStatus } from '@/services/overseerr/types/common';
+import { Cast, Rating } from '@/services/overseerr/types/common';
+import { MovieResult, TvResult, PersonResult } from '@/services/overseerr/types/search';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type MediaPageProps = {
 	id: number;
 	mediaType: MediaType;
-	backdropPath?: string;
-	posterPath?: string;
+	backdropPath: string | null;
+	posterPath: string | null;
 	title: string;
-	attributes: string[];
+	attributes: (string | null)[];
 	requestStatus?: MediaStatus;
 	trailerUrl?: string;
 	iOSPlexUrl?: string;
-	tagline?: string;
-	overview?: string;
+	tagline?: string | null;
+	overview: string | null;
 	collection?: Collection;
-	ratings?: Ratings;
+	rottenTomatoesRating?: Rating | null;
 	mediaFacts?: MediaFact[];
-	cast?: Cast[];
-	recommendations?: MediaMetadata[];
-	similar?: MediaMetadata[];
-	movies?: MediaMetadata[];
+	cast?: Cast[] | null;
+	recommendations?: (MovieResult | TvResult | PersonResult)[];
+	similar?: (MovieResult | TvResult | PersonResult)[];
+	movies?: MovieResult[];
 };
 
 export default function MediaPage(props: MediaPageProps) {
@@ -124,7 +121,7 @@ export default function MediaPage(props: MediaPageProps) {
 			<div className="flex flex-col gap-6 bg-system-primary-light via-transparent pb-4 dark:bg-system-primary-dark">
 				{props.tagline && (
 					<Section>
-						<p className="text-title-2 px-4 italic text-label-secondary-light dark:text-label-secondary-dark">
+						<p className="px-4 text-title-2 italic text-label-secondary-light dark:text-label-secondary-dark">
 							{props.tagline}
 						</p>
 					</Section>
@@ -157,9 +154,12 @@ export default function MediaPage(props: MediaPageProps) {
 						</Card>
 					</div>
 				)}
-				{props.mediaFacts && props.ratings && (
+				{props.mediaFacts && (
 					<Section className="px-4">
-						<MediaFacts ratings={props.ratings} facts={props.mediaFacts} />
+						<MediaFacts
+							ratings={{ rottenTomatoes: props.rottenTomatoesRating }}
+							facts={props.mediaFacts}
+						/>
 					</Section>
 				)}
 				{props.cast && (
@@ -185,17 +185,7 @@ export default function MediaPage(props: MediaPageProps) {
 									'Recommended ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')
 								}
 							>
-								<Carousel className="px-4">
-									{props.recommendations.map((metadata: MediaMetadata) => (
-										<PosterCard
-											key={metadata.id}
-											title={metadata.title}
-											posterPath={metadata.posterPath}
-											className="w-32"
-											onClick={() => router.push('/' + metadata.mediaType + '/' + metadata.id)}
-										/>
-									))}
-								</Carousel>
+								<MediaSlider results={props.recommendations} />
 							</Section>
 						)}
 					</>
@@ -206,17 +196,7 @@ export default function MediaPage(props: MediaPageProps) {
 							<Section
 								heading={'Similar ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')}
 							>
-								<Carousel className="px-4">
-									{props.similar.map((metadata: MediaMetadata) => (
-										<PosterCard
-											key={metadata.id}
-											title={metadata.title}
-											posterPath={metadata.posterPath}
-											className="w-32"
-											onClick={() => router.push('/' + metadata.mediaType + '/' + metadata.id)}
-										/>
-									))}
-								</Carousel>
+								<MediaSlider results={props.similar} />
 							</Section>
 						)}
 					</>
@@ -225,17 +205,7 @@ export default function MediaPage(props: MediaPageProps) {
 					<>
 						{props.movies.length > 0 && (
 							<Section heading="Films">
-								<Carousel className="px-4">
-									{props.movies.map((metadata: MediaMetadata) => (
-										<PosterCard
-											key={metadata.id}
-											title={metadata.title}
-											posterPath={metadata.posterPath}
-											className="w-32"
-											onClick={() => router.push('/' + metadata.mediaType + '/' + metadata.id)}
-										/>
-									))}
-								</Carousel>
+								<MediaSlider results={props.movies} />
 							</Section>
 						)}
 					</>

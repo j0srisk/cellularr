@@ -1,6 +1,8 @@
 'use client';
 
-import { getSearchResults } from '@/app/actionss';
+import { getSearchResults } from '@/app/actions';
+import MovieGenres from '@/components/Discover/MovieGenres';
+import TvGenres from '@/components/Discover/TvGenres';
 import Header from '@/components/Header';
 import PersonCard from '@/components/PersonCard';
 import PosterCard from '@/components/PosterCard';
@@ -70,7 +72,10 @@ export default function Page() {
 						)}
 					</div>
 				) : (
-					<p>Discover</p>
+					<div className="flex flex-col gap-6">
+						<MovieGenres />
+						<TvGenres />
+					</div>
 				)}
 			</div>
 		</div>

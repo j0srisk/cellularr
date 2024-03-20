@@ -1,38 +1,58 @@
 'use client';
 
-import { getSeries } from '@/app/actionss';
-import { createMovieFacts, createSeriesFacts } from '@/app/utils';
+import { getTvDetails, getRatings, getRecommendations, getSimilar } from '@/app/actions';
+import { MediaType } from '@/app/typess';
+import { createTvFacts } from '@/app/utils';
 import MediaPage from '@/components/MediaPage';
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 
-export default function MoviePage() {
+export default function TvPage() {
 	const params = useParams<{ id: string }>();
 
-	const { data: series } = useSWR(`series-${params.id}`, () => getSeries(parseInt(params.id)));
-
-	if (!series) {
-		return null;
-	}
-
-	return (
-		<MediaPage
-			id={series.metadata.id}
-			mediaType={series.mediaType}
-			backdropPath={series.metadata.backdropPath}
-			posterPath={series.metadata.posterPath}
-			title={series.metadata.name}
-			attributes={[series.metadata.certification, series.metadata.firstAirDate.split('-')[0]]}
-			requestStatus={series.info?.requestStatus}
-			trailerUrl={series.metadata.trailerUrl}
-			iOSPlexUrl={series.info?.iOSPlexUrl}
-			tagline={series.metadata.tagline}
-			overview={series.metadata.overview}
-			ratings={series.ratings}
-			mediaFacts={createSeriesFacts(series)}
-			cast={series.metadata.cast}
-			recommendations={series.recommendations}
-			similar={series.similar}
-		/>
+	const { data: tvDetails } = useSWR(`tv-${params.id}-details`, () =>
+		getTvDetails(parseInt(params.id)),
 	);
+
+	const { data: rottenTomatoesRating } = useSWR(`tv-${params.id}-rating`, () =>
+		getRatings(MediaType.TV, parseInt(params.id)),
+	);
+
+	const { data: recommendedSeries } = useSWR(`tv-${params.id}-recommendations`, () =>
+		getRecommendations(MediaType.TV, parseInt(params.id)),
+	);
+
+	const { data: similarSeries } = useSWR(`tv-${params.id}-similar`, () =>
+		getSimilar(MediaType.TV, parseInt(params.id)),
+	);
+
+	if (tvDetails) {
+		return (
+			<MediaPage
+				id={tvDetails.id}
+				mediaType={MediaType.TV}
+				backdropPath={tvDetails.backdropPath}
+				posterPath={tvDetails.posterPath}
+				title={tvDetails.name}
+				attributes={[
+					tvDetails.contentRatings.results.find((rating) => rating.iso_3166_1 === 'US')?.rating ||
+						null,
+					tvDetails.firstAirDate?.split('-')[0] || null,
+					tvDetails.numberOfSeasons.toString() +
+						' Season' +
+						(tvDetails.numberOfSeasons > 1 ? 's' : ''),
+				]}
+				requestStatus={tvDetails.mediaInfo?.status}
+				trailerUrl={tvDetails.relatedVideos.find((video) => video.type === 'Trailer')?.url}
+				iOSPlexUrl={tvDetails.mediaInfo?.iOSPlexUrl}
+				tagline={tvDetails.tagline}
+				overview={tvDetails.overview}
+				rottenTomatoesRating={rottenTomatoesRating}
+				mediaFacts={createTvFacts(tvDetails)}
+				cast={tvDetails.credits.cast}
+				recommendations={recommendedSeries?.results}
+				similar={similarSeries?.results}
+			/>
+		);
+	}
 }

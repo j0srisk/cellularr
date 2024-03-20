@@ -1,6 +1,7 @@
-import PosterCard from './PosterCard';
-import { Session, MediaType } from '@/app/types';
+import { getMovieDetails, getTvDetails } from '@/app/actions';
+import { Session, MediaType } from '@/app/typess';
 import { formatDuration } from '@/app/utils';
+import PosterCard from '@/components/PosterCard';
 import Image from 'next/image';
 
 export default function SessionCard({ session }: { session: Session }) {
@@ -51,6 +52,7 @@ export default function SessionCard({ session }: { session: Session }) {
 							? formattedDuration + ' left (' + timeString + ')'
 							: 'Paused (' + formattedDuration + ' left)'}
 					</p>
+					<p className="text-footnote">{session.progress}</p>
 				</div>
 			</div>
 			<div className="relative h-1 w-full bg-fill-tetiary-light dark:bg-fill-tetiary-dark">

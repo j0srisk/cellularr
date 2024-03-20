@@ -1,4 +1,8 @@
-import { Movie, Series, MediaStatus, MediaFact } from '@/app/typess';
+import { MediaFact } from '@/app/typess';
+import { MediaStatus } from '@/services/overseerr/types/common';
+import { MovieDetails } from '@/services/overseerr/types/movie';
+import { TvDetails } from '@/services/overseerr/types/tv';
+import { MediaFile } from '@/services/tautulli/interface';
 import ISO6391 from 'iso-639-1';
 
 export function CreatePosterUrl(posterPath?: String) {
@@ -19,7 +23,10 @@ export function CreateProfileUrl(profilePath: String | null) {
 	return 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + profilePath;
 }
 
-export function formatDuration(durationInMinutes: number) {
+export function formatDuration(durationInMinutes: number | null) {
+	if (durationInMinutes === null) {
+		return null;
+	}
 	const hours = Math.floor(durationInMinutes / 60);
 	const minutes = durationInMinutes % 60;
 
@@ -48,89 +55,91 @@ export function formatReleaseDate(releaseDate: string) {
 	return formattedDate;
 }
 
-export function createMovieFacts(movie: Movie) {
+export function createMovieFacts(movieDetails: MovieDetails, files?: MediaFile[] | null) {
 	const movieFacts: MediaFact[] = [];
 
-	if (movie.metadata.status) {
-		movieFacts.push({ key: 'Release Status', values: [movie.metadata.status] });
+	if (movieDetails.status) {
+		movieFacts.push({ key: 'Release Status', values: [movieDetails.status] });
 	}
 
-	if (movie.metadata.releaseDate) {
+	if (movieDetails.releaseDate) {
 		movieFacts.push({
 			key: 'Release Date',
-			values: [formatReleaseDate(movie.metadata.releaseDate)],
+			values: [formatReleaseDate(movieDetails.releaseDate)],
 		});
 	}
 
-	if (movie.metadata.originalLanguage) {
-		const language = ISO6391.getName(movie.metadata.originalLanguage);
+	if (movieDetails.originalLanguage) {
+		const language = ISO6391.getName(movieDetails.originalLanguage);
 		if (language) {
 			movieFacts.push({ key: 'Original Language', values: [language] });
 		}
 	}
 
-	if (movie.metadata.budget) {
-		movieFacts.push({ key: 'Budget', values: ['$' + movie.metadata.budget.toLocaleString()] });
+	if (movieDetails.budget) {
+		movieFacts.push({ key: 'Budget', values: ['$' + movieDetails.budget.toLocaleString()] });
 	}
 
-	if (movie.metadata.revenue) {
+	if (movieDetails.revenue) {
 		movieFacts.push({
 			key: 'Revenue',
-			values: ['$' + movie.metadata.revenue.toLocaleString()],
+			values: ['$' + movieDetails.revenue.toLocaleString()],
 		});
 	}
 
 	movieFacts.push({
 		key: 'Request Status',
-		values: movie.info ? [MediaStatus[movie.info?.requestStatus]] : ['Unrequested'],
+		values: movieDetails.mediaInfo
+			? [MediaStatus[movieDetails.mediaInfo?.status]]
+			: ['Unrequested'],
 	});
 
-	if (movie.files) {
-		if (movie.files[0].fullResolution) {
-			movieFacts.push({ key: 'Resolution', values: [movie.files[0].fullResolution] });
-		}
-		if (movie.files[0].size) {
-			movieFacts.push({
-				key: 'File Size',
-				values: [`${(movie.files[0].size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
-			});
-		}
-		const uniqueLanguages = Array.from(
-			new Set(movie.files[0].subtitles.map((subtitle) => subtitle.language)),
-		);
-		movieFacts.push({
-			key: 'Subtitles',
-			values: uniqueLanguages[0] ? uniqueLanguages : ['None'],
-		});
-	}
+	// if (files) {
+	// 	if (movie.files[0].fullResolution) {
+	// 		movieFacts.push({ key: 'Resolution', values: [movie.files[0].fullResolution] });
+	// 	}
+	// 	if (movie.files[0].size) {
+	// 		movieFacts.push({
+	// 			key: 'File Size',
+	// 			values: [`${(movie.files[0].size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
+	// 		});
+	// 	}
+	// 	const uniqueLanguages = Array.from(
+	// 		new Set(movie.files[0].subtitles.map((subtitle) => subtitle.language)),
+	// 	);
+	// 	movieFacts.push({
+	// 		key: 'Subtitles',
+	// 		values: uniqueLanguages[0] ? uniqueLanguages : ['None'],
+	// 	});
+	// }
 
 	return movieFacts;
 }
 
-export function createSeriesFacts(series: Series) {
+export function createTvFacts(tvDetails: TvDetails) {
 	const seriesFacts: MediaFact[] = [];
 
-	if (series.metadata.status) {
-		seriesFacts.push({ key: 'Status', values: [series.metadata.status] });
+	if (tvDetails.status) {
+		seriesFacts.push({ key: 'Status', values: [tvDetails.status] });
 	}
 
-	if (series.metadata.firstAirDate) {
+	if (tvDetails.firstAirDate) {
 		seriesFacts.push({
 			key: 'First Air Date',
-			values: [formatReleaseDate(series.metadata.firstAirDate)],
+			values: [formatReleaseDate(tvDetails.firstAirDate)],
 		});
 	}
 
-	if (series.metadata.lastAirDate) {
+	if (tvDetails.lastAirDate) {
 		seriesFacts.push({
 			key: 'Last Air Date',
-			values: [formatReleaseDate(series.metadata.lastAirDate)],
+			values: [formatReleaseDate(tvDetails.lastAirDate)],
 		});
 	}
 
 	seriesFacts.push({
 		key: 'Request Status',
-		values: series.info ? [MediaStatus[series.info?.requestStatus]] : ['Unrequested'],
+		values: tvDetails.mediaInfo ? [MediaStatus[tvDetails.mediaInfo?.status]] : ['Unrequested'],
 	});
 
 	return seriesFacts;

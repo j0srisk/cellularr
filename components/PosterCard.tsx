@@ -1,32 +1,47 @@
+'use client';
+
 import { posterUrl } from '@/app/typess';
 import Card from '@/components/Card';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
 type PosterProps = {
+	id: number;
 	title: string;
-	posterPath?: string;
+	posterPath: string | null;
+	mediaType: 'movie' | 'tv';
 	className?: string;
+	href?: string;
 	onClick?: () => void;
 };
 
-export default function PosterCard({ title, posterPath, className, onClick }: PosterProps) {
+export default function PosterCard({
+	id,
+	title,
+	posterPath,
+	mediaType,
+	className,
+	href,
+	onClick,
+}: PosterProps) {
+	const router = useRouter();
+
+	if (typeof onClick === 'undefined') {
+		onClick = () => router.push('/' + mediaType + '/' + id);
+	}
+
 	return (
 		<Card
 			className={twMerge([
-				'group relative inline-block aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center overflow-hidden rounded-xl hover:cursor-pointer',
+				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center overflow-hidden rounded-xl hover:cursor-pointer',
 				className,
 			])}
+			href={href}
 			onClick={onClick}
 		>
 			{posterPath ? (
-				<Image
-					src={posterUrl + posterPath}
-					alt={title}
-					height={450}
-					width={300}
-					className="object-cover"
-				/>
+				<Image src={posterUrl + posterPath} alt={title} fill={true} className="object-cover" />
 			) : (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

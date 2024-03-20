@@ -1,5 +1,5 @@
-import { MediaType, Session, File, Audio, Subtitle } from '@/app/types';
-import overseerr from '@/services/overseerr/overseerr';
+import { getMovieDetails, getTvDetails } from '@/app/actions';
+import { MediaType, Session, File, Audio, Subtitle } from '@/app/typess';
 import { MediaFile } from '@/services/tautulli/interface';
 import 'server-only';
 
@@ -10,7 +10,7 @@ async function command(cmd: string) {
 
 	const response = await fetch(
 		process.env.TAUTULLI_URL + '/api/v2?apikey=' + process.env.TAUTULLI_API_KEY + '&cmd=' + cmd,
-		{ cache: 'no-store' },
+		{ cache: 'no-cache' },
 	);
 
 	if (response.status !== 200) {
@@ -54,7 +54,15 @@ const tautulli = {
 				region: null,
 			};
 
-			const overseerrMedia = await overseerr.getMedia(mediaType, parseInt(tmdbId));
+			let overseerrMedia;
+
+			if (mediaType === MediaType.MOVIE) {
+				overseerrMedia = await getMovieDetails(parseInt(tmdbId));
+			}
+
+			if (mediaType === MediaType.TV) {
+				overseerrMedia = await getTvDetails(parseInt(tmdbId));
+			}
 
 			const session: Session = {
 				id: tautulliSession.session_key,

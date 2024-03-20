@@ -1,6 +1,7 @@
 'use client';
 
-import { getCollection } from '@/app/actionss';
+import { getCollection } from '@/app/actions';
+import { MediaType } from '@/app/typess';
 import MediaPage from '@/components/MediaPage';
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
@@ -19,7 +20,7 @@ export default function MoviePage() {
 	return (
 		<MediaPage
 			id={collection.id}
-			mediaType={collection.mediaType}
+			mediaType={MediaType.COLLECTION}
 			backdropPath={collection.backdropPath}
 			posterPath={collection.posterPath}
 			title={collection.name}

@@ -8,7 +8,7 @@ type PersonCardProps = {
 	character?: string;
 	className?: string;
 	imageURL?: string;
-	profilePath?: string;
+	profilePath: string | null;
 	onClick?: () => void;
 };
 
