@@ -1,15 +1,16 @@
+import { posterUrl } from '@/app/typess';
 import Card from '@/components/Card';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
 
 type PosterProps = {
 	title: string;
-	imageURL?: string;
+	posterPath?: string;
 	className?: string;
 	onClick?: () => void;
 };
 
-export default function PosterCard({ title, imageURL, className, onClick }: PosterProps) {
+export default function PosterCard({ title, posterPath, className, onClick }: PosterProps) {
 	return (
 		<Card
 			className={twMerge([
@@ -18,8 +19,14 @@ export default function PosterCard({ title, imageURL, className, onClick }: Post
 			])}
 			onClick={onClick}
 		>
-			{imageURL ? (
-				<Image src={imageURL} alt={title} height={450} width={300} className="object-cover" />
+			{posterPath ? (
+				<Image
+					src={posterUrl + posterPath}
+					alt={title}
+					height={450}
+					width={300}
+					className="object-cover"
+				/>
 			) : (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

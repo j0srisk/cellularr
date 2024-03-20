@@ -1,5 +1,6 @@
+import PosterCard from './PosterCard';
 import { Session, MediaType } from '@/app/types';
-import { formatDuration, CreatePosterUrl } from '@/app/utils';
+import { formatDuration } from '@/app/utils';
 import Image from 'next/image';
 
 export default function SessionCard({ session }: { session: Session }) {
@@ -22,13 +23,13 @@ export default function SessionCard({ session }: { session: Session }) {
 	return (
 		<div className="flex w-full flex-col rounded-xl border border-fill-tetiary-light bg-fill-tetiary-light bg-cover shadow-sm dark:border-fill-tetiary-dark dark:bg-fill-tetiary-dark">
 			<div className="flex items-center gap-3 p-3">
-				<Image
-					src={CreatePosterUrl(session.posterPath)}
-					alt={session.title}
-					height={300}
-					width={200}
-					className="aspect-[1/1.5] h-fit w-14 rounded-[4px]"
+				<PosterCard
+					title={session.title}
+					posterPath={session.posterPath}
+					mediaType={session.mediaType}
+					className="w-14 rounded-[4px] border-none shadow-none"
 				/>
+
 				<div className="flex h-fit flex-col items-start">
 					{session.mediaType === MediaType.MOVIE && (
 						<>

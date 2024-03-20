@@ -153,8 +153,8 @@ export type Session = {
 	userThumb: string;
 	player: string;
 	year: string;
-	posterPath: string | null;
-	backdropPath: string | null;
+	posterPath?: string;
+	backdropPath?: string;
 	ratingKey: string;
 	duration: number;
 	season?: number;

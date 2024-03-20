@@ -1,3 +1,4 @@
+import { posterUrl } from '@/app/typess';
 import Card from '@/components/Card';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
@@ -7,13 +8,14 @@ type PersonCardProps = {
 	character?: string;
 	className?: string;
 	imageURL?: string;
+	profilePath?: string;
 	onClick?: () => void;
 };
 
 export default function PersonCard({
 	name,
 	character,
-	imageURL,
+	profilePath,
 	className,
 	onClick,
 }: PersonCardProps) {
@@ -24,8 +26,14 @@ export default function PersonCard({
 		>
 			<div className="flex aspect-square w-full items-center justify-center">
 				<div className="flex aspect-square w-2/3 items-center justify-center overflow-hidden rounded-full">
-					{imageURL ? (
-						<Image src={imageURL} alt={name} height={300} width={300} className="object-cover" />
+					{profilePath ? (
+						<Image
+							src={posterUrl + profilePath}
+							alt={name}
+							height={300}
+							width={300}
+							className="object-cover"
+						/>
 					) : (
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

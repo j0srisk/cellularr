@@ -1,7 +1,6 @@
 'use client';
 
 import { getSearchResults } from '@/app/actionss';
-import { CreatePosterUrl } from '@/app/utils';
 import Header from '@/components/Header';
 import PersonCard from '@/components/PersonCard';
 import PosterCard from '@/components/PosterCard';
@@ -56,13 +55,13 @@ export default function Page() {
 								<PersonCard
 									key={searchResult.id}
 									name={searchResult.name}
-									imageURL={CreatePosterUrl(searchResult.profilePath)}
+									profilePath={searchResult.profilePath}
 								/>
 							) : (
 								<PosterCard
 									key={searchResult.id}
 									title={searchResult.originalTitle}
-									imageURL={CreatePosterUrl(searchResult.posterPath)}
+									posterPath={searchResult.posterPath}
 									onClick={() => {
 										router.push('/' + searchResult.mediaType + '/' + searchResult.id);
 									}}

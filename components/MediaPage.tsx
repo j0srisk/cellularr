@@ -66,7 +66,7 @@ export default function MediaPage(props: MediaPageProps) {
 			>
 				<Poster
 					title={props.title}
-					imageURL={CreatePosterUrl(props.posterPath)}
+					posterPath={props.posterPath}
 					className="z-10 w-32 rounded-lg border-none"
 				/>
 
@@ -170,7 +170,7 @@ export default function MediaPage(props: MediaPageProps) {
 									key={cast.id}
 									name={cast.name}
 									character={cast.character}
-									imageURL={CreatePosterUrl(cast.profilePath)}
+									profilePath={cast.profilePath}
 									className="w-32"
 								/>
 							))}
@@ -190,7 +190,7 @@ export default function MediaPage(props: MediaPageProps) {
 										<PosterCard
 											key={metadata.id}
 											title={metadata.title}
-											imageURL={CreatePosterUrl(metadata.posterPath)}
+											posterPath={metadata.posterPath}
 											className="w-32"
 											onClick={() => router.push('/' + metadata.mediaType + '/' + metadata.id)}
 										/>
@@ -211,7 +211,7 @@ export default function MediaPage(props: MediaPageProps) {
 										<PosterCard
 											key={metadata.id}
 											title={metadata.title}
-											imageURL={CreatePosterUrl(metadata.posterPath)}
+											posterPath={metadata.posterPath}
 											className="w-32"
 											onClick={() => router.push('/' + metadata.mediaType + '/' + metadata.id)}
 										/>
@@ -230,7 +230,7 @@ export default function MediaPage(props: MediaPageProps) {
 										<PosterCard
 											key={metadata.id}
 											title={metadata.title}
-											imageURL={CreatePosterUrl(metadata.posterPath)}
+											posterPath={metadata.posterPath}
 											className="w-32"
 											onClick={() => router.push('/' + metadata.mediaType + '/' + metadata.id)}
 										/>
