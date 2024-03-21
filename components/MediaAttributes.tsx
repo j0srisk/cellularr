@@ -1,4 +1,4 @@
-import { UnitedStatesCertification } from '@/app/typess';
+import { UnitedStatesCertification } from '@/app/types';
 import { CertificationBadge } from '@/components/media/Badges';
 import { Fragment } from 'react';
 

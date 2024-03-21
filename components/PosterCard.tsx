@@ -1,6 +1,6 @@
 'use client';
 
-import { posterUrl } from '@/app/typess';
+import { posterUrl, MediaType } from '@/app/types';
 import Card from '@/components/Card';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -9,8 +9,8 @@ import { twMerge } from 'tailwind-merge';
 type PosterProps = {
 	id: number;
 	title: string;
-	posterPath: string | null;
-	mediaType: 'movie' | 'tv';
+	posterPath?: string | null;
+	mediaType: MediaType.MOVIE | MediaType.TV;
 	className?: string;
 	href?: string;
 	onClick?: () => void;

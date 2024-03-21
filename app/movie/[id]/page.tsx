@@ -7,7 +7,7 @@ import {
 	getSimilar,
 	getFiles,
 } from '@/app/actions';
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
 import { createMovieFacts, formatDuration } from '@/app/utils';
 import MediaPage from '@/components/MediaPage';
 
@@ -30,7 +30,10 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
 	// 		: null,
 	// );
 
-	const files = null;
+	let files = null;
+	if (movieDetails?.mediaInfo?.ratingKey) {
+		files = await getFiles(movieDetails.mediaInfo.ratingKey);
+	}
 
 	// const { data: recommendedMovies } = useSWR(`movie-${params.id}-recommendations`, () =>
 	// 	getRecommendations(MediaType.MOVIE, parseInt(params.id)),

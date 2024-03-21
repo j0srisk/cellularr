@@ -1,8 +1,9 @@
+import { MediaType } from '@/app/types';
 import { MediaInfo } from '@/services/overseerr/types/common';
 
 export interface MovieResult {
 	id: number;
-	mediaType: 'movie';
+	mediaType: MediaType.MOVIE;
 	popularity: number | null;
 	posterPath: string | null;
 	backdropPath: string | null;
@@ -21,7 +22,7 @@ export interface MovieResult {
 
 export interface TvResult {
 	id: number;
-	mediaType: 'tv';
+	mediaType: MediaType.TV;
 	popularity: number | null;
 	posterPath: string | null;
 	backdropPath: string | null;
@@ -40,10 +41,10 @@ export interface TvResult {
 export interface PersonResult {
 	id: number;
 	name: string;
+	mediaType: MediaType.PERSON;
 	popularity: number | null;
 	profilePath: string | null;
 	adult: boolean | null;
-	mediaType: 'person';
 }
 
 export interface Results {

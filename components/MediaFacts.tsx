@@ -1,4 +1,4 @@
-import { MediaFact, Ratings } from '@/app/typess';
+import { MediaFact } from '@/app/types';
 import Card from '@/components/Card';
 import { RottenTomatoesCriticsRatingBadge } from '@/components/media/Badges';
 import { Rating } from '@/services/overseerr/types/common';

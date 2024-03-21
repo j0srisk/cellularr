@@ -1,7 +1,7 @@
 'use client';
 
 import { getTvDetails, getRatings, getRecommendations, getSimilar } from '@/app/actions';
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
 import { createTvFacts } from '@/app/utils';
 import MediaPage from '@/components/MediaPage';
 import { useParams } from 'next/navigation';

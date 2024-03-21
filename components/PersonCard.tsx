@@ -1,4 +1,4 @@
-import { posterUrl } from '@/app/typess';
+import { posterUrl } from '@/app/types';
 import Card from '@/components/Card';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';

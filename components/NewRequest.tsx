@@ -1,5 +1,5 @@
 import { getArrServers, getArrServer, getUsers, postRequest, getCurrentUser } from '@/app/actions';
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
 import Card from '@/components/Card';
 import { ServiceProfile } from '@/services/overseerr/types/common';
 import { RadarrSettings } from '@/services/overseerr/types/radarr';

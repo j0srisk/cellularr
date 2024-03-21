@@ -1,4 +1,4 @@
-import { RottenTomatoes, UnitedStatesCertification } from '@/app/typess';
+import { RottenTomatoes, UnitedStatesCertification } from '@/app/types';
 
 export function CertificationBadge({ certification }: { certification: string }) {
 	switch (certification) {

@@ -1,7 +1,7 @@
 'use server';
 
 import { demoApplications, demoSessions } from '@/app/config/demoData';
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
 import overseerr from '@/services/overseerr/overseerr';
 import { Collection } from '@/services/overseerr/types/collection';
 import { Genre } from '@/services/overseerr/types/common';
@@ -13,6 +13,9 @@ import { TvDetails } from '@/services/overseerr/types/tv';
 import { Users } from '@/services/overseerr/types/user';
 import { User } from '@/services/overseerr/types/user';
 import tautulli from '@/services/tautulli/tautulli';
+import { ActivityData } from '@/services/tautulli/types/activity';
+import { Location } from '@/services/tautulli/types/location';
+import { Media } from '@/services/tautulli/types/media';
 import { promises as fs } from 'fs';
 import { parse } from 'yaml';
 
@@ -24,6 +27,20 @@ export async function getSearchResults(query: string, page?: number, language?: 
 	);
 
 	return results;
+}
+
+export async function getMediaDetails(mediaType: MediaType, id: number) {
+	if (mediaType === MediaType.MOVIE) {
+		const movieDetails: MovieDetails = await overseerr.endpoint('/movie/' + id);
+
+		return movieDetails;
+	}
+
+	if (mediaType === MediaType.TV) {
+		const tvDetails: TvDetails = await overseerr.endpoint('/tv/' + id);
+
+		return tvDetails;
+	}
 }
 
 export async function getMovieDetails(id: number) {
@@ -172,20 +189,28 @@ export async function getTrending(page: number = 1) {
 	return results;
 }
 
-export async function getActiveSessions() {
-	if (process.env.DEMO_MODE === 'true') {
-		console.log('DEMO MODE: using demo sessions');
-		return demoSessions;
-	}
-	const sessions = await tautulli.getSessions();
+export async function getActivityData() {
+	// if (process.env.DEMO_MODE === 'true') {
+	// 	console.log('DEMO MODE: using demo sessions');
+	// 	return demoSessions;
+	// }
+	const sessionData: ActivityData = await tautulli.command('get_activity');
 
-	return sessions;
+	return sessionData;
+}
+
+export async function getLocation(ipAddress: string) {
+	const geolocationDetails: Location = await tautulli.command(
+		'get_geoip_lookup&ip_address=' + ipAddress,
+	);
+
+	return geolocationDetails;
 }
 
 export async function getFiles(ratingKey: number) {
-	const files = await tautulli.getFiles(ratingKey);
+	const media: Media = await tautulli.command('get_metadata&rating_key=' + ratingKey);
 
-	return files;
+	return media.media_info;
 }
 
 export async function GetApplications() {

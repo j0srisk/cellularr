@@ -1,4 +1,4 @@
-import { Session, MediaType } from '@/app/typess';
+import { Session, MediaType } from '@/app/types';
 
 export const demoSessions: Session[] = [
 	{

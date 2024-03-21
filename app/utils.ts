@@ -1,8 +1,8 @@
-import { MediaFact } from '@/app/typess';
+import { MediaFact } from '@/app/types';
 import { MediaStatus } from '@/services/overseerr/types/common';
 import { MovieDetails } from '@/services/overseerr/types/movie';
 import { TvDetails } from '@/services/overseerr/types/tv';
-import { MediaFile } from '@/services/tautulli/interface';
+import { MediaFile } from '@/services/tautulli/types/media';
 import ISO6391 from 'iso-639-1';
 
 export function CreatePosterUrl(posterPath?: String) {
@@ -94,24 +94,24 @@ export function createMovieFacts(movieDetails: MovieDetails, files?: MediaFile[]
 			: ['Unrequested'],
 	});
 
-	// if (files) {
-	// 	if (movie.files[0].fullResolution) {
-	// 		movieFacts.push({ key: 'Resolution', values: [movie.files[0].fullResolution] });
-	// 	}
-	// 	if (movie.files[0].size) {
-	// 		movieFacts.push({
-	// 			key: 'File Size',
-	// 			values: [`${(movie.files[0].size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
-	// 		});
-	// 	}
-	// 	const uniqueLanguages = Array.from(
-	// 		new Set(movie.files[0].subtitles.map((subtitle) => subtitle.language)),
-	// 	);
-	// 	movieFacts.push({
-	// 		key: 'Subtitles',
-	// 		values: uniqueLanguages[0] ? uniqueLanguages : ['None'],
-	// 	});
-	// }
+	if (files) {
+		if (files[0].video_full_resolution) {
+			movieFacts.push({ key: 'Resolution', values: [files[0].video_full_resolution] });
+		}
+		if (files[0].parts[0].file_size) {
+			movieFacts.push({
+				key: 'File Size',
+				values: [`${(files[0].parts[0].file_size / (1024 * 1024 * 1024)).toFixed(2)} GB`],
+			});
+		}
+		const uniqueLanguages = Array.from(
+			new Set(files[0].parts[0].streams.map((stream) => stream.subtitle_language)),
+		).filter((lang) => lang !== undefined) as string[];
+		movieFacts.push({
+			key: 'Subtitles',
+			values: uniqueLanguages.length > 0 ? uniqueLanguages : ['None'],
+		});
+	}
 
 	return movieFacts;
 }

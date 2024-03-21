@@ -1,4 +1,5 @@
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
+import { Season } from '@/services/overseerr/types/tv';
 
 export enum MediaStatus {
 	'Unknown' = 1,
@@ -38,11 +39,13 @@ export interface MediaInfo {
 	externalServiceId4k: string | null;
 	externalServiceSlug: string | null;
 	externalServiceSlug4k: string | null;
-	ratingKey: string | null;
-	ratingKey4k: string | null;
+	//TODO: ensure ratingKey's are always numbers
+	ratingKey: number | null;
+	ratingKey4k: number | null;
+	//TODO: add requests and issues
 	//requests: Request[];
 	//issues: Issue[];
-	//seasons: Season[];
+	seasons: Season[];
 	plexUrl?: string;
 	iOSPlexUrl?: string;
 	plexUrl4k?: string;
@@ -50,11 +53,11 @@ export interface MediaInfo {
 	serviceUrl?: string;
 }
 
-export type Genre = {
+export interface Genre {
 	id: number;
 	name: string;
 	backdrops?: string[];
-};
+}
 
 export interface RelatedVideo {
 	url: string;

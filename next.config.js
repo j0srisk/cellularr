@@ -18,6 +18,11 @@ const nextConfig = {
 				hostname: 'plex.tv',
 				pathname: '**',
 			},
+			{
+				protocol: 'http',
+				hostname: '192.168.1.93',
+				pathname: '**',
+			},
 		],
 	},
 	output: 'standalone',

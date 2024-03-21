@@ -1,5 +1,5 @@
 import GenreCard from '../GenreCard';
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
 import { Genre } from '@/services/overseerr/types/common';
 import { useState } from 'react';
 

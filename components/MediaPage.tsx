@@ -1,6 +1,6 @@
 'use client';
 
-import { MediaType, MediaFact } from '@/app/typess';
+import { MediaType, MediaFact } from '@/app/types';
 import { CreateBackdropUrl, CreatePosterUrl } from '@/app/utils';
 import Backdrop from '@/components/Backdrop';
 import Button from '@/components/Button';

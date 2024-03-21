@@ -1,5 +1,5 @@
 import { getMovieGenres } from '@/app/actions';
-import { MediaType } from '@/app/typess';
+import { MediaType } from '@/app/types';
 import Genres from '@/components/Discover/Genres';
 import useSWR from 'swr';
 
