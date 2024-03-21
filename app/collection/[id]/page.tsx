@@ -1,21 +1,9 @@
-'use client';
-
 import { getCollection } from '@/app/actions';
 import { MediaType } from '@/app/types';
 import MediaPage from '@/components/MediaPage';
-import { useParams } from 'next/navigation';
-import useSWR from 'swr';
 
-export default function MoviePage() {
-	const params = useParams<{ id: string }>();
-
-	const { data: collection } = useSWR(`collection-${params.id}`, () =>
-		getCollection(parseInt(params.id)),
-	);
-
-	if (!collection) {
-		return null;
-	}
+export default async function CollectionPage({ params }: { params: { id: string } }) {
+	const collection = await getCollection(parseInt(params.id));
 
 	return (
 		<MediaPage

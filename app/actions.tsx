@@ -169,7 +169,11 @@ export async function getMovieGenres() {
 	return genres;
 }
 
-export async function getGenreMovies(genreId: number, page: number = 1, language: string = 'en') {
+export async function getGenreMovies(
+	genreId: number | null,
+	page: number = 1,
+	language: string = 'en',
+) {
 	const results: Results = await overseerr.endpoint(
 		'/discover/movies?page=' + page + '&genre=' + genreId + '&language=' + language,
 	);

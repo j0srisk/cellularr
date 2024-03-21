@@ -1,5 +1,3 @@
-'use server';
-
 import {
 	getMovieDetails,
 	getRatings,
@@ -12,40 +10,18 @@ import { createMovieFacts, formatDuration } from '@/app/utils';
 import MediaPage from '@/components/MediaPage';
 
 export default async function MoviePage({ params }: { params: { id: string } }) {
-	// const { data: movieDetails } = useSWR(`movie-${params.id}-details`, () =>
-	// 	getMovieDetails(parseInt(params.id)),
-	// );
-
 	const movieDetails = await getMovieDetails(parseInt(params.id));
-
-	// const { data: rottenTomatoesRating } = useSWR(`movie-${params.id}-rating`, () =>
-	// 	getRatings(MediaType.MOVIE, parseInt(params.id)),
-	// );
 
 	const rottenTomatoesRating = await getRatings(MediaType.MOVIE, parseInt(params.id));
 
-	// const { data: files } = useSWR(`movie-${params.id}-files`, () =>
-	// 	movieDetails?.mediaInfo?.ratingKey
-	// 		? getFiles(parseInt(movieDetails.mediaInfo.ratingKey))
-	// 		: null,
-	// );
+	const recommendedMovies = await getRecommendations(MediaType.MOVIE, parseInt(params.id));
+
+	const similarMovies = await getSimilar(MediaType.MOVIE, parseInt(params.id));
 
 	let files = null;
 	if (movieDetails?.mediaInfo?.ratingKey) {
 		files = await getFiles(movieDetails.mediaInfo.ratingKey);
 	}
-
-	// const { data: recommendedMovies } = useSWR(`movie-${params.id}-recommendations`, () =>
-	// 	getRecommendations(MediaType.MOVIE, parseInt(params.id)),
-	// );
-
-	const recommendedMovies = await getRecommendations(MediaType.MOVIE, parseInt(params.id));
-
-	// const { data: similarMovies } = useSWR(`movie-${params.id}-similar`, () =>
-	// 	getSimilar(MediaType.MOVIE, parseInt(params.id)),
-	// );
-
-	const similarMovies = await getSimilar(MediaType.MOVIE, parseInt(params.id));
 
 	if (movieDetails) {
 		return (

@@ -12,7 +12,7 @@ export default function PosterGrid({
 	}
 
 	return (
-		<div className="grid h-fit grid-cols-3 gap-2">
+		<div className="grid h-fit w-full grid-cols-3 gap-2">
 			{results.map((result: MovieResult | TvResult | PersonResult) =>
 				result.mediaType === 'person' ? (
 					<PersonCard key={result.id} name={result.name} profilePath={result.profilePath} />

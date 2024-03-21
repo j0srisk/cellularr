@@ -10,17 +10,12 @@ export default function DiscoverMoviesPage() {
 
 	const genre = searchParams.get('genre');
 
-	let results;
+	const { data: genreResults } = useSWR(`genreMovies-${genre}`, () =>
+		getGenreMovies(parseInt(genre ? genre : '')),
+	);
 
-	if (genre) {
-		const { data } = useSWR(`movie-genre-${genre}`, () => getGenreMovies(parseInt(genre)));
-
-		if (data) {
-			results = data;
-		}
-	}
-
-	if (results) {
-		return <PosterGrid results={results.results} />;
+	if (genreResults) {
+		console.log(genreResults);
+		return <PosterGrid results={genreResults.results} />;
 	}
 }

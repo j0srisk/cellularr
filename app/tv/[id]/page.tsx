@@ -1,30 +1,16 @@
-'use client';
-
 import { getTvDetails, getRatings, getRecommendations, getSimilar } from '@/app/actions';
 import { MediaType } from '@/app/types';
 import { createTvFacts } from '@/app/utils';
 import MediaPage from '@/components/MediaPage';
-import { useParams } from 'next/navigation';
-import useSWR from 'swr';
 
-export default function TvPage() {
-	const params = useParams<{ id: string }>();
+export default async function TvPage({ params }: { params: { id: string } }) {
+	const tvDetails = await getTvDetails(parseInt(params.id));
 
-	const { data: tvDetails } = useSWR(`tv-${params.id}-details`, () =>
-		getTvDetails(parseInt(params.id)),
-	);
+	const rottenTomatoesRating = await getRatings(MediaType.TV, parseInt(params.id));
 
-	const { data: rottenTomatoesRating } = useSWR(`tv-${params.id}-rating`, () =>
-		getRatings(MediaType.TV, parseInt(params.id)),
-	);
+	const recommendedSeries = await getRecommendations(MediaType.TV, parseInt(params.id));
 
-	const { data: recommendedSeries } = useSWR(`tv-${params.id}-recommendations`, () =>
-		getRecommendations(MediaType.TV, parseInt(params.id)),
-	);
-
-	const { data: similarSeries } = useSWR(`tv-${params.id}-similar`, () =>
-		getSimilar(MediaType.TV, parseInt(params.id)),
-	);
+	const similarSeries = await getSimilar(MediaType.TV, parseInt(params.id));
 
 	if (tvDetails) {
 		return (
