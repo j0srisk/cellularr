@@ -16,6 +16,11 @@ export default function DiscoverMoviesPage() {
 
 	if (genreResults) {
 		console.log(genreResults);
-		return <PosterGrid results={genreResults.results} />;
+		return (
+			<div>
+				<p className="pb-4 text-title-1-emphasized">{genre}</p>
+				<PosterGrid results={genreResults.results} />
+			</div>
+		);
 	}
 }
