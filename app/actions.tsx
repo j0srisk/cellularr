@@ -1,6 +1,7 @@
 'use server';
 
 import { demoApplications, demoSessions } from '@/app/config/demoData';
+import demoData from '@/app/demoData.json';
 import { MediaType } from '@/app/types';
 import overseerr from '@/services/overseerr/overseerr';
 import { Collection } from '@/services/overseerr/types/collection';
@@ -191,6 +192,14 @@ export async function getTrending(query: string, page: number = 1, language: str
 	return results;
 }
 
+export async function getWatchlist(query: string, page: number = 1, language: string = 'en') {
+	const results: Results = await overseerr.endpoint('/discover/watchlist?page=' + page);
+
+	console.log(results);
+
+	return results;
+}
+
 export async function getGenreMovies(genreId: string, page: number = 1, language: string = 'en') {
 	const results: Results = await overseerr.endpoint(
 		'/discover/movies?genre=' + genreId + '&page=' + page + '&language=' + language,
@@ -200,13 +209,16 @@ export async function getGenreMovies(genreId: string, page: number = 1, language
 }
 
 export async function getActivityData() {
-	// if (process.env.DEMO_MODE === 'true') {
-	// 	console.log('DEMO MODE: using demo sessions');
-	// 	return demoSessions;
-	// }
-	const sessionData: ActivityData = await tautulli.command('get_activity');
+	if (process.env.DEMO_MODE === 'true') {
+		const activityData: ActivityData = demoData.activityData;
+		return activityData;
+	}
 
-	return sessionData;
+	//const activityData: ActivityData = await tautulli.command('get_activity');
+
+	const activityData: ActivityData = demoData.activityData;
+
+	return activityData;
 }
 
 export async function getLocation(ipAddress: string) {

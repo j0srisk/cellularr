@@ -1,5 +1,5 @@
 export interface ActivityData {
-	stream_count: number;
+	stream_count: string;
 	stream_count_direct_play: number;
 	stream_count_direct_stream: number;
 	stream_count_transcode: number;
@@ -12,7 +12,7 @@ export interface ActivityData {
 export interface Session {
 	session_key: string;
 	media_type: string;
-	progress_percent: number;
+	progress_percent: string;
 	library_name: string;
 	rating_key: string;
 	parent_rating_key: string | null;
@@ -20,17 +20,17 @@ export interface Session {
 	title: string;
 	parent_title: string | null;
 	grandparent_title: string | null;
-	media_index: number | null;
-	parent_media_index: number | null;
+	media_index: string | null;
+	parent_media_index: string | null;
 	thumb: string;
 	parent_thumb: string | null;
 	grandparent_thumb: string | null;
 	art: string;
 	banner: string | null;
-	duration: number;
+	duration: string;
 	year: string;
 	player: string;
-	bandwidth: number;
+	bandwidth: string;
 	location: string;
 	transcode_progress: number | null;
 	state: string;

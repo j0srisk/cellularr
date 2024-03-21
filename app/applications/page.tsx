@@ -1,8 +1,8 @@
 'use client';
 
 import { GetApplications } from '@/app/actions';
+import Header from '@/components/Common/NavigationBar/Index';
 import Container from '@/components/Container';
-import Header from '@/components/Header';
 import Seperator from '@/components/ui/Seperator';
 import { Fragment } from 'react';
 import { useState, useEffect } from 'react';

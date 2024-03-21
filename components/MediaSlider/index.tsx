@@ -9,7 +9,7 @@ export default function MediaSlider({
 	results: (MovieResult | TvResult | PersonResult)[];
 }) {
 	return (
-		<div className="no-scrollbar flex w-full gap-2 overflow-x-auto px-4">
+		<div className="no-scrollbar flex w-full gap-2 overflow-x-auto px-4 py-1">
 			{results.map((result: MovieResult | TvResult | PersonResult) => (
 				<Fragment key={result.id}>
 					{result.mediaType === 'person' ? (

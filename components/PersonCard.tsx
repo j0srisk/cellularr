@@ -21,7 +21,10 @@ export default function PersonCard({
 }: PersonCardProps) {
 	return (
 		<Card
-			className={twMerge(['flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0', className])}
+			className={twMerge([
+				'shadow-drop-xs flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0',
+				className,
+			])}
 			onClick={onClick}
 		>
 			<div className="flex aspect-square w-full items-center justify-center">

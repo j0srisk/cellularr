@@ -34,7 +34,7 @@ export default function PosterCard({
 	return (
 		<Card
 			className={twMerge([
-				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center overflow-hidden rounded-xl hover:cursor-pointer',
+				'shadow-drop-xs group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center border-none  hover:cursor-pointer',
 				className,
 			])}
 			href={href}

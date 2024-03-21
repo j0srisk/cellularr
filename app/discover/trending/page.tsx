@@ -1,14 +1,16 @@
 'use client';
 
-import { getTrending, getSearch } from '@/app/actions';
-import CompactNavBar from '@/components/Common/CompactNavBar';
+import { getTrending } from '@/app/actions';
+import CompactNavigationBar from '@/components/Common/CompactNavigationBar';
 import InfiniteResults from '@/components/Discover/InfiniteResults';
 
 export default function DiscoverTrendingPage() {
 	return (
-		<div className="w-full bg-system-primary-light dark:bg-system-primary-dark">
-			<CompactNavBar title="Trending" />
-			<InfiniteResults fetcher={getTrending} query={'trending'} />
+		<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
+			<CompactNavigationBar title="Trending" />
+			<div className="pt-nav-compact pb-nav-4 px-4">
+				<InfiniteResults fetcher={getTrending} query={'trending'} showFeatured={true} />
+			</div>
 		</div>
 	);
 }

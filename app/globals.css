@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-	--Materials-Thick---Dark:             
+	--Materials-Thick---Dark:                                      
 ;
 }
 
@@ -21,13 +21,38 @@
 		padding-bottom: calc(env(safe-area-inset-bottom) + 57px);
 	}
 
+	.pb-nav-4 {
+		padding-bottom: calc(env(safe-area-inset-bottom) + 57px + 1rem);
+	}
+
 	.pt-safe {
 		padding-top: env(safe-area-inset-top);
 	}
 
-	.pt-compact-nav {
+	.pt-nav {
+		padding-top: calc(env(safe-area-inset-top) + 72px);
+	}
+
+	.pt-nav-search {
+		padding-top: calc(env(safe-area-inset-top) + 104px);
+	}
+
+	.pt-nav-compact {
 		padding-top: calc(env(safe-area-inset-top) + 44px);
 	}
+
+	.pt-nav-4 {
+		padding-top: calc(env(safe-area-inset-top) + 72px + 1rem);
+	}
+
+	.bg-nav {
+		@apply bg-system-primary-light/75 bg-blend-hard-light backdrop-blur-[25px] dark:bg-system-primary-dark/75;
+	}
+
+	.shadow-apple {
+		box-shadow: 0 0 32px 0 rgba(0, 0, 0, 0.2);
+	}
+
 	/* Hide scrollbar for Chrome, Safari and Opera */
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;

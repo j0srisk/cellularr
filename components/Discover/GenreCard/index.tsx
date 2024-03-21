@@ -18,7 +18,7 @@ export default function GenreCard({
 }) {
 	return (
 		<Card
-			className="relative aspect-video w-full items-start justify-end p-2 hover:cursor-pointer"
+			className="shadow-drop-sm relative aspect-video w-full items-start justify-end border-none p-2 hover:cursor-pointer"
 			href={href}
 			onClick={onClick}
 		>

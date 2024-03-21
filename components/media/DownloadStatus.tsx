@@ -1,7 +1,7 @@
 'use client';
 
 import { Download, MediaType } from '@/app/types';
-import Header from '@/components/Header';
+import Header from '@/components/Common/NavigationBar/Index';
 import Seperator from '@/components/ui/Seperator';
 import { useState, useEffect } from 'react';
 import { Fragment } from 'react';

@@ -48,6 +48,13 @@ const config: Config = {
 				'footnote-emphasized': ['13px', { lineHeight: '18px', fontWeight: '590' }],
 				heading: ['13px', { lineHeight: '16px' }],
 			},
+			boxShadow: {
+				'drop-xl': '0px 0px 64px 0px rgba(0, 0, 0, 0.2)',
+				'drop-lg': '0px 0px 32px 0px rgba(0, 0, 0, 0.2)',
+				'drop-md': '0px 0px 16px 0px rgba(0, 0, 0, 0.2)',
+				'drop-sm': '0px 0px 8px 0px rgba(0, 0, 0, 0.2)',
+				'drop-xs': '0px 0px 4px 0px rgba(0, 0, 0, 0.2)',
+			},
 			colors: {
 				system: {
 					red: {

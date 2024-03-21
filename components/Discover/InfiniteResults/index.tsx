@@ -2,7 +2,8 @@
 
 import { MediaType } from '@/app/types';
 import GenreCard from '@/components/Discover/GenreCard';
-import PosterGrid from '@/components/Discover/PosterGrid';
+import PersonCard from '@/components/PersonCard';
+import PosterCard from '@/components/PosterCard';
 import { MovieResult, TvResult, PersonResult, Results } from '@/services/overseerr/types/search';
 import { useState, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
@@ -11,16 +12,22 @@ type InfiniteResultsProps = {
 	fetcher: (query: string, page?: number, language?: string) => Promise<Results>;
 	query: string;
 	language?: string;
+	showFeatured?: boolean;
 };
 
-export default function InfiniteResults({ fetcher, query, language }: InfiniteResultsProps) {
-	const [highlightedMedia, setHighlightedMedia] = useState<MovieResult | TvResult>();
+export default function InfiniteResults({
+	fetcher,
+	query,
+	language = 'en',
+	showFeatured = false,
+}: InfiniteResultsProps) {
+	const [featuredMedia, setFeaturedMedia] = useState<MovieResult | TvResult>();
 	const getKey = (pageIndex: number, previousPageData: Results) => {
 		// reached the end
 		if (previousPageData && previousPageData.page >= previousPageData.totalPages) return null;
 
 		// return the key of the next page
-		return [{ query }, pageIndex + 1, language];
+		return [query, pageIndex + 1, language];
 	};
 
 	const { data, size, setSize, isValidating } = useSWRInfinite(getKey, (key) =>
@@ -35,13 +42,13 @@ export default function InfiniteResults({ fetcher, query, language }: InfiniteRe
 		: [];
 
 	useEffect(() => {
-		if (results) {
+		if (showFeatured && results) {
 			const firstNotPersonMedia = results.find(
 				(result): result is MovieResult | TvResult =>
 					result.mediaType === MediaType.MOVIE || result.mediaType === MediaType.TV,
 			);
 			if (firstNotPersonMedia) {
-				setHighlightedMedia(firstNotPersonMedia);
+				setFeaturedMedia(firstNotPersonMedia);
 			}
 		}
 	}, [results]);
@@ -50,29 +57,45 @@ export default function InfiniteResults({ fetcher, query, language }: InfiniteRe
 		setSize(size + 1);
 	};
 
-	if (results && results.length > 0) {
+	if (results) {
 		return (
-			<div className="no-scrollbar h-full overflow-auto pb-4">
-				<div className="pb-nav flex w-full flex-col items-center gap-2 px-4">
-					{highlightedMedia && (
-						<GenreCard
-							name={
-								highlightedMedia.mediaType === MediaType.MOVIE
-									? highlightedMedia.title
-									: highlightedMedia.name
-							}
-							genreId={878}
-							backdropPath={highlightedMedia.backdropPath}
-							href={`/discover/${highlightedMedia.mediaType}s/${highlightedMedia.id}`}
-						/>
-					)}
-					<PosterGrid results={results} />
-					{data && data[data.length - 1].page < data[data.length - 1].totalPages && (
-						<button onClick={loadMore} disabled={isValidating}>
-							{isValidating ? 'Loading...' : 'Load More'}
-						</button>
-					)}
-				</div>
+			<div className="no-scrollbar flex h-full w-full flex-col gap-4 overflow-auto px-4 pt-1">
+				{results.length > 0 && (
+					<div className="flex w-full flex-col items-center gap-2">
+						{featuredMedia && (
+							<GenreCard
+								name={
+									featuredMedia.mediaType === MediaType.MOVIE
+										? featuredMedia.title
+										: featuredMedia.name
+								}
+								genreId={878}
+								backdropPath={featuredMedia.backdropPath}
+								href={`/discover/${featuredMedia.mediaType}s/${featuredMedia.id}`}
+							/>
+						)}
+						<div className="grid h-fit w-full grid-cols-3 gap-2">
+							{results.map((result: MovieResult | TvResult | PersonResult) =>
+								result.mediaType === 'person' ? (
+									<PersonCard key={result.id} name={result.name} profilePath={result.profilePath} />
+								) : (
+									<PosterCard
+										id={result.id}
+										key={result.id}
+										mediaType={result.mediaType}
+										title={(result as TvResult).name || (result as MovieResult).title}
+										posterPath={result.posterPath}
+									/>
+								),
+							)}
+						</div>
+						{data && data[data.length - 1].page < data[data.length - 1].totalPages && (
+							<button onClick={loadMore} disabled={isValidating}>
+								{isValidating ? 'Loading...' : 'Load More'}
+							</button>
+						)}
+					</div>
+				)}
 			</div>
 		);
 	}

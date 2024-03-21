@@ -1,13 +1,24 @@
+import { twMerge } from 'tailwind-merge';
+
 type HeaderProps = {
-	heading: string;
-	subheading?: string;
+	title: string;
+	subtitle?: string;
 	children?: React.ReactNode;
+	className?: string;
 	onBack?: () => void;
 };
 
-export default function Header({ heading, subheading, children, onBack }: HeaderProps) {
+export default function NavigationBar({
+	title,
+	subtitle,
+	children,
+	className,
+	onBack,
+}: HeaderProps) {
 	return (
-		<div className="flex w-full flex-col px-4">
+		<div
+			className={twMerge(`pt-safe bg-nav sticky top-0 z-30 flex w-full flex-col px-4`, className)}
+		>
 			{onBack && (
 				<div className="flex w-full items-center justify-start py-[11px]">
 					<button
@@ -31,10 +42,10 @@ export default function Header({ heading, subheading, children, onBack }: Header
 			)}
 
 			<div className="flex w-full flex-col items-center justify-center pb-[8px] pt-[3px]">
-				<p className="w-full truncate text-large-title-emphasized">{heading}</p>
-				{subheading && (
+				<p className="w-full truncate text-large-title-emphasized">{title}</p>
+				{subtitle && (
 					<p className="w-full truncate text-subheadline-emphasized text-label-secondary-light dark:text-label-secondary-dark">
-						{subheading}
+						{subtitle}
 					</p>
 				)}
 			</div>
