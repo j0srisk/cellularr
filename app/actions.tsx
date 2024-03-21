@@ -169,26 +169,32 @@ export async function getMovieGenres() {
 	return genres;
 }
 
-export async function getGenreMovies(
-	genreId: number | null,
-	page: number = 1,
-	language: string = 'en',
-) {
-	const results: Results = await overseerr.endpoint(
-		'/discover/movies?page=' + page + '&genre=' + genreId + '&language=' + language,
-	);
-
-	return results;
-}
-
 export async function getSeriesGenres() {
 	const genres: Genre[] = await overseerr.endpoint('/discover/genreslider/tv');
 
 	return genres;
 }
 
-export async function getTrending(page: number = 1) {
-	const results: Results = await overseerr.endpoint('/discover/trending');
+export async function getSearch(query: string, page: number = 1, language: string = 'en') {
+	const results: Results = await overseerr.endpoint(
+		'/search?query=' + query + '&page=' + page + '&language=' + language,
+	);
+
+	return results;
+}
+
+export async function getTrending(query: string, page: number = 1, language: string = 'en') {
+	const results: Results = await overseerr.endpoint(
+		'/discover/trending?page=' + page + '&language=' + language,
+	);
+
+	return results;
+}
+
+export async function getGenreMovies(genreId: string, page: number = 1, language: string = 'en') {
+	const results: Results = await overseerr.endpoint(
+		'/discover/movies?genre=' + genreId + '&page=' + page + '&language=' + language,
+	);
 
 	return results;
 }

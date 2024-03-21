@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-	--Materials-Thick---Dark:            
+	--Materials-Thick---Dark:             
 ;
 }
 
@@ -23,6 +23,10 @@
 
 	.pt-safe {
 		padding-top: env(safe-area-inset-top);
+	}
+
+	.pt-compact-nav {
+		padding-top: calc(env(safe-area-inset-top) + 44px);
 	}
 	/* Hide scrollbar for Chrome, Safari and Opera */
 	.no-scrollbar::-webkit-scrollbar {

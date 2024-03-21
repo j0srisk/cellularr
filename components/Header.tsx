@@ -7,7 +7,7 @@ type HeaderProps = {
 
 export default function Header({ heading, subheading, children, onBack }: HeaderProps) {
 	return (
-		<div className="flex w-full flex-col">
+		<div className="flex w-full flex-col px-4">
 			{onBack && (
 				<div className="flex w-full items-center justify-start py-[11px]">
 					<button

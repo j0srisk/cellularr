@@ -1,26 +1,19 @@
 'use client';
 
 import { getGenreMovies } from '@/app/actions';
-import PosterGrid from '@/components/Discover/PosterGrid';
+import CompactNavBar from '@/components/Common/CompactNavBar';
+import InfiniteResults from '@/components/Discover/InfiniteResults';
 import { useSearchParams } from 'next/navigation';
-import useSWR from 'swr';
 
 export default function DiscoverMoviesPage() {
 	const searchParams = useSearchParams();
 
 	const genre = searchParams.get('genre');
 
-	const { data: genreResults } = useSWR(`genreMovies-${genre}`, () =>
-		getGenreMovies(parseInt(genre ? genre : '')),
+	return (
+		<div className="w-full bg-system-primary-light dark:bg-system-primary-dark">
+			<CompactNavBar title="Trending" />
+			{genre && <InfiniteResults fetcher={getGenreMovies} query={genre} />}
+		</div>
 	);
-
-	if (genreResults) {
-		console.log(genreResults);
-		return (
-			<div>
-				<p className="pb-4 text-title-1-emphasized">{genre}</p>
-				<PosterGrid results={genreResults.results} />
-			</div>
-		);
-	}
 }

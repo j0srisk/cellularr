@@ -1,20 +1,14 @@
 'use client';
 
-import { getTrending } from '@/app/actions';
-import PosterGrid from '@/components/Discover/PosterGrid';
-import Section from '@/components/Section';
-import useSWR from 'swr';
-import useSWRInfinite from 'swr/infinite';
+import { getTrending, getSearch } from '@/app/actions';
+import CompactNavBar from '@/components/Common/CompactNavBar';
+import InfiniteResults from '@/components/Discover/InfiniteResults';
 
 export default function DiscoverTrendingPage() {
-	const { data: results } = useSWR('trending', () => getTrending(1));
-
-	if (results) {
-		return (
-			<div>
-				<p className="pb-4 text-title-1-emphasized">Trending</p>
-				<PosterGrid results={results.results} />
-			</div>
-		);
-	}
+	return (
+		<div className="w-full bg-system-primary-light dark:bg-system-primary-dark">
+			<CompactNavBar title="Trending" />
+			<InfiniteResults fetcher={getTrending} query={'trending'} />
+		</div>
+	);
 }

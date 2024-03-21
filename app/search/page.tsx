@@ -1,6 +1,7 @@
 'use client';
 
-import { getSearchResults } from '@/app/actions';
+import { getSearchResults, getSearch } from '@/app/actions';
+import InfiniteResults from '@/components/Discover/InfiniteResults';
 import MovieGenres from '@/components/Discover/MovieGenres';
 import TvGenres from '@/components/Discover/TvGenres';
 import Header from '@/components/Header';
@@ -16,21 +17,11 @@ export default function Page() {
 	const searchQuery = searchParams.get('query');
 
 	const [search, setSearch] = useState<string | ''>(searchQuery || '');
-	const [results, setResults] = useState([]);
 
 	const router = useRouter();
 
-	useEffect(() => {
-		(async () => {
-			if (search) {
-				const searchResultsResponse = await getSearchResults(search);
-				setResults(searchResultsResponse.results);
-			}
-		})();
-	}, [search]);
-
 	return (
-		<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
+		<div className="pt-safe flex h-full w-full flex-col">
 			<Header heading="Search">
 				<div className="w-full pb-[15px] pt-[1px]">
 					<SearchBar
@@ -49,30 +40,14 @@ export default function Page() {
 				</div>
 			</Header>
 
-			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start gap-[9px] overflow-y-auto overflow-x-hidden">
+			<div className="no-scrollbar pb-nav flex h-full w-full flex-col justify-start overflow-y-auto overflow-x-hidden">
 				{searchQuery ? (
-					<div className="grid w-full grid-cols-3 gap-2">
-						{results.map((searchResult: any) =>
-							searchResult.mediaType === 'person' ? (
-								<PersonCard
-									key={searchResult.id}
-									name={searchResult.name}
-									profilePath={searchResult.profilePath}
-								/>
-							) : (
-								<PosterCard
-									key={searchResult.id}
-									title={searchResult.originalTitle}
-									posterPath={searchResult.posterPath}
-									onClick={() => {
-										router.push('/' + searchResult.mediaType + '/' + searchResult.id);
-									}}
-								/>
-							),
-						)}
-					</div>
+					<>
+						<InfiniteResults fetcher={getSearch} query={searchQuery} />
+					</>
 				) : (
 					<div className="flex flex-col gap-6">
+						<button onClick={() => router.push('/discover/trending')}>Trending</button>
 						<MovieGenres />
 						<TvGenres />
 					</div>

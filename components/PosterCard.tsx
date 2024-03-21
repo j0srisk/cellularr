@@ -41,7 +41,13 @@ export default function PosterCard({
 			onClick={onClick}
 		>
 			{posterPath ? (
-				<Image src={posterUrl + posterPath} alt={title} fill={true} className="object-cover" />
+				<Image
+					src={posterUrl + posterPath}
+					alt={title}
+					fill={true}
+					sizes="33vw"
+					className="object-cover"
+				/>
 			) : (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

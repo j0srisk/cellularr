@@ -21,7 +21,9 @@ export default function Genres({
 				{genres.slice(0, moreGenres ? genres.length : 5).map((genre: Genre) => (
 					<GenreCard
 						key={genre.id}
-						genre={genre}
+						name={genre.name}
+						genreId={genre.id}
+						backdropPath={genre.backdrops[4]}
 						href={`/discover/${mediaType}${mediaType === MediaType.MOVIE ? 's' : ''}?genre=${
 							genre.id
 						}`}
@@ -29,11 +31,10 @@ export default function Genres({
 				))}
 				{genres.length > 5 && (
 					<GenreCard
-						genre={{
-							id: -1,
-							name: 'Show ' + (moreGenres ? 'Less' : 'More'),
-							backdrops: [],
-						}}
+						key={-1}
+						name={'Show ' + (moreGenres ? 'Less' : 'More')}
+						genreId={-1}
+						backdropPath=""
 						onClick={() => setMoreGenres(!moreGenres)}
 					/>
 				)}
