@@ -208,6 +208,14 @@ export async function getGenreMovies(genreId: string, page: number = 1, language
 	return results;
 }
 
+export async function getGenreTv(genreId: string, page: number = 1, language: string = 'en') {
+	const results: Results = await overseerr.endpoint(
+		'/discover/tv?genre=' + genreId + '&page=' + page + '&language=' + language,
+	);
+
+	return results;
+}
+
 export async function getActivityData() {
 	if (process.env.DEMO_MODE === 'true') {
 		const activityData: ActivityData = demoData.activityData;
