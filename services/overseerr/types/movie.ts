@@ -1,3 +1,4 @@
+import { MediaType } from '@/app/types';
 import { Collection } from '@/services/overseerr/types/collection';
 import {
 	Genre,
@@ -14,6 +15,7 @@ import {
 
 export interface MovieDetails {
 	id: number;
+	mediaType: MediaType.MOVIE;
 	imdbId: string;
 	adult: boolean;
 	backdropPath: string | null;

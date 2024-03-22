@@ -3,13 +3,17 @@
 @tailwind utilities;
 
 :root {
-	--Materials-Thick---Dark:                                      
+	--Materials-Thick---Dark:                                          
 ;
 }
 
 @layer utilities {
 	.pb-safe {
 		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.pb-safe-4 {
+		padding-bottom: env(safe-area-inset-bottom) + 1rem;
 	}
 
 	.px-safe {

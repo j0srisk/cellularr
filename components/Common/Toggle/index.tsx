@@ -1,22 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type ToggleButtonProps = {
-	isToggled: boolean;
-	isDisabled?: boolean;
+	toggled: boolean;
+	disabled?: boolean;
 	color?: string;
 	onToggle?: () => void;
 };
 
-export default function ToggleButton({
-	isToggled,
-	isDisabled,
-	color,
-	onToggle,
-}: ToggleButtonProps) {
-	const [toggled, setToggled] = useState(isToggled);
-	const [disabled, setDisabled] = useState(isDisabled || false);
+export default function ToggleButton({ toggled, disabled, color, onToggle }: ToggleButtonProps) {
+	//const [disabled, setDisabled] = useState(Disabled || false);
 
 	return (
 		<button
@@ -27,13 +22,11 @@ export default function ToggleButton({
 			}}
 			className={`flex h-[31px] w-[51px] flex-shrink-0 rounded-full p-[2px] ${
 				toggled
-					? color
-						? 'bg-system-indigo-light dark:bg-system-indigo-dark'
-						: 'bg-system-green-light dark:bg-system-green-dark'
+					? twMerge('bg-system-green-light dark:bg-system-green-dark', color)
 					: 'bg-fill-secondary-light dark:bg-fill-secondary-dark'
 			}`}
 			onClick={() => {
-				setToggled(!toggled);
+				toggled = !toggled;
 				onToggle && onToggle();
 			}}
 		>

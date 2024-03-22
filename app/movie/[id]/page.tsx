@@ -57,6 +57,7 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
 			<MediaPage
 				id={movieDetails.id}
 				mediaType={MediaType.MOVIE}
+				mediaDetails={movieDetails}
 				backdropPath={movieDetails.backdropPath}
 				posterPath={movieDetails.posterPath}
 				title={movieDetails.title}

@@ -20,7 +20,7 @@ export default function Card({
 	return (
 		<div
 			className={twMerge([
-				'relative flex flex-col overflow-hidden rounded-[13px] border border-fill-tetiary-light bg-system-secondary-light bg-white dark:border-fill-tetiary-dark dark:bg-system-secondary-dark',
+				'relative flex flex-col overflow-hidden rounded-[13px] border border-fill-tetiary-light bg-system-secondary-light dark:border-fill-tetiary-dark dark:bg-system-secondary-dark',
 				className,
 			])}
 			onClick={onClick}

@@ -1,5 +1,6 @@
 'use client';
 
+import RequestButton from '../RequestButton';
 import { MediaType, MediaFact } from '@/app/types';
 import { backdropUrl } from '@/app/types';
 import Button from '@/components/Common/Button';
@@ -16,13 +17,16 @@ import useBackdropScale from '@/hooks/useBackdropScale';
 import { Collection } from '@/services/overseerr/types/collection';
 import { MediaStatus } from '@/services/overseerr/types/common';
 import { Cast, Rating } from '@/services/overseerr/types/common';
+import { MovieDetails } from '@/services/overseerr/types/movie';
 import { MovieResult, TvResult, PersonResult } from '@/services/overseerr/types/search';
+import { TvDetails } from '@/services/overseerr/types/tv';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type MediaPageProps = {
 	id: number;
 	mediaType: MediaType.MOVIE | MediaType.TV | MediaType.COLLECTION;
+	mediaDetails: MovieDetails | TvDetails | Collection;
 	backdropPath: string | null;
 	posterPath: string | null;
 	title: string;
@@ -45,7 +49,7 @@ export default function MediaPage(props: MediaPageProps) {
 	const { backdropHeight, scaleFactor, handleScroll, setRef } = useBackdropScale(0);
 	const [backdropBlurred, setBackdropBlurred] = useState(true);
 
-	const [requestPanel, setRequestPanel] = useState(false);
+	const [requestPanelOpen, setRequestPanelOpen] = useState(false);
 
 	const router = useRouter();
 
@@ -74,26 +78,11 @@ export default function MediaPage(props: MediaPageProps) {
 					<p className="text-center text-large-title-emphasized leading-[28px]">{props.title}</p>
 					<MediaAttributes attributes={props.attributes} />
 					<div className="flex w-full items-center justify-center gap-2">
-						{props.iOSPlexUrl && (
-							<Button className="w-1/2 border border-system-orange-dark bg-system-orange-light dark:border-system-orange-dark dark:bg-system-orange-light">
-								<p className="text-subheadline-emphasized">Play on Plex</p>
-								<svg
-									className="hidden h-4 w-4 fill-current stroke-current"
-									viewBox="0 0 32 32"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path d="M15.527 0h-9.287l10.239 16-10.239 16h9.287l10.233-16-10.233-16z" />
-								</svg>
-							</Button>
-						)}
-						{!props.requestStatus && (
-							<Button
-								className="w-1/2 border border-system-indigo-dark bg-system-indigo-light dark:border-system-indigo-dark dark:bg-system-indigo-light"
-								onClick={() => setRequestPanel(true)}
-							>
-								<p className="text-subheadline-emphasized">Request</p>
-							</Button>
-						)}
+						<RequestButton
+							requestStatus={props.requestStatus}
+							iOSPlexUrl={props.iOSPlexUrl}
+							setRequestPanelOpen={setRequestPanelOpen}
+						/>
 						{props.trailerUrl && (
 							<SystemBackground className="rounded-lg">
 								<Button
@@ -190,14 +179,15 @@ export default function MediaPage(props: MediaPageProps) {
 					scaleFactor={scaleFactor}
 					blurred={backdropBlurred}
 				/>
-				{requestPanel && (
+				{requestPanelOpen && (
 					<Request
 						mediaType={MediaType.MOVIE}
 						id={props.id}
 						title={props.title}
+						mediaDetails={props.mediaDetails}
 						backdropUrl={backdropUrl + props.backdropPath}
 						backdropHeight={backdropHeight}
-						closeFunction={() => setRequestPanel(false)}
+						closeFunction={() => setRequestPanelOpen(false)}
 					/>
 				)}
 			</>

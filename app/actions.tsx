@@ -129,11 +129,8 @@ export async function getArrServers(mediaType: MediaType = MediaType.MOVIE) {
 }
 
 export async function getArrServer(mediaType: MediaType = MediaType.MOVIE, id: number) {
-	console.log(mediaType, id);
 	if (mediaType === MediaType.MOVIE) {
 		const radarr: Radarr = await overseerr.endpoint('/service/radarr/' + id);
-
-		console.log(radarr);
 
 		return radarr;
 	}

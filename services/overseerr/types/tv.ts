@@ -1,3 +1,4 @@
+import { MediaType } from '@/app/types';
 import {
 	Genre,
 	ProductionCompany,
@@ -12,6 +13,7 @@ import { PersonResult } from '@/services/overseerr/types/search';
 
 export interface TvDetails {
 	id: number;
+	mediaType: MediaType.TV;
 	backdropPath: string | null;
 	posterPath: string | null;
 	contentRatings: {

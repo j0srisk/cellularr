@@ -85,7 +85,7 @@ export default function InfiniteResults({
 				{results.length > 0 && (
 					<div className="flex w-full flex-col items-center gap-4">
 						{featuredMedia && (
-							<div className="relative flex aspect-video w-full items-center justify-center">
+							<div className="relative flex aspect-video w-full items-center justify-center shadow-drop-xs">
 								<Image
 									src={`https://image.tmdb.org/t/p/w1280_filter(duotone,${genreColorMap[genreId]})${featuredMedia.backdropPath}`}
 									alt={

@@ -2,11 +2,11 @@ import { MediaType } from '@/app/types';
 import { Season } from '@/services/overseerr/types/tv';
 
 export enum MediaStatus {
-	'Unknown' = 1,
-	'Pending' = 2,
-	'Processing' = 3,
-	'Partially Available' = 4,
-	'Available' = 5,
+	UNKNOWN = 1,
+	PENDING = 2,
+	PROCESSING = 3,
+	PARTIALLY_AVAILABLE = 4,
+	AVAILABLE = 5,
 }
 
 export enum RelatedVideoType {
