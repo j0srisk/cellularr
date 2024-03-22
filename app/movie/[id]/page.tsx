@@ -23,6 +23,35 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
 		files = await getFiles(movieDetails.mediaInfo.ratingKey);
 	}
 
+	// let certification = null;
+
+	// const usReleases = movieDetails.releases.results.find((release) => release.iso_3166_1 === 'US');
+
+	// const releasesWithCertification = usReleases?.release_dates.filter(
+	// 	(release) => release.certification,
+	// );
+
+	// const theaterRelease = releasesWithCertification?.find(
+	// 	(release) => release.type === 3 && release.certification,
+	// );
+
+	// if (!theaterRelease) {
+	// 	const anyRelease = releasesWithCertification?.find((release) => release.certification);
+
+	// 	certification = anyRelease?.certification;
+	// } else {
+	// 	certification = theaterRelease.certification;
+	// }
+
+	let certification = (
+		movieDetails.releases.results
+			.find((release) => release.iso_3166_1 === 'US')
+			?.release_dates.find((release) => release.type === 3) ||
+		movieDetails.releases.results
+			.find((release) => release.iso_3166_1 === 'US')
+			?.release_dates.find((release) => release.certification)
+	)?.certification;
+
 	if (movieDetails) {
 		return (
 			<MediaPage
@@ -32,11 +61,7 @@ export default async function MoviePage({ params }: { params: { id: string } }) 
 				posterPath={movieDetails.posterPath}
 				title={movieDetails.title}
 				attributes={[
-					movieDetails.releases.results
-						.find((release) => release.iso_3166_1 === 'US') // Find US release
-						?.release_dates?.filter((release) => release.certification) // Filter out releases without certification
-						.reduce((prev, current) => (prev.release_date < current.release_date ? prev : current))
-						.certification || null,
+					certification ? certification : 'NR',
 					movieDetails.releaseDate.split('-')[0],
 					formatDuration(movieDetails.runtime),
 				]}
