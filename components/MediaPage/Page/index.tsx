@@ -46,6 +46,7 @@ type MediaPageProps = {
 
 export default function MediaPage(props: MediaPageProps) {
 	const { backdropHeight, scaleFactor, handleScroll, setRef } = useBackdropScale(0);
+	const [backdropBlurred, setBackdropBlurred] = useState(true);
 
 	const [requestPanel, setRequestPanel] = useState(false);
 
@@ -66,7 +67,10 @@ export default function MediaPage(props: MediaPageProps) {
 					mediaType={props.mediaType}
 					title={props.title}
 					posterPath={props.posterPath}
-					className="z-10 w-32 rounded-lg border-none"
+					className={`z-10 w-32 rounded-lg border-none ${
+						backdropBlurred ? 'opacity-100' : 'opacity-0'
+					}`}
+					onClick={() => setBackdropBlurred(!backdropBlurred)}
 				/>
 
 				<div className="flex w-full flex-col items-center justify-center gap-2">
@@ -219,6 +223,7 @@ export default function MediaPage(props: MediaPageProps) {
 					backdropUrl={backdropUrl + props.backdropPath}
 					backdropHeight={backdropHeight}
 					scaleFactor={scaleFactor}
+					blurred={backdropBlurred}
 				/>
 				{requestPanel && (
 					<Request
