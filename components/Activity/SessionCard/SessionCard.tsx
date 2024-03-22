@@ -46,7 +46,7 @@ export default function SessionCard({ session }: { session: Session }) {
 
 	if (mediaDetails) {
 		return (
-			<Card className="shadow-drop-md">
+			<Card className="border-none shadow-drop-md">
 				{mediaType !== MediaType.MUSIC && (
 					<Image
 						src={backdropUrl + mediaDetails.backdropPath}
@@ -79,7 +79,7 @@ export default function SessionCard({ session }: { session: Session }) {
 						{mediaType === MediaType.TV && (
 							<>
 								<p className="text-body-emphasized">{session.grandparent_title}</p>
-								<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+								<p className="hidden text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 									{session.title}
 								</p>
 								<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
@@ -91,6 +91,18 @@ export default function SessionCard({ session }: { session: Session }) {
 							{session.state !== 'paused'
 								? formattedDuration + ' left (' + timeString + ')'
 								: 'Paused (' + formattedDuration + ' left)'}
+						</p>
+						<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+							{session.username}
+							{location && (
+								<span>
+									{' ('}
+									{location.city && location.region
+										? `${location.city}, ${location.region}`
+										: location.city || location.region}
+									{')'}
+								</span>
+							)}
 						</p>
 					</div>
 					{mediaType !== MediaType.MUSIC && (
