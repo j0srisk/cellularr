@@ -3,11 +3,11 @@
 import { MediaType } from '@/app/types';
 import PersonCard from '@/components/Common/PersonCard';
 import PosterCard from '@/components/Common/PosterCard';
-import GenreCard from '@/components/Search/GenreCard';
 import { genreColorMap, genreNameMap } from '@/components/Search/constants';
+import useOnScreen from '@/hooks/useOnScreen';
 import { MovieResult, TvResult, PersonResult, Results } from '@/services/overseerr/types/search';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
 type InfiniteResultsProps = {
@@ -26,6 +26,8 @@ export default function InfiniteResults({
 	genreId = 0,
 }: InfiniteResultsProps) {
 	const [featuredMedia, setFeaturedMedia] = useState<MovieResult | TvResult>();
+	const bottomRef = useRef<HTMLDivElement>(null);
+	const isVisable = useOnScreen(bottomRef);
 	const getKey = (pageIndex: number, previousPageData: Results) => {
 		// reached the end
 		if (previousPageData && previousPageData.page >= previousPageData.totalPages) return null;
@@ -39,12 +41,16 @@ export default function InfiniteResults({
 		fetcher(query, Number(key[1]), language),
 	);
 
-	const results = data
-		? data.reduce<(MovieResult | TvResult | PersonResult)[]>(
-				(acc, pageData) => [...acc, ...pageData.results],
-				[],
-			)
-		: [];
+	const results = useMemo(
+		() =>
+			data
+				? data.reduce<(MovieResult | TvResult | PersonResult)[]>(
+						(acc, pageData) => [...acc, ...pageData.results],
+						[],
+					)
+				: [],
+		[data],
+	);
 
 	useEffect(() => {
 		if (showFeatured && results) {
@@ -58,15 +64,24 @@ export default function InfiniteResults({
 				setFeaturedMedia(firstNotPersonMedia);
 			}
 		}
-	}, [results]);
+	}, [results, showFeatured]);
 
-	const loadMore = () => {
+	const loadMore = useCallback(() => {
 		setSize(size + 1);
-	};
+	}, [size, setSize]);
+
+	//TODO: Figure out why adding loadMore to the dependency array causes an infinite loop
+	useEffect(() => {
+		console.log('Is Visable:', isVisable);
+		if (isVisable) {
+			console.log('Loading more...');
+			loadMore();
+		}
+	}, [isVisable]);
 
 	if (results) {
 		return (
-			<div className="no-scrollbar flex h-full w-full flex-col gap-4 overflow-auto">
+			<div className="no-scrollbar relative flex h-full w-full flex-col gap-4 overflow-auto">
 				{results.length > 0 && (
 					<div className="flex w-full flex-col items-center gap-4">
 						{featuredMedia && (
@@ -102,13 +117,20 @@ export default function InfiniteResults({
 								),
 							)}
 						</div>
+
 						{data && data[data.length - 1].page < data[data.length - 1].totalPages && (
-							<button onClick={loadMore} disabled={isValidating}>
+							<button onClick={loadMore} disabled={isValidating} className="hidden">
 								{isValidating ? 'Loading...' : 'Load More'}
 							</button>
 						)}
 					</div>
 				)}
+				<div
+					ref={bottomRef}
+					className="absolute bottom-[100vh] -z-50 w-[1px] bg-blue-500 opacity-0"
+				>
+					Loads More When Visable
+				</div>
 			</div>
 		);
 	}

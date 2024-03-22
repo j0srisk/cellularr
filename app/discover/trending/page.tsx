@@ -9,7 +9,12 @@ export default function DiscoverTrendingPage() {
 		<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
 			<CompactNavigationBar title="Trending" />
 			<div className="pt-nav-compact pb-nav-4">
-				<InfiniteResults fetcher={getTrending} query={'trending'} showFeatured={true} />
+				<InfiniteResults
+					fetcher={getTrending}
+					query={'trending'}
+					showFeatured={true}
+					genreId={Number('0')}
+				/>
 			</div>
 		</div>
 	);
