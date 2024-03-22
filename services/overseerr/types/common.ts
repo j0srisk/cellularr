@@ -94,6 +94,7 @@ export interface Cast {
 	name: string;
 	order: number;
 	profilePath: string | null;
+	mediaType: MediaType.PERSON;
 }
 
 export interface Crew {
@@ -104,6 +105,7 @@ export interface Crew {
 	job: string;
 	department: string;
 	profilePath: string | null;
+	mediaType: MediaType.PERSON;
 }
 
 export interface ExternalIds {

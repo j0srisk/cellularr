@@ -1,19 +1,26 @@
+import { MediaType } from '@/app/types';
 import PersonCard from '@/components/Common/PersonCard';
 import PosterCard from '@/components/Common/PosterCard';
+import { Cast } from '@/services/overseerr/types/common';
 import { MovieResult, PersonResult, TvResult } from '@/services/overseerr/types/search';
 import { Fragment } from 'react';
 
 export default function MediaSlider({
 	results,
 }: {
-	results: (MovieResult | TvResult | PersonResult)[];
+	results: (MovieResult | TvResult | PersonResult | Cast)[];
 }) {
 	return (
 		<div className="no-scrollbar flex w-full gap-2 overflow-x-auto px-4 py-1">
-			{results.map((result: MovieResult | TvResult | PersonResult) => (
+			{results.map((result: MovieResult | TvResult | PersonResult | Cast) => (
 				<Fragment key={result.id}>
-					{result.mediaType === 'person' ? (
-						<PersonCard name={result.name} profilePath={result.profilePath} />
+					{'profilePath' in result ? (
+						<PersonCard
+							name={result.name}
+							character={(result as Cast).character}
+							profilePath={result.profilePath}
+							className="w-32"
+						/>
 					) : (
 						<PosterCard
 							id={result.id}

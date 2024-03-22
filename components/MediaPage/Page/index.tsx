@@ -170,17 +170,7 @@ export default function MediaPage(props: MediaPageProps) {
 				)}
 				{props.cast && (
 					<Section heading="Cast">
-						<Carousel className="px-4">
-							{props.cast.map((cast: Cast) => (
-								<PersonCard
-									key={cast.id}
-									name={cast.name}
-									character={cast.character}
-									profilePath={cast.profilePath}
-									className="w-32"
-								/>
-							))}
-						</Carousel>
+						<MediaSlider results={props.cast} />
 					</Section>
 				)}
 				{props.recommendations && (

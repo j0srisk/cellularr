@@ -28,29 +28,31 @@ export default function PersonCard({
 			onClick={onClick}
 		>
 			<div className="flex aspect-square w-full items-center justify-center">
-				<div className="flex aspect-square w-2/3 items-center justify-center overflow-hidden rounded-full">
+				<div className="flex aspect-square w-2/3 items-center justify-center overflow-hidden rounded-full border border-fill-tetiary-light dark:border-fill-tetiary-dark">
 					{profilePath ? (
 						<Image
 							src={posterUrl + profilePath}
 							alt={name}
 							height={300}
 							width={300}
-							className="object-cover"
+							className=" object-cover"
 						/>
 					) : (
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth={2}
-							className="aspect-square w-1/2 stroke-label-secondary-dark"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-							/>
-						</svg>
+						<div className="flex h-full w-full items-center justify-center bg-fill-tetiary-light dark:bg-fill-tetiary-dark">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={2}
+								className="aspect-square w-1/2 stroke-label-secondary-light dark:stroke-label-secondary-dark"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+								/>
+							</svg>
+						</div>
 					)}
 				</div>
 			</div>
