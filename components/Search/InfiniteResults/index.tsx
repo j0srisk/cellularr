@@ -13,6 +13,7 @@ type InfiniteResultsProps = {
 	query: string;
 	language?: string;
 	showFeatured?: boolean;
+	genreId?: number;
 };
 
 export default function InfiniteResults({
@@ -20,12 +21,14 @@ export default function InfiniteResults({
 	query,
 	language = 'en',
 	showFeatured = false,
+	genreId = 0,
 }: InfiniteResultsProps) {
 	const [featuredMedia, setFeaturedMedia] = useState<MovieResult | TvResult>();
 	const getKey = (pageIndex: number, previousPageData: Results) => {
 		// reached the end
 		if (previousPageData && previousPageData.page >= previousPageData.totalPages) return null;
 
+		//console.log([query, pageIndex + 1, language]);
 		// return the key of the next page
 		return [query, pageIndex + 1, language];
 	};
@@ -43,10 +46,12 @@ export default function InfiniteResults({
 
 	useEffect(() => {
 		if (showFeatured && results) {
-			const firstNotPersonMedia = results.find(
-				(result): result is MovieResult | TvResult =>
-					result.mediaType === MediaType.MOVIE || result.mediaType === MediaType.TV,
-			);
+			const firstNotPersonMedia = results
+				.slice(3)
+				.find(
+					(result): result is MovieResult | TvResult =>
+						result.mediaType === MediaType.MOVIE || result.mediaType === MediaType.TV,
+				);
 			if (firstNotPersonMedia) {
 				setFeaturedMedia(firstNotPersonMedia);
 			}
@@ -69,9 +74,9 @@ export default function InfiniteResults({
 										? featuredMedia.title
 										: featuredMedia.name
 								}
-								genreId={878}
+								genreId={genreId}
 								backdropPath={featuredMedia.backdropPath}
-								href={`/discover/${featuredMedia.mediaType}s/${featuredMedia.id}`}
+								href={`/${featuredMedia.mediaType}/${featuredMedia.id}`}
 							/>
 						)}
 						<div className="grid h-fit w-full grid-cols-3 gap-2">
@@ -79,13 +84,17 @@ export default function InfiniteResults({
 								result.mediaType === 'person' ? (
 									<PersonCard key={result.id} name={result.name} profilePath={result.profilePath} />
 								) : (
-									<PosterCard
-										id={result.id}
-										key={result.id}
-										mediaType={result.mediaType}
-										title={(result as TvResult).name || (result as MovieResult).title}
-										posterPath={result.posterPath}
-									/>
+									<>
+										{result !== featuredMedia && (
+											<PosterCard
+												id={result.id}
+												key={result.id}
+												mediaType={result.mediaType}
+												title={(result as TvResult).name || (result as MovieResult).title}
+												posterPath={result.posterPath}
+											/>
+										)}
+									</>
 								),
 							)}
 						</div>
