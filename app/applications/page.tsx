@@ -1,9 +1,9 @@
 'use client';
 
 import { GetApplications } from '@/app/actions';
-import Header from '@/components/Common/NavigationBar/Index';
-import Container from '@/components/Container';
-import Seperator from '@/components/ui/Seperator';
+import Container from '@/components/Applications/Container';
+import Seperator from '@/components/Applications/Seperator';
+import NavigationBar from '@/components/Common/NavigationBar/Index';
 import { Fragment } from 'react';
 import { useState, useEffect } from 'react';
 
@@ -36,7 +36,7 @@ export default function ApplicationPage() {
 	}, []);
 	return (
 		<div className="pt-safe flex h-full w-full flex-col px-4 md:py-1">
-			<Header heading="Applications" subheading={applicationCount + ' applications found'} />
+			<NavigationBar title="Applications" subtitle={applicationCount + ' applications found'} />
 			<div className="pb-nav no-scrollbar flex h-full w-full flex-col justify-start gap-8 overflow-auto">
 				{applications ? (
 					<>

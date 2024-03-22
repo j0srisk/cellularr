@@ -1,9 +1,9 @@
 'use client';
 
 import { getActivityData } from '@/app/actions';
-import CenteredMessage from '@/components/CenteredMessage';
+import SessionCard from '@/components/Activity/SessionCard/SessionCard';
+import CenteredMessage from '@/components/Common/CenteredMessage';
 import NavigationBar from '@/components/Common/NavigationBar/Index';
-import SessionCard from '@/components/Sessions/SessionCard/SessionCard';
 import useSWR from 'swr';
 
 export default function SessionPage() {

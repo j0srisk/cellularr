@@ -1,6 +1,6 @@
 import { getCollection } from '@/app/actions';
 import { MediaType } from '@/app/types';
-import MediaPage from '@/components/MediaPage';
+import MediaPage from '@/components/MediaPage/Page';
 
 export default async function CollectionPage({ params }: { params: { id: string } }) {
 	const collection = await getCollection(parseInt(params.id));

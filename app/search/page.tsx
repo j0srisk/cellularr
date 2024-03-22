@@ -2,9 +2,9 @@
 
 import { getSearch } from '@/app/actions';
 import Header from '@/components/Common/NavigationBar/Index';
+import SearchBar from '@/components/Common/SearchBar';
 import Discover from '@/components/Search/Discover';
 import InfiniteResults from '@/components/Search/InfiniteResults';
-import SearchBar from '@/components/ui/SearchBar';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

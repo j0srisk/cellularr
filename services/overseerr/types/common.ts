@@ -137,6 +137,8 @@ export interface Rating {
 	url: string;
 	criticsScore: number;
 	criticsRating: string;
+	audienceScore: number | null;
+	audienceRating: string | null;
 }
 
 export interface PageInfo {

@@ -1,5 +1,5 @@
-import PersonCard from '@/components/PersonCard';
-import PosterCard from '@/components/PosterCard';
+import PersonCard from '@/components/Common/PersonCard';
+import PosterCard from '@/components/Common/PosterCard';
 import { MovieResult, PersonResult, TvResult } from '@/services/overseerr/types/search';
 
 export default function PosterGrid({

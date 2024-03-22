@@ -1,4 +1,4 @@
-import Card from '@/components/Card';
+import Card from '@/components/Common/Card';
 import { genreColorMap } from '@/components/Search/constants';
 import { Genre } from '@/services/overseerr/types/common';
 import Image from 'next/image';

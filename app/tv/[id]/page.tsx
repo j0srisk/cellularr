@@ -1,7 +1,7 @@
 import { getTvDetails, getRatings, getRecommendations, getSimilar } from '@/app/actions';
 import { MediaType } from '@/app/types';
 import { createTvFacts } from '@/app/utils';
-import MediaPage from '@/components/MediaPage';
+import MediaPage from '@/components/MediaPage/Page';
 
 export default async function TvPage({ params }: { params: { id: string } }) {
 	const tvDetails = await getTvDetails(parseInt(params.id));

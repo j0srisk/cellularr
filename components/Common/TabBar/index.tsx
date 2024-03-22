@@ -1,6 +1,6 @@
 'use client';
 
-import Seperator from '@/components/ui/Seperator';
+import Seperator from '@/components/Applications/Seperator';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {

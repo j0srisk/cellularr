@@ -7,7 +7,7 @@ import {
 } from '@/app/actions';
 import { MediaType } from '@/app/types';
 import { createMovieFacts, formatDuration } from '@/app/utils';
-import MediaPage from '@/components/MediaPage';
+import MediaPage from '@/components/MediaPage/Page';
 
 export default async function MoviePage({ params }: { params: { id: string } }) {
 	const movieDetails = await getMovieDetails(parseInt(params.id));

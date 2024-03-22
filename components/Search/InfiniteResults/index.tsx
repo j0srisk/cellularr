@@ -1,8 +1,8 @@
 'use client';
 
 import { MediaType } from '@/app/types';
-import PersonCard from '@/components/PersonCard';
-import PosterCard from '@/components/PosterCard';
+import PersonCard from '@/components/Common/PersonCard';
+import PosterCard from '@/components/Common/PosterCard';
 import GenreCard from '@/components/Search/GenreCard';
 import { MovieResult, TvResult, PersonResult, Results } from '@/services/overseerr/types/search';
 import { useState, useEffect } from 'react';
