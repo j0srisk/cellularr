@@ -8,21 +8,27 @@ export default function MediaFacts({
 	ratings,
 	facts,
 }: {
-	ratings: { rottenTomatoes: Rating } | null;
+	ratings: { rottenTomatoes?: Rating | null } | null;
 	facts: MediaFact[];
 }) {
 	return (
 		<Card>
-			{ratings && Object.keys(ratings).length > 0 && (
+			{ratings && ratings.rottenTomatoes && (
 				<>
 					<div className="flex items-center justify-center gap-6 p-4 py-3">
 						{ratings?.rottenTomatoes && (
-							<div className="flex items-center gap-2">
-								<RottenTomatoesCriticsRatingBadge
-									criticsRating={ratings.rottenTomatoes.criticsRating}
-								/>
-								<p className="text-subheadline">{ratings.rottenTomatoes.criticsScore}%</p>
-							</div>
+							<>
+								{ratings.rottenTomatoes.criticsRating && (
+									<div className="flex items-center gap-2">
+										<RottenTomatoesCriticsRatingBadge
+											criticsRating={ratings.rottenTomatoes.criticsRating}
+										/>
+										<p className="text-subheadline">
+											{ratings.rottenTomatoes.criticsScore ?? '-- '}%
+										</p>
+									</div>
+								)}
+							</>
 						)}
 					</div>
 					<div className="h-[1px] w-full bg-fill-tetiary-light" />

@@ -141,7 +141,7 @@ export function CertificationBadge({ certification }: { certification: string })
 	}
 }
 
-export function RottenTomatoesCriticsRatingBadge({ criticsRating }: Rating) {
+export function RottenTomatoesCriticsRatingBadge({ criticsRating }: { criticsRating: string }) {
 	switch (criticsRating) {
 		case 'Rotten':
 			return (

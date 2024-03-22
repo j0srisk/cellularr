@@ -1,6 +1,6 @@
 'use server';
 
-import { demoApplications, demoSessions } from '@/app/config/demoData';
+import { demoApplications } from '@/app/config/demoData';
 import demoData from '@/app/demoData.json';
 import { MediaType } from '@/app/types';
 import overseerr from '@/services/overseerr/overseerr';

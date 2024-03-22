@@ -116,7 +116,7 @@ export default function SessionCard({ session }: { session: Session }) {
 					)}
 				</div>
 
-				<div className="flex hidden items-center gap-3 p-3">
+				<div className="hidden items-center gap-3 p-3">
 					<div className="flex h-full w-14 items-center justify-center">
 						<Image
 							src={session.user_thumb}

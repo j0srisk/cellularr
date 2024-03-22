@@ -1,7 +1,8 @@
 'use client';
 
 import { MediaType, MediaFact } from '@/app/types';
-import { CreateBackdropUrl, CreatePosterUrl } from '@/app/utils';
+import { backdropUrl } from '@/app/types';
+import { CreateBackdropUrl } from '@/app/utils';
 import Button from '@/components/Common/Button';
 import Card from '@/components/Common/Card';
 import PersonCard from '@/components/Common/PersonCard';
@@ -24,7 +25,7 @@ import { useState } from 'react';
 
 type MediaPageProps = {
 	id: number;
-	mediaType: MediaType;
+	mediaType: MediaType.MOVIE | MediaType.TV | MediaType.COLLECTION;
 	backdropPath: string | null;
 	posterPath: string | null;
 	title: string;
@@ -61,6 +62,8 @@ export default function MediaPage(props: MediaPageProps) {
 				className="flex w-full flex-col items-center gap-6 bg-gradient-to-b from-transparent to-system-primary-light px-4 pb-8 pt-32 dark:to-system-primary-dark"
 			>
 				<Poster
+					id={props.id}
+					mediaType={props.mediaType}
 					title={props.title}
 					posterPath={props.posterPath}
 					className="z-10 w-32 rounded-lg border-none"
@@ -93,7 +96,7 @@ export default function MediaPage(props: MediaPageProps) {
 						{props.trailerUrl && (
 							<SystemBackground className="rounded-lg">
 								<Button
-									onClick={() => router.push(props.trailerUrl)}
+									onClick={() => router.push(props.trailerUrl!)}
 									className="flex h-full items-center justify-center rounded-lg p-2.5"
 								>
 									<svg
@@ -138,13 +141,13 @@ export default function MediaPage(props: MediaPageProps) {
 							<div
 								className="relative flex h-full bg-cover bg-center"
 								style={{
-									backgroundImage: `url(${CreateBackdropUrl(props.collection.backdropPath)})`,
+									backgroundImage: `url(${backdropUrl + props.collection!.backdropPath})`,
 								}}
 							>
 								<div className="flex w-full items-center justify-between gap-2 bg-gradient-to-b from-transparent to-system-primary-dark/75 p-4 dark:to-system-primary-dark/75">
 									<p className="text-title-3 text-label-primary-dark">{props.collection.name}</p>
 									<SystemBackground className="rounded-lg">
-										<Button onClick={() => router.push('/collection/' + props.collection.id)}>
+										<Button onClick={() => router.push('/collection/' + props.collection!.id)}>
 											<p className="text-subheadline-emphasized">View</p>
 										</Button>
 									</SystemBackground>
@@ -213,7 +216,7 @@ export default function MediaPage(props: MediaPageProps) {
 
 			<>
 				<Backdrop
-					backdropUrl={CreateBackdropUrl(props.backdropPath)}
+					backdropUrl={backdropUrl + props.backdropPath}
 					backdropHeight={backdropHeight}
 					scaleFactor={scaleFactor}
 				/>
@@ -222,7 +225,7 @@ export default function MediaPage(props: MediaPageProps) {
 						mediaType={MediaType.MOVIE}
 						id={props.id}
 						title={props.title}
-						backdropUrl={CreateBackdropUrl(props.backdropPath)}
+						backdropUrl={backdropUrl + props.backdropPath}
 						backdropHeight={backdropHeight}
 						closeFunction={() => setRequestPanel(false)}
 					/>

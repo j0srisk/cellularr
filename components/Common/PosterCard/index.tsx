@@ -10,7 +10,7 @@ type PosterProps = {
 	id: number;
 	title: string;
 	posterPath?: string | null;
-	mediaType: MediaType.MOVIE | MediaType.TV;
+	mediaType: MediaType.MOVIE | MediaType.TV | MediaType.COLLECTION;
 	className?: string;
 	href?: string;
 	onClick?: () => void;
@@ -34,7 +34,7 @@ export default function PosterCard({
 	return (
 		<Card
 			className={twMerge([
-				'shadow-drop-xs group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center border-none  hover:cursor-pointer',
+				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center border-none shadow-drop-xs  hover:cursor-pointer',
 				className,
 			])}
 			href={href}

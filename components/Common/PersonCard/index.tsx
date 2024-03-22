@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 
 type PersonCardProps = {
 	name: string;
-	character?: string;
+	character?: string | null;
 	className?: string;
 	imageURL?: string;
 	profilePath: string | null;
@@ -22,7 +22,7 @@ export default function PersonCard({
 	return (
 		<Card
 			className={twMerge([
-				'shadow-drop-xs flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0',
+				'flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 shadow-drop-xs',
 				className,
 			])}
 			onClick={onClick}

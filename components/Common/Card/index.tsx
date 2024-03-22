@@ -12,8 +12,8 @@ export default function Card({
 	href?: string;
 	onClick?: () => void;
 }) {
+	const router = useRouter();
 	if (href && !onClick) {
-		const router = useRouter();
 		onClick = () => router.push(href);
 	}
 
