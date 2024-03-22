@@ -4,7 +4,9 @@ import { MediaType } from '@/app/types';
 import PersonCard from '@/components/Common/PersonCard';
 import PosterCard from '@/components/Common/PosterCard';
 import GenreCard from '@/components/Search/GenreCard';
+import { genreColorMap, genreNameMap } from '@/components/Search/constants';
 import { MovieResult, TvResult, PersonResult, Results } from '@/services/overseerr/types/search';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
@@ -64,37 +66,39 @@ export default function InfiniteResults({
 
 	if (results) {
 		return (
-			<div className="no-scrollbar flex h-full w-full flex-col gap-4 overflow-auto px-4 pt-1">
+			<div className="no-scrollbar flex h-full w-full flex-col gap-4 overflow-auto">
 				{results.length > 0 && (
-					<div className="flex w-full flex-col items-center gap-2">
+					<div className="flex w-full flex-col items-center gap-4">
 						{featuredMedia && (
-							<GenreCard
-								name={
-									featuredMedia.mediaType === MediaType.MOVIE
-										? featuredMedia.title
-										: featuredMedia.name
-								}
-								genreId={genreId}
-								backdropPath={featuredMedia.backdropPath}
-								href={`/${featuredMedia.mediaType}/${featuredMedia.id}`}
-							/>
+							<div className="relative flex aspect-video w-full items-center justify-center">
+								<Image
+									src={`https://image.tmdb.org/t/p/w1280_filter(duotone,${genreColorMap[genreId]})${featuredMedia.backdropPath}`}
+									alt={
+										featuredMedia.mediaType === MediaType.MOVIE
+											? featuredMedia.title
+											: featuredMedia.name
+									}
+									width={1280}
+									height={720}
+									className="absolute h-full w-full"
+								/>
+								<p className="z-10 text-large-title-emphasized text-label-primary-dark">
+									{genreNameMap[genreId]}
+								</p>
+							</div>
 						)}
-						<div className="grid h-fit w-full grid-cols-3 gap-2">
+						<div className="grid h-fit w-full grid-cols-3 gap-2 px-4 pt-0">
 							{results.map((result: MovieResult | TvResult | PersonResult) =>
 								result.mediaType === 'person' ? (
 									<PersonCard key={result.id} name={result.name} profilePath={result.profilePath} />
 								) : (
-									<>
-										{result !== featuredMedia && (
-											<PosterCard
-												id={result.id}
-												key={result.id}
-												mediaType={result.mediaType}
-												title={(result as TvResult).name || (result as MovieResult).title}
-												posterPath={result.posterPath}
-											/>
-										)}
-									</>
+									<PosterCard
+										id={result.id}
+										key={result.id}
+										mediaType={result.mediaType}
+										title={(result as TvResult).name || (result as MovieResult).title}
+										posterPath={result.posterPath}
+									/>
 								),
 							)}
 						</div>

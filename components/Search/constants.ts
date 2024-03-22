@@ -63,7 +63,7 @@ export const genreColorMap: Record<number, [string, string]> = {
 };
 
 export const genreNameMap: Record<number, string> = {
-	0: 'All',
+	0: 'Trending',
 	28: 'Action',
 	12: 'Adventure',
 	16: 'Animation',
