@@ -1,9 +1,9 @@
 'use client';
 
 import { MediaType } from '@/app/types';
-import GenreCard from '@/components/Discover/GenreCard';
 import PersonCard from '@/components/PersonCard';
 import PosterCard from '@/components/PosterCard';
+import GenreCard from '@/components/Search/GenreCard';
 import { MovieResult, TvResult, PersonResult, Results } from '@/services/overseerr/types/search';
 import { useState, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';

@@ -2,12 +2,8 @@
 
 import { getSearch } from '@/app/actions';
 import Header from '@/components/Common/NavigationBar/Index';
-import GenreCard from '@/components/Discover/GenreCard';
-import InfiniteResults from '@/components/Discover/InfiniteResults';
-import MovieGenres from '@/components/Discover/MovieGenres';
-import TrendingCard from '@/components/Discover/TrendingCard';
-import TvGenres from '@/components/Discover/TvGenres';
-import WatchlistCard from '@/components/Discover/WatchlistCard';
+import Discover from '@/components/Search/Discover';
+import InfiniteResults from '@/components/Search/InfiniteResults';
 import SearchBar from '@/components/ui/SearchBar';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -42,21 +38,7 @@ export default function Page() {
 			</Header>
 
 			<div className="pb-nav-4 flex h-fit w-full gap-4">
-				{searchQuery ? (
-					<InfiniteResults fetcher={getSearch} query={searchQuery} />
-				) : (
-					<div className="flex flex-col gap-3 px-4">
-						<p className="text-title-3-emphasized">Discover</p>
-						<div className="grid grid-cols-2 gap-2">
-							<TrendingCard />
-							<WatchlistCard />
-						</div>
-						<p className="text-title-3-emphasized">Movies</p>
-						<MovieGenres />
-						<p className="text-title-3-emphasized">TV Shows</p>
-						<TvGenres />
-					</div>
-				)}
+				{searchQuery ? <InfiniteResults fetcher={getSearch} query={searchQuery} /> : <Discover />}
 			</div>
 		</div>
 	);

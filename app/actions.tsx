@@ -170,7 +170,7 @@ export async function getMovieGenres() {
 	return genres;
 }
 
-export async function getSeriesGenres() {
+export async function getTvGenres() {
 	const genres: Genre[] = await overseerr.endpoint('/discover/genreslider/tv');
 
 	return genres;

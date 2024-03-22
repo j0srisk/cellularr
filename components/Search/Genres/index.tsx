@@ -13,13 +13,13 @@ export default function Genres({
 	const [moreGenres, setMoreGenres] = useState(false);
 
 	return (
-		<div className="grid grid-cols-2 gap-2">
+		<div className="grid w-full grid-cols-2 gap-2">
 			{genres.slice(0, moreGenres ? genres.length : 20).map((genre: Genre) => (
 				<GenreCard
 					key={genre.id}
 					name={genre.name}
 					genreId={genre.id}
-					backdropPath={genre.backdrops[4]}
+					backdropPath={genre.backdrops?.[4] || null}
 					href={`/discover/${mediaType}${mediaType === MediaType.MOVIE ? 's' : ''}?genre=${
 						genre.id
 					}`}

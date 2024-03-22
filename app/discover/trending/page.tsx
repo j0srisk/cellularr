@@ -2,7 +2,7 @@
 
 import { getTrending } from '@/app/actions';
 import CompactNavigationBar from '@/components/Common/CompactNavigationBar';
-import InfiniteResults from '@/components/Discover/InfiniteResults';
+import InfiniteResults from '@/components/Search/InfiniteResults';
 
 export default function DiscoverTrendingPage() {
 	return (

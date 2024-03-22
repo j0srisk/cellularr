@@ -1,5 +1,5 @@
 import Card from '@/components/Card';
-import { genreColorMap } from '@/components/Discover/constants';
+import { genreColorMap } from '@/components/Search/constants';
 import { Genre } from '@/services/overseerr/types/common';
 import Image from 'next/image';
 
@@ -25,12 +25,16 @@ export default function GenreCard({
 			<p className="z-10 text-title-2-emphasized text-label-primary-dark">{name}</p>
 			{genreId != -1 && (
 				<>
-					{backdropPath && (
+					{backdropPath ? (
 						<Image
 							src={`https://image.tmdb.org/t/p/w1280_filter(duotone,${genreColorMap[genreId]})${backdropPath}`}
 							alt={name}
 							fill={true}
 							className="absolute top-0 h-full w-full object-cover object-center"
+						/>
+					) : (
+						<div
+							className={`absolute top-0 h-full w-full bg-gradient-to-b from-${genreColorMap[genreId]} to-transparent`}
 						/>
 					)}
 				</>
