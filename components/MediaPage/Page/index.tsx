@@ -2,17 +2,14 @@
 
 import { MediaType, MediaFact } from '@/app/types';
 import { backdropUrl } from '@/app/types';
-import { CreateBackdropUrl } from '@/app/utils';
 import Button from '@/components/Common/Button';
-import Card from '@/components/Common/Card';
-import PersonCard from '@/components/Common/PersonCard';
 import Poster from '@/components/Common/PosterCard';
 import Section from '@/components/Common/Section';
 import SystemBackground from '@/components/Common/SystemBackground';
 import MediaAttributes from '@/components/MediaPage/Attributes';
-import Backdrop from '@/components/MediaPage/Backdrop/Backdrop';
-import Carousel from '@/components/MediaPage/Carousel';
-import MediaFacts from '@/components/MediaPage/Facts';
+import Backdrop from '@/components/MediaPage/Backdrop';
+import CollectionCard from '@/components/MediaPage/CollectionCard';
+import MediaFacts from '@/components/MediaPage/FactsCard';
 import MediaSlider from '@/components/MediaPage/Slider';
 import Request from '@/components/Request';
 import useBackdropScale from '@/hooks/useBackdropScale';
@@ -140,25 +137,9 @@ export default function MediaPage(props: MediaPageProps) {
 					</Section>
 				)}
 				{props.collection && (
-					<div className="w-full px-4">
-						<Card className="">
-							<div
-								className="relative flex h-full bg-cover bg-center"
-								style={{
-									backgroundImage: `url(${backdropUrl + props.collection!.backdropPath})`,
-								}}
-							>
-								<div className="flex w-full items-center justify-between gap-2 bg-gradient-to-b from-transparent to-system-primary-dark/75 p-4 dark:to-system-primary-dark/75">
-									<p className="text-title-3 text-label-primary-dark">{props.collection.name}</p>
-									<SystemBackground className="rounded-lg">
-										<Button onClick={() => router.push('/collection/' + props.collection!.id)}>
-											<p className="text-subheadline-emphasized">View</p>
-										</Button>
-									</SystemBackground>
-								</div>
-							</div>
-						</Card>
-					</div>
+					<Section className="px-4">
+						<CollectionCard collection={props.collection} />
+					</Section>
 				)}
 				{props.mediaFacts && (
 					<Section className="px-4">
@@ -168,23 +149,17 @@ export default function MediaPage(props: MediaPageProps) {
 						/>
 					</Section>
 				)}
-				{props.cast && (
+				{props.cast && props.cast.length > 0 && (
 					<Section heading="Cast">
 						<MediaSlider results={props.cast} />
 					</Section>
 				)}
-				{props.recommendations && (
-					<>
-						{props.recommendations.length > 0 && (
-							<Section
-								heading={
-									'Recommended ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')
-								}
-							>
-								<MediaSlider results={props.recommendations} />
-							</Section>
-						)}
-					</>
+				{props.recommendations && props.recommendations.length > 0 && (
+					<Section
+						heading={'Recommended ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')}
+					>
+						<MediaSlider results={props.recommendations} />
+					</Section>
 				)}
 				{props.similar && (
 					<>

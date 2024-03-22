@@ -19,7 +19,7 @@ export default function MediaSlider({
 							name={result.name}
 							character={(result as Cast).character}
 							profilePath={result.profilePath}
-							className="w-32"
+							className="w-32 shadow-drop-xs"
 						/>
 					) : (
 						<PosterCard
@@ -27,7 +27,7 @@ export default function MediaSlider({
 							mediaType={result.mediaType}
 							title={(result as TvResult).name || (result as MovieResult).title}
 							posterPath={result.posterPath}
-							className="w-32"
+							className="w-32 shadow-drop-xs"
 							href={'/' + result.mediaType + '/' + result.id}
 						/>
 					)}

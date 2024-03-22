@@ -83,7 +83,7 @@ export default function InfiniteResults({
 		return (
 			<div className="no-scrollbar relative flex h-full w-full flex-col overflow-auto">
 				{results.length > 0 && (
-					<div className="flex w-full flex-col items-center">
+					<div className="flex w-full flex-col items-center gap-4">
 						{featuredMedia && (
 							<div className="relative flex aspect-video w-full items-center justify-center">
 								<Image
@@ -102,10 +102,15 @@ export default function InfiniteResults({
 								</p>
 							</div>
 						)}
-						<div className="grid h-fit w-full grid-cols-3 gap-2 px-4 pt-4">
+						<div className="grid h-fit w-full grid-cols-3 gap-2 px-4">
 							{results.map((result: MovieResult | TvResult | PersonResult) =>
 								result.mediaType === 'person' ? (
-									<PersonCard key={result.id} name={result.name} profilePath={result.profilePath} />
+									<PersonCard
+										key={result.id}
+										name={result.name}
+										profilePath={result.profilePath}
+										className="shadow-drop-xs"
+									/>
 								) : (
 									<PosterCard
 										id={result.id}
@@ -113,6 +118,7 @@ export default function InfiniteResults({
 										mediaType={result.mediaType}
 										title={(result as TvResult).name || (result as MovieResult).title}
 										posterPath={result.posterPath}
+										className="shadow-drop-xs"
 									/>
 								),
 							)}

@@ -19,7 +19,7 @@ export default function SessionPage() {
 					subtitle={activityData.sessions.length + ' sessions found'}
 					className=""
 				/>
-				<div className="pb-nav-4 grid h-fit w-full gap-4 px-4 pt-4 md:grid-cols-3">
+				<div className="pb-nav-4 grid h-fit w-full gap-4 px-4 pt-0 md:grid-cols-3">
 					{activityData.sessions.length > 0 ? (
 						<>
 							{activityData.sessions.map((session) => (

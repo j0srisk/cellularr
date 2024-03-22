@@ -12,7 +12,7 @@ export default function MediaFacts({
 	facts: MediaFact[];
 }) {
 	return (
-		<Card>
+		<Card className="shadow-drop-xs">
 			{ratings && ratings.rottenTomatoes && (
 				<>
 					<div className="flex items-center justify-center gap-6 p-4 py-3">

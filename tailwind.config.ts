@@ -53,7 +53,7 @@ const config: Config = {
 				'drop-lg': '0px 0px 32px 0px rgba(0, 0, 0, 0.2)',
 				'drop-md': '0px 0px 16px 0px rgba(0, 0, 0, 0.2)',
 				'drop-sm': '0px 0px 8px 0px rgba(0, 0, 0, 0.2)',
-				'drop-xs': '0px 0px 4px 0px rgba(0, 0, 0, 0.2)',
+				'drop-xs': '0px 0px 4px 0px rgba(0, 0, 0, 0.05)',
 			},
 			colors: {
 				system: {

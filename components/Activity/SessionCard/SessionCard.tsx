@@ -46,7 +46,7 @@ export default function SessionCard({ session }: { session: Session }) {
 
 	if (mediaDetails) {
 		return (
-			<Card className="shadow-drop-md">
+			<Card className="shadow-drop-xs">
 				{mediaType !== MediaType.MUSIC && (
 					<Image
 						src={backdropUrl + mediaDetails.backdropPath}
