@@ -8,6 +8,7 @@ import {
 	WatchProvider,
 	MediaInfo,
 	RelatedVideo,
+	MediaStatus,
 } from '@/services/overseerr/types/common';
 import { PersonResult } from '@/services/overseerr/types/search';
 
@@ -42,7 +43,7 @@ export interface TvDetails {
 	productionCompanies: ProductionCompany[];
 	productionCountries: ProductionCompany[];
 	spokenLanguages: ProductionCompany[];
-	seasons: Season[];
+	seasons: SeasonDetails[];
 	status: string;
 	tagline: string | null;
 	type: string | null;
@@ -58,7 +59,7 @@ export interface TvDetails {
 	watchProviders: WatchProvider[];
 }
 
-export interface Season {
+export interface SeasonDetails {
 	id: number;
 	airDate: string | null;
 	episodeCount: number;
@@ -91,4 +92,13 @@ export interface Keyword {
 export interface ContentRating {
 	iso_3166_1: string;
 	rating: string;
+}
+
+export interface SeasonInfo {
+	id: number;
+	seasonNumber: number;
+	status: MediaStatus;
+	status4k: MediaStatus;
+	createdAt: string;
+	updatedAt: string;
 }

@@ -1,21 +1,63 @@
-import Card from '../Common/Card';
-import PosterCard from '../Common/PosterCard';
-import ToggleButton from '../Common/Toggle';
 import { getArrServers, getArrServer, getUsers, postRequest, getCurrentUser } from '@/app/actions';
-import { MediaType } from '@/app/types';
+import { CombinedSeason, MediaType } from '@/app/types';
 import Button from '@/components/Common/Button';
 import Dropdown from '@/components/Common/Dropdown';
-import Separator from '@/components/Common/Separator';
+import MovieSelector from '@/components/Request/MovieSelector';
+import SeasonSelector from '@/components/Request/SeasonSelector';
 import { Collection } from '@/services/overseerr/types/collection';
-import { MediaStatus, ServiceProfile } from '@/services/overseerr/types/common';
+import { ServiceProfile } from '@/services/overseerr/types/common';
 import { MovieDetails } from '@/services/overseerr/types/movie';
 import { RadarrSettings } from '@/services/overseerr/types/radarr';
 import { MovieResult } from '@/services/overseerr/types/search';
+import { SonarrSettings } from '@/services/overseerr/types/sonarr';
 import { TvDetails } from '@/services/overseerr/types/tv';
+import { SeasonInfo } from '@/services/overseerr/types/tv';
 import { User } from '@/services/overseerr/types/user';
 import { useState, useRef, useEffect } from 'react';
-import { Fragment } from 'react';
 import useSWR from 'swr';
+
+const getMovies = (mediaDetails: MovieDetails | TvDetails | Collection) => {
+	const movies: (MovieDetails | MovieResult)[] = [];
+
+	if ('parts' in mediaDetails) {
+		mediaDetails.parts.map((part) => {
+			movies.push(part);
+		});
+	} else {
+		if ('releaseDate' in mediaDetails) {
+			movies.push(mediaDetails);
+		}
+	}
+
+	return movies;
+};
+
+const getSeasons = (mediaDetails: MovieDetails | TvDetails | Collection) => {
+	const seasons: CombinedSeason[] = [];
+
+	if ('seasons' in mediaDetails) {
+		mediaDetails.seasons.map((seasonDetails) => {
+			if (seasonDetails.seasonNumber !== 0) {
+				let seasonInfo: SeasonInfo | undefined;
+
+				if (mediaDetails.mediaInfo?.seasons) {
+					seasonInfo = mediaDetails.mediaInfo?.seasons.find(
+						(seasonInfo: SeasonInfo) => seasonInfo.seasonNumber === seasonDetails.seasonNumber,
+					);
+				}
+
+				const combinedSeason: CombinedSeason = {
+					seasonDetails: seasonDetails,
+					seasonInfo: seasonInfo,
+				};
+
+				seasons.push(combinedSeason);
+			}
+		});
+	}
+
+	return seasons;
+};
 
 type RequestProps = {
 	mediaType: MediaType;
@@ -39,19 +81,24 @@ export default function Request({
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const [requesting, setRequesting] = useState(false);
 
-	const { data: arrServers } = useSWR('arrServers', () => getArrServers(MediaType.MOVIE));
+	const { data: arrServers } = useSWR(
+		mediaType === MediaType.TV ? 'sonarrServers' : 'radarrServers',
+		() => getArrServers(mediaType),
+	);
 
-	const [activeServer, setActiveServer] = useState<RadarrSettings | null>(null);
+	const [activeServer, setActiveServer] = useState<RadarrSettings | SonarrSettings | null>(null);
 	const [arrProfiles, setArrProfiles] = useState<ServiceProfile[] | null>(null);
 	const [activeProfile, setActiveProfile] = useState<ServiceProfile | null>(null);
 	const [activeUser, setActiveUser] = useState<User | null>(null);
 	const [selectedMovies, setSelectedMovies] = useState<(MovieDetails | MovieResult)[]>([]);
+	const [selectedSeasons, setSelectedSeasons] = useState<CombinedSeason[]>([]);
 
 	const [scaleFactor, setScaleFactor] = useState(1);
 
 	const { data: currentUser } = useSWR('currentUser', getCurrentUser);
 	const { data: users } = useSWR('users', getUsers);
 
+	// set the default arr server
 	useEffect(() => {
 		if (arrServers) {
 			arrServers.map((arrServer) => {
@@ -64,9 +111,14 @@ export default function Request({
 		}
 	}, [arrServers]);
 
+	// set the default profile
 	useEffect(() => {
 		if (activeServer) {
-			getArrServer(MediaType.MOVIE, activeServer.id).then((server) => {
+			getArrServer(mediaType, activeServer.id).then((server) => {
+				if (!server) {
+					return;
+				}
+
 				setArrProfiles(server.profiles);
 
 				server.profiles.map((profile) => {
@@ -80,13 +132,15 @@ export default function Request({
 		}
 	}, [activeServer]);
 
+	// set the default user
 	useEffect(() => {
 		if (currentUser && users) {
 			const user = users.results.find((user) => user.id === currentUser.id);
 			if (!user) {
 				setActiveUser(users.results[0]);
+			} else {
+				setActiveUser(user);
 			}
-			setActiveUser(user);
 		}
 	}, [currentUser, users]);
 
@@ -98,31 +152,28 @@ export default function Request({
 		}
 	};
 
-	const movies: (MovieDetails | MovieResult)[] = [];
+	const movies = getMovies(mediaDetails);
 
-	if ('parts' in mediaDetails) {
-		mediaDetails.parts.map((part) => {
-			movies.push(part);
-		});
-	} else {
-		if ('releaseDate' in mediaDetails) {
-			movies.push(mediaDetails);
-		}
-	}
-
-	const unrequestedMovies = movies.filter((movie) => !movie.mediaInfo);
-
-	const handleSelectAllMovies = () => {
-		if (selectedMovies.length === unrequestedMovies.length) {
-			setSelectedMovies([]);
-		} else {
-			setSelectedMovies(unrequestedMovies);
-		}
-	};
+	const seasons = getSeasons(mediaDetails);
 
 	const handleRequest = async () => {
-		if (selectedMovies.length > 0) {
+		if (!activeServer || !activeProfile || !activeUser) {
+			return;
+		}
+		if (mediaType === MediaType.TV) {
 			setRequesting(true);
+
+			await postRequest(
+				MediaType.TV,
+				id,
+				activeServer.id,
+				activeProfile.id,
+				activeUser.id,
+				selectedSeasons.map((season) => season.seasonDetails.id),
+			);
+		} else {
+			setRequesting(true);
+
 			selectedMovies.map(async (movie) => {
 				await postRequest(
 					MediaType.MOVIE,
@@ -162,68 +213,21 @@ export default function Request({
 						<p className="text-large-title-emphasized">{title}</p>
 					</div>
 
-					{movies.length >= 1 && (
-						<Card className="flex w-full flex-col rounded-lg bg-system-tertiary-light dark:bg-system-tertiary-dark">
-							{movies.length > 1 && (
-								<div className="flex w-full flex-col items-center">
-									<div className="flex w-full items-center justify-between gap-2 p-3 py-2.5">
-										<p className="text-body-emphasized">Select All</p>
-										<p>{selectedMovies.length === unrequestedMovies.length ? 'true' : 'false'}</p>
-										<ToggleButton
-											toggled={selectedMovies.length === unrequestedMovies.length ? true : false}
-											disabled={unrequestedMovies.length === 0}
-											color="bg-system-indigo-light dark:bg-system-indigo-dark"
-											onToggle={() => {
-												handleSelectAllMovies();
-											}}
-										/>
-									</div>
-									<Separator />
-								</div>
-							)}
-							{movies.map((movie, index) => (
-								<Fragment key={movie.id}>
-									<div className="flex w-full items-center gap-2 p-3 py-2.5">
-										<PosterCard
-											id={movie.id}
-											posterPath={movie.posterPath}
-											title={movie.title}
-											mediaType={MediaType.MOVIE}
-											className="w-16 rounded-md border-none"
-										/>
+					{(mediaType === MediaType.MOVIE || mediaType === MediaType.COLLECTION) &&
+						movies.length >= 1 && (
+							<MovieSelector
+								movies={movies}
+								selectedMovies={selectedMovies}
+								setSelectedMovies={setSelectedMovies}
+							/>
+						)}
 
-										<div className="flex w-full flex-col">
-											{movie.releaseDate && (
-												<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
-													{movie.releaseDate.split('-')[0]}
-												</p>
-											)}
-											<p className="text-body-emphasized">{movie.title}</p>
-										</div>
-										<p>{selectedMovies.includes(movie) ? 'true' : 'false'}</p>
-										<ToggleButton
-											toggled={selectedMovies.includes(movie) || movie.mediaInfo ? true : false}
-											color={
-												movie.mediaInfo?.status === MediaStatus.AVAILABLE
-													? ''
-													: 'bg-system-indigo-light dark:bg-system-indigo-dark'
-											}
-											disabled={movie.mediaInfo ? true : false}
-											onToggle={() => {
-												if (selectedMovies.includes(movie)) {
-													setSelectedMovies(
-														selectedMovies.filter((selected) => selected !== movie),
-													);
-												} else {
-													setSelectedMovies([...selectedMovies, movie]);
-												}
-											}}
-										/>
-									</div>
-									{index !== movies.length - 1 && <Separator />}
-								</Fragment>
-							))}
-						</Card>
+					{mediaType === MediaType.TV && seasons.length >= 1 && (
+						<SeasonSelector
+							seasons={seasons}
+							selectedSeasons={selectedSeasons}
+							setSelectedSeasons={setSelectedSeasons}
+						/>
 					)}
 
 					<div className="flex flex-col gap-2">
@@ -305,7 +309,10 @@ export default function Request({
 									handleRequest();
 								}}
 								disabled={
-									selectedMovies.length === 0 || !activeServer || !activeProfile || !activeUser
+									(selectedMovies.length === 0 && selectedSeasons.length === 0) ||
+									!activeServer ||
+									!activeProfile ||
+									!activeUser
 								}
 							>
 								<p className="text-subheadline-emphasized">Request</p>

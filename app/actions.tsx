@@ -8,8 +8,9 @@ import { Collection } from '@/services/overseerr/types/collection';
 import { Genre } from '@/services/overseerr/types/common';
 import { Rating } from '@/services/overseerr/types/common';
 import { MovieDetails } from '@/services/overseerr/types/movie';
-import { Radarr, RadarrServers } from '@/services/overseerr/types/radarr';
+import { Radarr, RadarrSettings } from '@/services/overseerr/types/radarr';
 import { Results } from '@/services/overseerr/types/search';
+import { Sonarr, SonarrSettings } from '@/services/overseerr/types/sonarr';
 import { TvDetails } from '@/services/overseerr/types/tv';
 import { Users } from '@/services/overseerr/types/user';
 import { User } from '@/services/overseerr/types/user';
@@ -120,19 +121,36 @@ export async function getSimilar(
 	}
 }
 
-export async function getArrServers(mediaType: MediaType = MediaType.MOVIE) {
-	if (mediaType === MediaType.MOVIE) {
-		const radarrServers: RadarrServers = await overseerr.endpoint('/service/radarr');
+export async function getArrServers(
+	mediaType: MediaType = MediaType.MOVIE || MediaType.COLLECTION || MediaType.TV,
+) {
+	if (mediaType === MediaType.MOVIE || mediaType === MediaType.COLLECTION) {
+		const radarrServers: RadarrSettings[] = await overseerr.endpoint('/service/radarr');
 
 		return radarrServers;
 	}
+
+	if (mediaType === MediaType.TV) {
+		const sonarrServers: SonarrSettings[] = await overseerr.endpoint('/service/sonarr');
+
+		return sonarrServers;
+	}
 }
 
-export async function getArrServer(mediaType: MediaType = MediaType.MOVIE, id: number) {
-	if (mediaType === MediaType.MOVIE) {
+export async function getArrServer(
+	mediaType: MediaType = MediaType.MOVIE || MediaType.COLLECTION || MediaType.TV,
+	id: number,
+) {
+	if (mediaType === MediaType.MOVIE || mediaType === MediaType.COLLECTION) {
 		const radarr: Radarr = await overseerr.endpoint('/service/radarr/' + id);
 
 		return radarr;
+	}
+
+	if (mediaType === MediaType.TV) {
+		const sonarr: Sonarr = await overseerr.endpoint('/service/sonarr/' + id);
+
+		return sonarr;
 	}
 }
 
@@ -155,8 +173,9 @@ export async function postRequest(
 	serverId: number,
 	profileId: number,
 	userId: number,
+	seasons?: number[],
 ) {
-	console.log(mediaType, id, serverId, profileId, userId);
+	console.log(mediaType, id, serverId, profileId, userId, seasons);
 
 	return 'success';
 }

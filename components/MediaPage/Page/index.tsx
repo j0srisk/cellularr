@@ -181,7 +181,7 @@ export default function MediaPage(props: MediaPageProps) {
 				/>
 				{requestPanelOpen && (
 					<Request
-						mediaType={MediaType.MOVIE}
+						mediaType={props.mediaType}
 						id={props.id}
 						title={props.title}
 						mediaDetails={props.mediaDetails}

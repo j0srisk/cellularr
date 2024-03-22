@@ -1,11 +1,6 @@
 import { ServiceProfile } from '@/services/overseerr/types/common';
 
-export interface Radarr {
-	server: RadarrSettings;
-	profiles: ServiceProfile[];
-}
-
-export interface RadarrSettings {
+export interface SonarrSettings {
 	id: number;
 	name: string;
 	hostname: string;
@@ -16,10 +11,20 @@ export interface RadarrSettings {
 	activeProfileId: number;
 	activeProfileName: string;
 	activeDirectory: string;
+	activeLanguageProfileId: number;
+	activeAnimeProfileId: number;
+	activeAnimeLanguageProfileId: number;
+	activeAnimeProfileName: string;
+	activeAnimeDirectory: string;
 	is4k: boolean;
-	minimumAvailability: string;
+	enableSeasonFolders: boolean;
 	isDefault: boolean;
 	externalUrl: string;
 	syncEnabled: boolean;
 	preventSearch: boolean;
+}
+
+export interface Sonarr {
+	server: SonarrSettings;
+	profiles: ServiceProfile[];
 }

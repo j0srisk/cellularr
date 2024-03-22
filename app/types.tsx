@@ -1,3 +1,5 @@
+import { SeasonDetails, SeasonInfo } from '@/services/overseerr/types/tv';
+
 export const posterUrl = 'https://image.tmdb.org/t/p/w600_and_h900_bestv2';
 export const backdropUrl = 'https://image.tmdb.org/t/p/w1920_and_h800_multi_faces';
 
@@ -26,4 +28,9 @@ export enum UnitedStatesCertification {
 export type MediaFact = {
 	key: string;
 	values: string[];
+};
+
+export type CombinedSeason = {
+	seasonDetails: SeasonDetails;
+	seasonInfo?: SeasonInfo;
 };

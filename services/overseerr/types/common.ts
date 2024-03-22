@@ -1,5 +1,5 @@
 import { MediaType } from '@/app/types';
-import { Season } from '@/services/overseerr/types/tv';
+import { SeasonInfo } from '@/services/overseerr/types/tv';
 
 export enum MediaStatus {
 	UNKNOWN = 1,
@@ -45,7 +45,7 @@ export interface MediaInfo {
 	//TODO: add requests and issues
 	//requests: Request[];
 	//issues: Issue[];
-	seasons: Season[];
+	seasons?: SeasonInfo[];
 	plexUrl?: string;
 	iOSPlexUrl?: string;
 	plexUrl4k?: string;

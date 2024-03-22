@@ -17,6 +17,7 @@ export default async function TvPage({ params }: { params: { id: string } }) {
 			<MediaPage
 				id={tvDetails.id}
 				mediaType={MediaType.TV}
+				mediaDetails={tvDetails}
 				backdropPath={tvDetails.backdropPath}
 				posterPath={tvDetails.posterPath}
 				title={tvDetails.name}
