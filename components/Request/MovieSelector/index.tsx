@@ -6,7 +6,7 @@ import ToggleButton from '@/components/Common/Toggle';
 import { MediaStatus } from '@/services/overseerr/types/common';
 import { MovieDetails } from '@/services/overseerr/types/movie';
 import { MovieResult } from '@/services/overseerr/types/search';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 
 export default function MovieSelector({
 	setSelectedMovies,
@@ -26,6 +26,13 @@ export default function MovieSelector({
 			setSelectedMovies(unrequestedMovies);
 		}
 	};
+
+	useEffect(() => {
+		if (movies.length === 1 && unrequestedMovies.length === 1) {
+			console.log('single movie', movies);
+			setSelectedMovies(movies);
+		}
+	}, []);
 
 	return (
 		<Card className="flex w-full flex-col rounded-lg bg-system-tertiary-light dark:bg-system-tertiary-dark">
@@ -66,22 +73,24 @@ export default function MovieSelector({
 							<p className="text-body-emphasized">{movie.title}</p>
 						</div>
 						<p>{selectedMovies.includes(movie) ? 'true' : 'false'}</p>
-						<ToggleButton
-							toggled={selectedMovies.includes(movie) || movie.mediaInfo ? true : false}
-							color={
-								movie.mediaInfo?.status === MediaStatus.AVAILABLE
-									? ''
-									: 'bg-system-indigo-light dark:bg-system-indigo-dark'
-							}
-							disabled={movie.mediaInfo ? true : false}
-							onToggle={() => {
-								if (selectedMovies.includes(movie)) {
-									setSelectedMovies(selectedMovies.filter((selected) => selected !== movie));
-								} else {
-									setSelectedMovies([...selectedMovies, movie]);
+						{movies.length > 1 && (
+							<ToggleButton
+								toggled={selectedMovies.includes(movie) || movie.mediaInfo ? true : false}
+								color={
+									movie.mediaInfo?.status === MediaStatus.AVAILABLE
+										? ''
+										: 'bg-system-indigo-light dark:bg-system-indigo-dark'
 								}
-							}}
-						/>
+								disabled={movie.mediaInfo ? true : false}
+								onToggle={() => {
+									if (selectedMovies.includes(movie)) {
+										setSelectedMovies(selectedMovies.filter((selected) => selected !== movie));
+									} else {
+										setSelectedMovies([...selectedMovies, movie]);
+									}
+								}}
+							/>
+						)}
 					</div>
 					{index !== movies.length - 1 && <Separator />}
 				</Fragment>

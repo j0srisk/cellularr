@@ -208,7 +208,12 @@ export default function Request({
 								requesting ? 'text-system-orange-light' : 'text-system-indigo-light'
 							} transition-colors duration-1000 ease-in`}
 						>
-							Request {mediaType === MediaType.MOVIE ? 'Movie' : 'Series'}
+							Request{' '}
+							{mediaType === MediaType.MOVIE
+								? 'Movie'
+								: mediaType === MediaType.TV
+									? 'Series'
+									: 'Collection'}
 						</p>
 						<p className="text-large-title-emphasized">{title}</p>
 					</div>
