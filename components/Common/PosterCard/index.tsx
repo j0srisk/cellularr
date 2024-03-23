@@ -57,13 +57,12 @@ export default function PosterCard({
 				</>
 			) : (
 				<>
-					<p className="p-2 text-center text-title-2-emphasized text-label-primary-dark">{title}</p>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						strokeWidth={2}
-						className="hidden aspect-square w-1/2 stroke-label-secondary-dark"
+						className="aspect-square w-1/2 stroke-label-secondary-light dark:stroke-label-secondary-dark"
 					>
 						<path
 							strokeLinecap="round"

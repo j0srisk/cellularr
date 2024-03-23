@@ -110,21 +110,29 @@ export default function InfiniteResults({
 						<div className="grid h-fit w-full grid-cols-3 gap-2 px-4">
 							{results.map((result: MovieResult | TvResult | PersonResult, index) =>
 								result.mediaType === 'person' ? (
-									<PersonCard
-										key={result.id}
-										name={result.name}
-										profilePath={result.profilePath}
-										className="shadow-drop-xs"
-									/>
+									<>
+										{result.profilePath && (
+											<PersonCard
+												key={result.id}
+												name={result.name}
+												profilePath={result.profilePath}
+												className="shadow-drop-xs"
+											/>
+										)}
+									</>
 								) : (
-									<PosterCard
-										id={result.id}
-										key={result.id}
-										mediaType={result.mediaType}
-										title={(result as TvResult).name || (result as MovieResult).title}
-										posterPath={result.posterPath}
-										className="shadow-drop-xs"
-									/>
+									<>
+										{result.posterPath && (
+											<PosterCard
+												id={result.id}
+												key={result.id}
+												mediaType={result.mediaType}
+												title={(result as TvResult).name || (result as MovieResult).title}
+												posterPath={result.posterPath}
+												className="shadow-drop-xs"
+											/>
+										)}
+									</>
 								),
 							)}
 						</div>
