@@ -42,81 +42,83 @@ export default function MediaPage(props: MediaPageProps) {
 	const [backdroploaded, setBackdropLoaded] = useState(false);
 
 	return (
-		<div
-			className={`pb-nav no-scrollbar flex h-screen w-screen flex-col overflow-auto opacity-0 ${
-				backdroploaded ? 'animate-fade opacity-100' : ''
-			}`}
-			onScroll={handleScroll}
-		>
-			<MediaHero
-				{...props}
-				backdropHeight={backdropHeight}
-				scaleFactor={scaleFactor}
-				setRef={setRef}
-				setBackdropLoaded={setBackdropLoaded}
-			/>
+		<>
+			<div
+				className={`pb-nav no-scrollbar flex h-screen w-screen flex-col overflow-auto opacity-0 ${
+					backdroploaded ? 'animate-fade opacity-100' : ''
+				}`}
+				onScroll={handleScroll}
+			>
+				<MediaHero
+					{...props}
+					backdropHeight={backdropHeight}
+					scaleFactor={scaleFactor}
+					setRef={setRef}
+					setBackdropLoaded={setBackdropLoaded}
+				/>
 
-			<div className="flex flex-col gap-6 bg-system-primary-light via-transparent pb-4 dark:bg-system-primary-dark">
-				{props.tagline && (
-					<Section>
-						<p className="px-4 text-title-2 italic text-label-secondary-light dark:text-label-secondary-dark">
-							{props.tagline}
-						</p>
-					</Section>
-				)}
-				{props.overview && (
-					<Section heading="Overview">
-						<p className="px-4 text-body text-label-secondary-light dark:text-label-secondary-dark">
-							{props.overview}
-						</p>
-					</Section>
-				)}
-				{props.collection && (
-					<Section className="px-4">
-						<CollectionCard collection={props.collection} />
-					</Section>
-				)}
-				{props.mediaFacts && (
-					<Section className="px-4">
-						<MediaFacts
-							ratings={{ rottenTomatoes: props.rottenTomatoesRating }}
-							facts={props.mediaFacts}
-						/>
-					</Section>
-				)}
-				{props.cast && props.cast.length > 0 && (
-					<Section heading="Cast">
-						<MediaSlider results={props.cast} />
-					</Section>
-				)}
-				{props.recommendations && props.recommendations.length > 0 && (
-					<Section
-						heading={'Recommended ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')}
-					>
-						<MediaSlider results={props.recommendations} />
-					</Section>
-				)}
-				{props.similar && (
-					<>
-						{props.similar.length > 0 && (
-							<Section
-								heading={'Similar ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')}
-							>
-								<MediaSlider results={props.similar} />
-							</Section>
-						)}
-					</>
-				)}
-				{props.movies && (
-					<>
-						{props.movies.length > 0 && (
-							<Section heading="Films">
-								<MediaSlider results={props.movies} />
-							</Section>
-						)}
-					</>
-				)}
+				<div className="flex flex-col gap-6 bg-system-primary-light via-transparent pb-4 dark:bg-system-primary-dark">
+					{props.tagline && (
+						<Section>
+							<p className="px-4 text-title-2 italic text-label-secondary-light dark:text-label-secondary-dark">
+								{props.tagline}
+							</p>
+						</Section>
+					)}
+					{props.overview && (
+						<Section heading="Overview">
+							<p className="px-4 text-body text-label-secondary-light dark:text-label-secondary-dark">
+								{props.overview}
+							</p>
+						</Section>
+					)}
+					{props.collection && (
+						<Section className="px-4">
+							<CollectionCard collection={props.collection} />
+						</Section>
+					)}
+					{props.mediaFacts && (
+						<Section className="px-4">
+							<MediaFacts
+								ratings={{ rottenTomatoes: props.rottenTomatoesRating }}
+								facts={props.mediaFacts}
+							/>
+						</Section>
+					)}
+					{props.cast && props.cast.length > 0 && (
+						<Section heading="Cast">
+							<MediaSlider results={props.cast} />
+						</Section>
+					)}
+					{props.recommendations && props.recommendations.length > 0 && (
+						<Section
+							heading={'Recommended ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')}
+						>
+							<MediaSlider results={props.recommendations} />
+						</Section>
+					)}
+					{props.similar && (
+						<>
+							{props.similar.length > 0 && (
+								<Section
+									heading={'Similar ' + (props.mediaType === MediaType.MOVIE ? 'Films' : 'Series')}
+								>
+									<MediaSlider results={props.similar} />
+								</Section>
+							)}
+						</>
+					)}
+					{props.movies && (
+						<>
+							{props.movies.length > 0 && (
+								<Section heading="Films">
+									<MediaSlider results={props.movies} />
+								</Section>
+							)}
+						</>
+					)}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
