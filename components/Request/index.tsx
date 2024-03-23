@@ -1,3 +1,5 @@
+'use client';
+
 import { getArrServers, getArrServer, getUsers, postRequest, getCurrentUser } from '@/app/actions';
 import { CombinedSeason, MediaType } from '@/app/types';
 import Button from '@/components/Common/Button';
@@ -13,7 +15,8 @@ import { SonarrSettings } from '@/services/overseerr/types/sonarr';
 import { TvDetails } from '@/services/overseerr/types/tv';
 import { SeasonInfo } from '@/services/overseerr/types/tv';
 import { User } from '@/services/overseerr/types/user';
-import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 
 const getMovies = (mediaDetails: MovieDetails | TvDetails | Collection) => {
@@ -64,18 +67,11 @@ type RequestProps = {
 	mediaDetails: MovieDetails | TvDetails | Collection;
 	backdropUrl?: string;
 	backdropHeight: number;
-	closeFunction: () => void;
 };
 
-export default function Request({
-	mediaType,
-	mediaDetails,
-	backdropUrl,
-	backdropHeight,
-	closeFunction,
-}: RequestProps) {
-	const scrollContainerRef = useRef<HTMLDivElement>(null);
+export default function Request({ mediaType, mediaDetails }: RequestProps) {
 	const [requesting, setRequesting] = useState(false);
+	const router = useRouter();
 
 	const { data: arrServers } = useSWR(
 		mediaType === MediaType.TV ? 'sonarrServers' : 'radarrServers',
@@ -88,8 +84,6 @@ export default function Request({
 	const [activeUser, setActiveUser] = useState<User | null>(null);
 	const [selectedMovies, setSelectedMovies] = useState<(MovieDetails | MovieResult)[]>([]);
 	const [selectedSeasons, setSelectedSeasons] = useState<CombinedSeason[]>([]);
-
-	const [scaleFactor, setScaleFactor] = useState(1);
 
 	const { data: currentUser } = useSWR('currentUser', getCurrentUser);
 	const { data: users } = useSWR('users', getUsers);
@@ -140,14 +134,6 @@ export default function Request({
 		}
 	}, [currentUser, users]);
 
-	const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-		const currentPosition = event.currentTarget.scrollTop;
-		if (currentPosition < 0) {
-			const scaleFactor = 1 - currentPosition / backdropHeight;
-			setScaleFactor(scaleFactor);
-		}
-	};
-
 	const movies = getMovies(mediaDetails);
 
 	const seasons = getSeasons(mediaDetails);
@@ -161,7 +147,7 @@ export default function Request({
 
 			await postRequest(
 				MediaType.TV,
-				id,
+				mediaDetails.id,
 				activeServer.id,
 				activeProfile.id,
 				activeUser.id,
@@ -187,154 +173,126 @@ export default function Request({
 	}
 
 	return (
-		<div className="fixed z-40 flex h-screen w-screen animate-fade bg-system-secondary-light dark:bg-system-secondary-dark">
-			<div
-				id="scroll-container"
-				className="no-scrollbar pb-safe flex w-full flex-col justify-between overflow-auto"
-				onScroll={handleScroll}
-			>
-				<span
-					className="w-full flex-shrink-0 bg-gradient-to-b from-transparent to-system-secondary-light dark:to-system-secondary-dark"
-					style={{ height: backdropHeight }}
-				/>
-				<div className="flex h-fit w-full flex-col justify-between gap-4 bg-system-secondary-light px-4 dark:bg-system-secondary-dark">
-					<div className="flex flex-col bg-system-secondary-light dark:bg-system-secondary-dark">
-						<p
-							className={`text-title-1-emphasized ${
-								requesting ? 'text-system-orange-light' : 'text-system-indigo-light'
-							} transition-colors duration-1000 ease-in`}
-						>
-							Request{' '}
-							{mediaType === MediaType.MOVIE
-								? 'Movie'
-								: mediaType === MediaType.TV
-									? 'Series'
-									: 'Collection'}
-						</p>
-						<p className="text-large-title-emphasized">
-							{'title' in mediaDetails ? mediaDetails.title : mediaDetails.name}
-						</p>
-					</div>
-
-					{(mediaType === MediaType.MOVIE || mediaType === MediaType.COLLECTION) &&
-						movies.length >= 1 && (
-							<MovieSelector
-								movies={movies}
-								selectedMovies={selectedMovies}
-								setSelectedMovies={setSelectedMovies}
-							/>
-						)}
-
-					{mediaType === MediaType.TV && seasons.length >= 1 && (
-						<SeasonSelector
-							seasons={seasons}
-							selectedSeasons={selectedSeasons}
-							setSelectedSeasons={setSelectedSeasons}
-						/>
-					)}
-
-					<div className="flex flex-col gap-2">
-						{activeServer && (
-							<div className="flex w-full flex-col gap-2">
-								<p className="text-body-emphasized">Server</p>
-								<Dropdown
-									value={activeServer.name}
-									valueText={activeServer.is4k ? activeServer.name + ' 4K' : activeServer.name}
-									onChange={(event) => {
-										const selectedServerName = event.target.value;
-										const selectedServer =
-											arrServers.find((server) => server.name === selectedServerName) ||
-											arrServers[0];
-										setActiveServer(selectedServer);
-									}}
-									options={arrServers.map((server) => (
-										<option key={server.id}>{server.name}</option>
-									))}
-								/>
-							</div>
-						)}
-
-						{activeProfile && (
-							<div className="flex w-full flex-col gap-2">
-								<p className="text-body-emphasized">Profile</p>
-								<Dropdown
-									value={activeProfile.name}
-									onChange={(event) => {
-										const selectedProfileName = event.target.value;
-										const selectedProfile =
-											arrProfiles.find((profile) => profile.name === selectedProfileName) ||
-											arrServers[0];
-										setActiveProfile(selectedProfile);
-									}}
-									options={arrProfiles.map((profile) => (
-										<option key={profile.id}>{profile.name}</option>
-									))}
-								/>
-							</div>
-						)}
-
-						{activeUser && (
-							<div className="flex w-full flex-col gap-2">
-								<p className="text-body-emphasized">Request As</p>
-								<Dropdown
-									value={activeUser.displayName}
-									onChange={(event) => {
-										const selectedUserName = event.target.value;
-										const selectedUser =
-											users.results.find((user) => user.displayName === selectedUserName) ||
-											users.results[0];
-										setActiveUser(selectedUser);
-									}}
-									options={users.results.map((user) => (
-										<option key={user.id}>{user.displayName}</option>
-									))}
-								/>
-							</div>
-						)}
-
-						<div
-							className="pb-safe
-                             flex w-full gap-4 pt-2"
-						>
-							<Button
-								className="bg-system-tetiary-light dark:bg-system-tetiary-dark w-full"
-								onClick={() => {
-									closeFunction();
-									setRequesting(false);
-									scrollContainerRef.current?.scrollTo(0, 0);
-								}}
-							>
-								<p className="text-subheadline-emphasized">Cancel</p>
-							</Button>
-							<Button
-								className="w-full border-none bg-system-indigo-light text-label-primary-dark dark:bg-system-indigo-dark"
-								onClick={async () => {
-									handleRequest();
-								}}
-								disabled={
-									(selectedMovies.length === 0 && selectedSeasons.length === 0) ||
-									!activeServer ||
-									!activeProfile ||
-									!activeUser
-								}
-							>
-								<p className="text-subheadline-emphasized">Request</p>
-							</Button>
-						</div>
-					</div>
-				</div>
+		<div className="flex h-fit w-full animate-fade flex-col justify-between gap-4 bg-system-primary-light px-4 pb-4 dark:bg-system-primary-dark">
+			<div className="flex flex-col">
+				<p
+					className={`text-title-1-emphasized ${
+						requesting ? 'text-system-orange-light' : 'text-system-indigo-light'
+					} transition-colors duration-1000 ease-in`}
+				>
+					Request{' '}
+					{mediaType === MediaType.MOVIE
+						? 'Movie'
+						: mediaType === MediaType.TV
+							? 'Series'
+							: 'Collection'}
+				</p>
+				<p className="text-large-title-emphasized">
+					{'title' in mediaDetails ? mediaDetails.title : mediaDetails.name}
+				</p>
 			</div>
 
-			<span
-				className="fixed top-0 -z-10 w-full bg-cover bg-center"
-				style={{
-					backgroundImage: `url(${backdropUrl}`,
-					height: backdropHeight,
-					transformOrigin: 'top',
-					transform: `scale(${scaleFactor})`,
-					transition: 'transform linear',
-				}}
-			/>
+			{(mediaType === MediaType.MOVIE || mediaType === MediaType.COLLECTION) &&
+				movies.length >= 1 && (
+					<MovieSelector
+						movies={movies}
+						selectedMovies={selectedMovies}
+						setSelectedMovies={setSelectedMovies}
+					/>
+				)}
+
+			{mediaType === MediaType.TV && seasons.length >= 1 && (
+				<SeasonSelector
+					seasons={seasons}
+					selectedSeasons={selectedSeasons}
+					setSelectedSeasons={setSelectedSeasons}
+				/>
+			)}
+
+			<div className="flex flex-col gap-2">
+				{activeServer && (
+					<div className="flex w-full flex-col gap-2">
+						<p className="text-body-emphasized">Server</p>
+						<Dropdown
+							value={activeServer.name}
+							valueText={activeServer.is4k ? activeServer.name + ' 4K' : activeServer.name}
+							onChange={(event) => {
+								const selectedServerName = event.target.value;
+								const selectedServer =
+									arrServers.find((server) => server.name === selectedServerName) || arrServers[0];
+								setActiveServer(selectedServer);
+							}}
+							options={arrServers.map((server) => (
+								<option key={server.id}>{server.name}</option>
+							))}
+						/>
+					</div>
+				)}
+
+				{activeProfile && (
+					<div className="flex w-full flex-col gap-2">
+						<p className="text-body-emphasized">Profile</p>
+						<Dropdown
+							value={activeProfile.name}
+							onChange={(event) => {
+								const selectedProfileName = event.target.value;
+								const selectedProfile =
+									arrProfiles.find((profile) => profile.name === selectedProfileName) ||
+									arrServers[0];
+								setActiveProfile(selectedProfile);
+							}}
+							options={arrProfiles.map((profile) => (
+								<option key={profile.id}>{profile.name}</option>
+							))}
+						/>
+					</div>
+				)}
+
+				{activeUser && (
+					<div className="flex w-full flex-col gap-2">
+						<p className="text-body-emphasized">Request As</p>
+						<Dropdown
+							value={activeUser.displayName}
+							onChange={(event) => {
+								const selectedUserName = event.target.value;
+								const selectedUser =
+									users.results.find((user) => user.displayName === selectedUserName) ||
+									users.results[0];
+								setActiveUser(selectedUser);
+							}}
+							options={users.results.map((user) => (
+								<option key={user.id}>{user.displayName}</option>
+							))}
+						/>
+					</div>
+				)}
+
+				<div className="flex w-full gap-4 pt-2">
+					<Button
+						className="bg-system-tetiary-light dark:bg-system-tetiary-dark w-full"
+						onClick={() => {
+							setRequesting(false);
+							router.back();
+						}}
+					>
+						<p className="text-subheadline-emphasized">Cancel</p>
+					</Button>
+					<Button
+						className="w-full border-none bg-system-indigo-light text-label-primary-dark dark:bg-system-indigo-dark"
+						onClick={async () => {
+							handleRequest();
+						}}
+						disabled={
+							(selectedMovies.length === 0 && selectedSeasons.length === 0) ||
+							!activeServer ||
+							!activeProfile ||
+							!activeUser
+						}
+					>
+						<p className="text-subheadline-emphasized">Request</p>
+					</Button>
+				</div>
+			</div>
 		</div>
 	);
 }

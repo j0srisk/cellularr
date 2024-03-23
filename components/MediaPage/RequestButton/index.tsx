@@ -1,15 +1,17 @@
 import Button from '@/components/Common/Button';
 import { MediaStatus } from '@/services/overseerr/types/common';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function RequestButton({
 	requestStatus,
 	iOSPlexUrl,
-	setRequestPanelOpen,
 }: {
 	requestStatus?: MediaStatus;
 	iOSPlexUrl?: string;
-	setRequestPanelOpen: (value: boolean) => void;
 }) {
+	const router = useRouter();
+	const pathname = usePathname();
 	if (requestStatus === MediaStatus.AVAILABLE) {
 		return (
 			<Button
@@ -47,7 +49,7 @@ export default function RequestButton({
 						</svg>
 					</Button>
 				) : (
-					<Button className="d w-full bg-system-tertiary-dark text-label-primary-dark hover:cursor-auto">
+					<Button className="w-full bg-system-orange-light text-label-primary-dark hover:cursor-auto dark:bg-system-orange-dark">
 						<p className="text-center text-subheadline-emphasized">Partially Available</p>
 						<svg
 							className="hidden h-4 w-4 fill-current stroke-current"
@@ -60,7 +62,7 @@ export default function RequestButton({
 				)}
 				<Button
 					className="w-full border border-system-indigo-dark bg-system-indigo-light text-label-primary-dark dark:border-system-indigo-dark dark:bg-system-indigo-light"
-					onClick={() => setRequestPanelOpen(true)}
+					onClick={() => router.push(`${pathname}/request`)}
 				>
 					<p className="text-center text-subheadline-emphasized">Request More</p>
 				</Button>
@@ -87,7 +89,7 @@ export default function RequestButton({
 	return (
 		<Button
 			className="w-1/2 border border-system-indigo-dark bg-system-indigo-light text-label-primary-dark dark:border-system-indigo-dark dark:bg-system-indigo-light"
-			onClick={() => setRequestPanelOpen(true)}
+			onClick={() => router.push(`${pathname}/request`)}
 		>
 			<p className="text-subheadline-emphasized">Request</p>
 		</Button>

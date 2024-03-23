@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function Backdrop({
 	backdropUrl,
 	backdropHeight,
@@ -10,12 +12,16 @@ export default function Backdrop({
 	blurred?: boolean;
 }) {
 	return (
-		<span
-			className={`fixed top-0 -z-10 w-full transform-gpu bg-cover bg-center ${
-				blurred ? 'blur-sm ' : ''
+		<Image
+			src={backdropUrl}
+			alt="Backdrop"
+			height={backdropHeight}
+			width={800}
+			priority={true}
+			className={`fixed bottom-0 left-0 right-0 top-0 -z-10 h-full w-full transform-gpu object-cover object-center ${
+				blurred ? 'blur-sm' : ''
 			}`}
 			style={{
-				backgroundImage: `url(${backdropUrl}`,
 				height: backdropHeight,
 				transformOrigin: 'top',
 				transform: `scale(${scaleFactor})`,
