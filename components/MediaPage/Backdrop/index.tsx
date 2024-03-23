@@ -1,16 +1,20 @@
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 export default function Backdrop({
 	backdropUrl,
 	backdropHeight,
 	scaleFactor,
 	blurred = true,
+	setBackdropLoaded,
 }: {
 	backdropUrl: string;
 	backdropHeight: number;
 	scaleFactor: number;
 	blurred?: boolean;
+	setBackdropLoaded?: (loaded: boolean) => void;
 }) {
+	const [loaded, setLoaded] = useState(false);
 	return (
 		<Image
 			src={backdropUrl}
@@ -26,6 +30,10 @@ export default function Backdrop({
 				transformOrigin: 'top',
 				transform: `scale(${scaleFactor})`,
 				transition: 'transform linear',
+			}}
+			onLoad={() => {
+				console.log('Backdrop loaded');
+				setBackdropLoaded && setBackdropLoaded(true);
 			}}
 		/>
 	);

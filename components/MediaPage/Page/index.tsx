@@ -13,6 +13,7 @@ import { Cast, Rating } from '@/services/overseerr/types/common';
 import { MovieDetails } from '@/services/overseerr/types/movie';
 import { MovieResult, TvResult, PersonResult } from '@/services/overseerr/types/search';
 import { TvDetails } from '@/services/overseerr/types/tv';
+import { useState, useEffect } from 'react';
 
 type MediaPageProps = {
 	id: number;
@@ -38,10 +39,13 @@ type MediaPageProps = {
 
 export default function MediaPage(props: MediaPageProps) {
 	const { backdropHeight, scaleFactor, handleScroll, setRef } = useBackdropScale(0);
+	const [backdroploaded, setBackdropLoaded] = useState(false);
 
 	return (
 		<div
-			className="pb-nav no-scrollbar flex h-screen w-screen flex-col overflow-auto"
+			className={`pb-nav no-scrollbar flex h-screen w-screen flex-col overflow-auto opacity-0 ${
+				backdroploaded ? 'animate-fade opacity-100' : ''
+			}`}
 			onScroll={handleScroll}
 		>
 			<MediaHero
@@ -49,6 +53,7 @@ export default function MediaPage(props: MediaPageProps) {
 				backdropHeight={backdropHeight}
 				scaleFactor={scaleFactor}
 				setRef={setRef}
+				setBackdropLoaded={setBackdropLoaded}
 			/>
 
 			<div className="flex flex-col gap-6 bg-system-primary-light via-transparent pb-4 dark:bg-system-primary-dark">

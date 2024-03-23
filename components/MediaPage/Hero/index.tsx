@@ -28,6 +28,7 @@ type MediaPageHeroProps = {
 	setRef: (node: HTMLDivElement) => void;
 	blurred?: boolean;
 	hidden?: boolean;
+	setBackdropLoaded: (loaded: boolean) => void;
 };
 
 export default function MediaHero({
@@ -42,6 +43,7 @@ export default function MediaHero({
 	setRef,
 	blurred = true,
 	hidden = false,
+	setBackdropLoaded,
 }: MediaPageHeroProps) {
 	const [backdropBlurred, setBackdropBlurred] = useState(blurred);
 	const router = useRouter();
@@ -113,6 +115,7 @@ export default function MediaHero({
 				backdropHeight={backdropHeight}
 				scaleFactor={scaleFactor}
 				blurred={backdropBlurred}
+				setBackdropLoaded={setBackdropLoaded}
 			/>
 		</div>
 	);
