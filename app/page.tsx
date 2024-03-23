@@ -9,6 +9,7 @@ import useSWR from 'swr';
 export default function SessionPage() {
 	const { data: activityData } = useSWR('activityData', () => getActivityData(), {
 		refreshInterval: 5000,
+		revalidateOnFocus: false,
 	});
 
 	if (activityData) {

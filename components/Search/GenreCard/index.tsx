@@ -31,6 +31,7 @@ export default function GenreCard({
 							alt={name}
 							fill={true}
 							className="absolute top-0 h-full w-full object-cover object-center"
+							priority={true}
 						/>
 					) : (
 						<div

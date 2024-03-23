@@ -54,6 +54,7 @@ export default function SessionCard({ session }: { session: Session }) {
 						height={1920}
 						width={800}
 						className="aspect-video w-full object-cover object-center"
+						priority={true}
 					/>
 				)}
 				<div className="relative h-1.5 w-full bg-fill-tetiary-light dark:bg-fill-tetiary-dark">
@@ -124,6 +125,7 @@ export default function SessionCard({ session }: { session: Session }) {
 							height={100}
 							width={100}
 							className="h-10 w-10 rounded-full"
+							priority={true}
 						/>
 					</div>
 

@@ -1,9 +1,11 @@
 'use client';
 
+import Spinner from '../Spinner/Spinner';
 import { posterUrl, MediaType } from '@/app/types';
 import Card from '@/components/Common/Card';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type PosterProps = {
@@ -25,6 +27,7 @@ export default function PosterCard({
 	href,
 	onClick,
 }: PosterProps) {
+	const [loaded, setLoaded] = useState(false);
 	const router = useRouter();
 
 	if (typeof onClick === 'undefined') {
@@ -41,27 +44,34 @@ export default function PosterCard({
 			onClick={onClick}
 		>
 			{posterPath ? (
-				<Image
-					src={posterUrl + posterPath}
-					alt={title}
-					fill={true}
-					sizes="33vw"
-					className="object-cover"
-				/>
-			) : (
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					strokeWidth={2}
-					className="aspect-square w-1/2 stroke-label-secondary-dark"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+				<>
+					<Image
+						src={posterUrl + posterPath}
+						alt={title}
+						fill={true}
+						sizes="33vw"
+						className="object-cover"
+						priority={true}
+						onLoad={() => setLoaded(true)}
 					/>
-				</svg>
+				</>
+			) : (
+				<>
+					<p className="p-2 text-center text-title-2-emphasized text-label-primary-dark">{title}</p>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						strokeWidth={2}
+						className="hidden aspect-square w-1/2 stroke-label-secondary-dark"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+						/>
+					</svg>
+				</>
 			)}
 		</Card>
 	);

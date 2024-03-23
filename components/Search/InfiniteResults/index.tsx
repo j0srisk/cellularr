@@ -37,8 +37,12 @@ export default function InfiniteResults({
 		return [query, pageIndex + 1, language];
 	};
 
-	const { data, size, setSize, isValidating } = useSWRInfinite(getKey, (key) =>
-		fetcher(query, Number(key[1]), language),
+	const { data, size, setSize, isValidating } = useSWRInfinite(
+		getKey,
+		(key) => fetcher(query, Number(key[1]), language),
+		{
+			revalidateOnFocus: false,
+		},
 	);
 
 	const results = useMemo(
@@ -96,6 +100,7 @@ export default function InfiniteResults({
 									width={1280}
 									height={720}
 									className="absolute h-full w-full"
+									priority={true}
 								/>
 								<p className="z-10 text-large-title-emphasized text-label-primary-dark">
 									{genreNameMap[genreId]}
@@ -103,7 +108,7 @@ export default function InfiniteResults({
 							</div>
 						)}
 						<div className="grid h-fit w-full grid-cols-3 gap-2 px-4">
-							{results.map((result: MovieResult | TvResult | PersonResult) =>
+							{results.map((result: MovieResult | TvResult | PersonResult, index) =>
 								result.mediaType === 'person' ? (
 									<PersonCard
 										key={result.id}

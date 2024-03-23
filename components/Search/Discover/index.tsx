@@ -5,11 +5,19 @@ import Genres from '@/components/Search/Genres';
 import useSWR from 'swr';
 
 export default function Discover() {
-	const { data: trending, isLoading: trendingLoading } = useSWR(['trending', 1, 'en'], () =>
-		getTrending('trending', 1),
+	const { data: trending, isLoading: trendingLoading } = useSWR(
+		['trending', 1, 'en'],
+		() => getTrending('trending', 1),
+		{
+			revalidateOnFocus: false,
+		},
 	);
-	const { data: movieGenres, isLoading: moviesLoading } = useSWR('movieGenres', getMovieGenres);
-	const { data: tvGenres, isLoading: tvLoading } = useSWR('seriesGenres', getTvGenres);
+	const { data: movieGenres, isLoading: moviesLoading } = useSWR('movieGenres', getMovieGenres, {
+		revalidateOnFocus: false,
+	});
+	const { data: tvGenres, isLoading: tvLoading } = useSWR('seriesGenres', getTvGenres, {
+		revalidateOnFocus: false,
+	});
 
 	if (!trendingLoading || !moviesLoading || !tvLoading) {
 		return (
