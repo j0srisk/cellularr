@@ -269,7 +269,7 @@ export default function Request({ mediaType, mediaDetails }: RequestProps) {
 
 				<div className="flex w-full gap-4 pt-2">
 					<Button
-						className="bg-system-tetiary-light dark:bg-system-tetiary-dark w-full"
+						className="w-full bg-system-secondary-light dark:bg-system-secondary-dark"
 						onClick={() => {
 							setRequesting(false);
 							router.back();
