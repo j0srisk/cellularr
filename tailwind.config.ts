@@ -119,7 +119,7 @@ const config: Config = {
 							DEFAULT: 'rgba(28, 28, 30, 1)',
 						},
 					},
-					tertiary: {
+					tetiary: {
 						light: 'rgba(255, 255, 255, 1)',
 						dark: {
 							elevated: 'rgba(58, 58, 60, 1)',

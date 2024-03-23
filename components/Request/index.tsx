@@ -61,8 +61,6 @@ const getSeasons = (mediaDetails: MovieDetails | TvDetails | Collection) => {
 
 type RequestProps = {
 	mediaType: MediaType;
-	id: number;
-	title: string;
 	mediaDetails: MovieDetails | TvDetails | Collection;
 	backdropUrl?: string;
 	backdropHeight: number;
@@ -70,8 +68,6 @@ type RequestProps = {
 };
 
 export default function Request({
-	id,
-	title,
 	mediaType,
 	mediaDetails,
 	backdropUrl,
@@ -215,7 +211,9 @@ export default function Request({
 									? 'Series'
 									: 'Collection'}
 						</p>
-						<p className="text-large-title-emphasized">{title}</p>
+						<p className="text-large-title-emphasized">
+							{'title' in mediaDetails ? mediaDetails.title : mediaDetails.name}
+						</p>
 					</div>
 
 					{(mediaType === MediaType.MOVIE || mediaType === MediaType.COLLECTION) &&
@@ -299,7 +297,7 @@ export default function Request({
                              flex w-full gap-4 pt-2"
 						>
 							<Button
-								className="w-full bg-system-tertiary-light dark:bg-system-tertiary-dark"
+								className="bg-system-tetiary-light dark:bg-system-tetiary-dark w-full"
 								onClick={() => {
 									closeFunction();
 									setRequesting(false);

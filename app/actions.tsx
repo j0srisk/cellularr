@@ -238,9 +238,9 @@ export async function getActivityData() {
 		return activityData;
 	}
 
-	//const activityData: ActivityData = await tautulli.command('get_activity');
+	const activityData: ActivityData = await tautulli.command('get_activity');
 
-	const activityData: ActivityData = demoData.activityData;
+	//const activityData: ActivityData = demoData.activityData;
 
 	return activityData;
 }

@@ -10,7 +10,7 @@ type DropdownProps = {
 export default function Dropdown({ value, valueText = value, onChange, options }: DropdownProps) {
 	return (
 		<div className="relative">
-			<Card className="w-full flex-row items-center justify-between rounded-lg bg-system-tertiary-light p-3 py-2.5 dark:bg-system-tertiary-dark">
+			<Card className="bg-system-tetiary-light dark:bg-system-tetiary-dark w-full flex-row items-center justify-between rounded-lg p-3 py-2.5">
 				<p className="text-body">{valueText}</p>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

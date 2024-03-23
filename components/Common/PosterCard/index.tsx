@@ -1,8 +1,8 @@
 'use client';
 
-import Spinner from '../Spinner/Spinner';
 import { posterUrl, MediaType } from '@/app/types';
 import Card from '@/components/Common/Card';
+import Placeholder from '@/components/Common/Placeholder';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -37,7 +37,7 @@ export default function PosterCard({
 	return (
 		<Card
 			className={twMerge([
-				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center  hover:cursor-pointer',
+				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center hover:cursor-pointer',
 				className,
 			])}
 			href={href}
@@ -54,6 +54,7 @@ export default function PosterCard({
 						priority={true}
 						onLoad={() => setLoaded(true)}
 					/>
+					{!loaded && <Placeholder />}
 				</>
 			) : (
 				<>

@@ -11,7 +11,9 @@ export default function Backdrop({
 }) {
 	return (
 		<span
-			className={`fixed top-0 -z-10 w-full bg-cover bg-center ${blurred ? 'blur-sm ' : ''}`}
+			className={`fixed top-0 -z-10 w-full transform-gpu bg-cover bg-center ${
+				blurred ? 'blur-sm ' : ''
+			}`}
 			style={{
 				backgroundImage: `url(${backdropUrl}`,
 				height: backdropHeight,

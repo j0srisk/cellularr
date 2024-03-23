@@ -28,7 +28,7 @@ export default function SeasonSelector({
 	};
 
 	return (
-		<Card className="flex w-full flex-col rounded-lg bg-system-tertiary-light dark:bg-system-tertiary-dark">
+		<Card className="bg-system-tetiary-light dark:bg-system-tetiary-dark flex w-full flex-col rounded-lg">
 			{seasons.length > 1 && (
 				<div className="flex w-full flex-col items-center">
 					<div className="flex w-full items-center justify-between gap-2 p-3 py-2.5">

@@ -25,7 +25,7 @@ export default function PersonCard({
 			onClick={onClick}
 		>
 			<div className="flex aspect-square w-full items-center justify-center">
-				<div className="flex aspect-square w-2/3 items-center justify-center overflow-hidden rounded-full border border-fill-tetiary-light dark:border-fill-tetiary-dark">
+				<div className="flex aspect-square w-2/3 items-center justify-center overflow-hidden rounded-full border border-fill-tetiary-light  dark:border-fill-tetiary-dark">
 					{profilePath ? (
 						<Image
 							src={posterUrl + profilePath}
