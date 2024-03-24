@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			className="overscroll-none bg-system-primary-light text-label-primary-light  dark:bg-system-primary-dark dark:text-label-primary-dark"
 			lang="en"
 		>
-			<body className="flex h-[100vh] justify-center overflow-hidden">
+			<body className="flex h-[100vh] w-screen justify-center overflow-hidden">
 				<TransitionRoot duration={500}>{children}</TransitionRoot>
 				<TabBar />
 			</body>

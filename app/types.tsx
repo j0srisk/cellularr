@@ -54,3 +54,19 @@ export type Service = {
 	icon: string;
 	href: string;
 };
+
+export type TorrentClient = {
+	name: string;
+	torrents: Torrent[];
+};
+
+export type Torrent = {
+	id: string;
+	progress: number;
+	state: string;
+	name: string;
+	size: number;
+	downloaded: number;
+	uploadSpeed: number;
+	downloadSpeed: number;
+};

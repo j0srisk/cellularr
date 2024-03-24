@@ -20,7 +20,7 @@ export default async function ApplicationPage() {
 				subtitle={applicationsCount + ' services found'}
 				className=""
 			/>
-			<div className="pb-nav-4 grid h-fit w-full gap-4 pt-0 md:grid-cols-3">
+			<div className="pb-nav-4 flex h-fit w-full flex-col gap-4 pt-0">
 				{services.map((section) => (
 					<Section key={section.name} heading={section.name}>
 						<div className="px-4">

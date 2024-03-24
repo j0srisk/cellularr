@@ -2,7 +2,8 @@
 
 import { demoApplications } from '@/app/config/demoData';
 import demoData from '@/app/demoData.json';
-import { MediaType, YamlData, ServiceSection, Service } from '@/app/types';
+import { MediaType, YamlData, ServiceSection, Service, Torrent, TorrentClient } from '@/app/types';
+import deluge from '@/services/deluge';
 import overseerr from '@/services/overseerr/overseerr';
 import { Collection } from '@/services/overseerr/types/collection';
 import { Genre } from '@/services/overseerr/types/common';
@@ -290,29 +291,46 @@ export async function getServices() {
 	return serviceSections;
 }
 
-export async function GetApplications() {
-	if (process.env.DEMO_MODE === 'true') {
-		console.log('DEMO MODE: using demo applications');
-		return demoApplications;
-	}
+export async function getDelugeTorrents() {
+	await deluge.sendJsonRpcRequest('http://192.168.1.93:8112/json', 'auth.login', ['deluge']);
 
-	try {
-		let yamlFilePath = '/app/config/applications.yaml';
+	const { data, error } = await deluge.sendJsonRpcRequest(
+		'http://192.168.1.93:8112/json',
+		'web.update_ui',
+		[
+			[
+				'queue',
+				'name',
+				'total_wanted',
+				'state',
+				'progress',
+				'download_payload_rate',
+				'upload_payload_rate',
+				'total_remaining',
+			],
+			{},
+		],
+	);
 
-		//if not running in docker, use local config file
-		//todo: maybe remove this check?
-		if (!process.env.DOCKER) {
-			yamlFilePath = process.cwd() + '/app/config/applications.yaml';
-		}
+	const torrents: Torrent[] = Object.entries(data.torrents).map(([id, torrent]) => ({
+		id,
+		progress: torrent.progress,
+		state: torrent.state,
+		name: torrent.name,
+		size: torrent.total_wanted,
+		downloaded: torrent.total_wanted - torrent.total_remaining,
+		uploadSpeed: torrent.upload_payload_rate,
+		downloadSpeed: torrent.download_payload_rate,
+	}));
 
-		const yamlFile = await fs.readFile(yamlFilePath, 'utf8');
-		const yamlData = parse(yamlFile);
-		return yamlData;
-	} catch (error: any) {
-		if (error.code === 'ENOENT') {
-			return null;
-		} else {
-			throw error;
-		}
-	}
+	const delugeClient: TorrentClient = {
+		name: 'Deluge',
+		torrents: torrents,
+	};
+
+	const torrentClients: TorrentClient[] = [delugeClient];
+
+	console.log(delugeClient);
+
+	return torrentClients;
 }

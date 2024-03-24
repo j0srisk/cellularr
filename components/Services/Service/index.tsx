@@ -10,7 +10,7 @@ export default function ServiceCard({ service }: { service: Service }) {
 	return (
 		<Card
 			key={service.name}
-			className={`group flex flex-row items-center gap-3 rounded-lg p-3 ${
+			className={`group flex flex-row items-center gap-4 rounded-lg p-3 ${
 				service.href ? 'cursor-pointer' : ''
 			}`}
 			onClick={service.href ? () => router.push(service.href!) : undefined}
@@ -27,13 +27,18 @@ export default function ServiceCard({ service }: { service: Service }) {
 					priority={true}
 				/>
 			)}
-			<p className="flex-1 text-body">{service.name}</p>
+			<div className="flex flex-1 flex-col truncate">
+				<p className="text-body-emphasized">{service.name}</p>
+				<p className="hidden truncate text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+					{service.href}
+				</p>
+			</div>
 			{service.href && (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"
-					strokeWidth={1.5}
+					strokeWidth={2}
 					stroke="currentColor"
 					className="h-6 w-6 stroke-label-secondary-light dark:stroke-label-secondary-dark"
 				>

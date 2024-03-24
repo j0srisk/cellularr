@@ -1,3 +1,5 @@
+'use client';
+
 import Card from '@/components/Common/Card';
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
