@@ -64,7 +64,8 @@ export default function InfiniteResults({
 				.slice(3)
 				.find(
 					(result): result is MovieResult | TvResult =>
-						result.mediaType === MediaType.MOVIE || result.mediaType === MediaType.TV,
+						(result.mediaType === MediaType.MOVIE || result.mediaType === MediaType.TV) &&
+						result.backdropPath !== null,
 				);
 			if (firstNotPersonMedia) {
 				setFeaturedMedia(firstNotPersonMedia);
