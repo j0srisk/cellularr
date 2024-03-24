@@ -90,7 +90,14 @@ export function createMovieFacts(movieDetails: MovieDetails, files?: MediaFile[]
 	movieFacts.push({
 		key: 'Request Status',
 		values: movieDetails.mediaInfo
-			? [MediaStatus[movieDetails.mediaInfo?.status]]
+			? [
+					MediaStatus[movieDetails.mediaInfo?.status]
+						.toString()
+						.toLowerCase()
+						.split('_')
+						.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+						.join(' '),
+				]
 			: ['Unrequested'],
 	});
 
@@ -139,7 +146,16 @@ export function createTvFacts(tvDetails: TvDetails) {
 
 	seriesFacts.push({
 		key: 'Request Status',
-		values: tvDetails.mediaInfo ? [MediaStatus[tvDetails.mediaInfo?.status]] : ['Unrequested'],
+		values: tvDetails.mediaInfo
+			? [
+					MediaStatus[tvDetails.mediaInfo?.status]
+						.toString()
+						.toLowerCase()
+						.split('_')
+						.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+						.join(' '),
+				]
+			: ['Unrequested'],
 	});
 
 	return seriesFacts;
