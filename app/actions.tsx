@@ -2,7 +2,7 @@
 
 import { demoApplications } from '@/app/config/demoData';
 import demoData from '@/app/demoData.json';
-import { MediaType } from '@/app/types';
+import { MediaType, YamlData, ServiceSection, Service } from '@/app/types';
 import overseerr from '@/services/overseerr/overseerr';
 import { Collection } from '@/services/overseerr/types/collection';
 import { Genre } from '@/services/overseerr/types/common';
@@ -257,6 +257,37 @@ export async function getFiles(ratingKey: number) {
 	const media: Media = await tautulli.command('get_metadata&rating_key=' + ratingKey);
 
 	return media.media_info;
+}
+
+export async function getServices() {
+	const yamlFile = await fs.readFile(process.cwd() + '/config/services.yaml', 'utf8');
+	const yamlData: YamlData[] = parse(yamlFile);
+
+	const serviceSections: ServiceSection[] = [];
+
+	yamlData.forEach((sectionData: { [key: string]: { [key: string]: any } }) => {
+		const sectionName = Object.keys(sectionData)[0];
+		const services: Service[] = [];
+
+		// Iterate over each service in the section
+		sectionData[sectionName].forEach((serviceData: { [key: string]: any }) => {
+			const serviceName = Object.keys(serviceData)[0];
+			const { icon, href } = serviceData[serviceName];
+			services.push({
+				name: serviceName,
+				icon: icon || '',
+				href: href || '',
+			});
+		});
+
+		// Add section to applicationSections array
+		serviceSections.push({
+			name: sectionName,
+			services,
+		});
+	});
+
+	return serviceSections;
 }
 
 export async function GetApplications() {

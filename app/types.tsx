@@ -34,3 +34,23 @@ export type CombinedSeason = {
 	seasonDetails: SeasonDetails;
 	seasonInfo?: SeasonInfo;
 };
+
+export interface YamlData {
+	[sectionName: string]: {
+		[serviceName: string]: {
+			icon?: string;
+			href?: string;
+		};
+	};
+}
+
+export type ServiceSection = {
+	name: string;
+	services?: Service[];
+};
+
+export type Service = {
+	name: string;
+	icon: string;
+	href: string;
+};

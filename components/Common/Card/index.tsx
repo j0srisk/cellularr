@@ -1,3 +1,5 @@
+'use client';
+
 import { useTransition } from '@/components/Common/TransitionRoot';
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
