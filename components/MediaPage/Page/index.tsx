@@ -2,6 +2,7 @@
 
 import { MediaType, MediaFact } from '@/app/types';
 import Section from '@/components/Common/Section';
+import { useTransition } from '@/components/Common/TransitionRoot';
 import CollectionCard from '@/components/MediaPage/CollectionCard';
 import MediaFacts from '@/components/MediaPage/FactsCard';
 import MediaHero from '@/components/MediaPage/Hero';
@@ -39,7 +40,7 @@ type MediaPageProps = {
 
 export default function MediaPage(props: MediaPageProps) {
 	const { backdropHeight, scaleFactor, handleScroll, setRef } = useBackdropScale(0);
-	const [backdroploaded, setBackdropLoaded] = useState(false);
+	const [backdroploaded, setBackdropLoaded] = useState(!props.backdropPath);
 
 	return (
 		<>

@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 
 export default function Backdrop({
 	backdropUrl,
@@ -14,7 +13,6 @@ export default function Backdrop({
 	blurred?: boolean;
 	setBackdropLoaded?: (loaded: boolean) => void;
 }) {
-	const [loaded, setLoaded] = useState(false);
 	return (
 		<Image
 			src={backdropUrl}

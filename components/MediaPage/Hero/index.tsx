@@ -28,7 +28,7 @@ type MediaPageHeroProps = {
 	setRef: (node: HTMLDivElement) => void;
 	blurred?: boolean;
 	hidden?: boolean;
-	setBackdropLoaded: (loaded: boolean) => void;
+	setBackdropLoaded?: (loaded: boolean) => void;
 };
 
 export default function MediaHero({
@@ -110,13 +110,15 @@ export default function MediaHero({
 					</div>
 				</div>
 			</div>
-			<Backdrop
-				backdropUrl={backdropUrl + mediaDetails.backdropPath}
-				backdropHeight={backdropHeight}
-				scaleFactor={scaleFactor}
-				blurred={backdropBlurred}
-				setBackdropLoaded={setBackdropLoaded}
-			/>
+			{mediaDetails.backdropPath && (
+				<Backdrop
+					backdropUrl={backdropUrl + mediaDetails.backdropPath}
+					backdropHeight={backdropHeight}
+					scaleFactor={scaleFactor}
+					blurred={backdropBlurred}
+					setBackdropLoaded={setBackdropLoaded}
+				/>
+			)}
 		</div>
 	);
 }

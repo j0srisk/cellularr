@@ -1,5 +1,6 @@
 import './globals.css';
 import TabBar from '@/components/Common/TabBar';
+import TransitionRoot from '@/components/Common/TransitionRoot';
 import type { Metadata, Viewport } from 'next';
 
 //const inter = Inter({ subsets: ['latin'] });
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			lang="en"
 		>
 			<body className="flex h-[100vh] justify-center overflow-hidden">
-				{children}
+				<TransitionRoot duration={500}>{children}</TransitionRoot>
 				<TabBar />
 			</body>
 		</html>

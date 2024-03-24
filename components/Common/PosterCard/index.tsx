@@ -31,7 +31,7 @@ export default function PosterCard({
 	const router = useRouter();
 
 	if (typeof onClick === 'undefined') {
-		onClick = () => router.push('/' + mediaType + '/' + id);
+		href = `/${mediaType}/${id}`;
 	}
 
 	return (
