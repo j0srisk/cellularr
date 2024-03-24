@@ -19,8 +19,8 @@ const nextConfig = {
 				pathname: '**',
 			},
 			{
-				protocol: 'http',
-				hostname: '192.168.1.93',
+				protocol: 'https',
+				hostname: 'cdn.jsdelivr.net',
 				pathname: '**',
 			},
 		],

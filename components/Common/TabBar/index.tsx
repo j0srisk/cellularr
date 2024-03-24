@@ -67,13 +67,11 @@ export default function Navbar() {
 				</button>
 				<button
 					className="flex h-full flex-1 flex-col items-end px-6 py-[7px]"
-					onClick={() => router.replace('/applications')}
+					onClick={() => router.replace('/services')}
 				>
 					<div
 						className={`flex flex-col items-center gap-[7px] transition-colors duration-300 ease-in ${
-							pathname === '/applications'
-								? 'text-system-blue-light dark:text-system-blue-dark'
-								: ''
+							pathname === '/services' ? 'text-system-blue-light dark:text-system-blue-dark' : ''
 						}`}
 					>
 						<svg
@@ -91,7 +89,7 @@ export default function Navbar() {
 							/>
 						</svg>
 
-						<p className="text-[10px] font-[510]">Applications</p>
+						<p className="text-[10px] font-[510]">Services</p>
 					</div>
 				</button>
 			</div>

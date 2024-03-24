@@ -1,6 +1,7 @@
 import { getServices } from '@/app/actions';
-import Card from '@/components/Common/Card';
 import NavigationBar from '@/components/Common/NavigationBar';
+import Section from '@/components/Common/Section';
+import ServiceCard from '@/components/Services/Service';
 
 export default async function ApplicationPage() {
 	const services = await getServices();
@@ -15,24 +16,23 @@ export default async function ApplicationPage() {
 	return (
 		<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
 			<NavigationBar
-				title="Applications"
+				title="Services"
 				subtitle={applicationsCount + ' services found'}
 				className=""
 			/>
-			<div className="pb-nav-4 grid h-fit w-full gap-4 px-4 pt-0 md:grid-cols-3">
+			<div className="pb-nav-4 grid h-fit w-full gap-4 pt-0 md:grid-cols-3">
 				{services.map((section) => (
-					<Card key={section.name} className="flex flex-col gap-2 p-2">
-						<p className="text-lg font-bold">{section.name}</p>
-						{section.services && (
-							<>
-								{section.services.map((service) => (
-									<p key={service.name} className="text-sm">
-										{service.name}
-									</p>
-								))}
-							</>
-						)}
-					</Card>
+					<Section key={section.name} heading={section.name}>
+						<div className="px-4">
+							{section.services && (
+								<div className="flex flex-col gap-4">
+									{section.services.map((service) => (
+										<ServiceCard key={service.name} service={service} />
+									))}
+								</div>
+							)}
+						</div>
+					</Section>
 				))}
 			</div>
 		</div>
