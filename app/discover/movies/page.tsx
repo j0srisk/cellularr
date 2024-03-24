@@ -13,7 +13,10 @@ export default function DiscoverMoviesPage() {
 
 	return (
 		<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
-			<CompactNavigationBar title={genre ? genreNameMap[Number(genre)] : 'Discover'} />
+			<CompactNavigationBar
+				title={genre ? genreNameMap[Number(genre)] : 'Discover'}
+				onBack={() => history.back()}
+			/>
 			<div className="pt-nav-compact pb-nav-4">
 				{genre && (
 					<InfiniteResults
