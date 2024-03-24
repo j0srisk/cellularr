@@ -24,6 +24,7 @@ export default function ServiceCard({ service }: { service: Service }) {
 					width={32}
 					height={32}
 					className="rounded-lg"
+					priority={true}
 				/>
 			)}
 			<p className="flex-1 text-body">{service.name}</p>
