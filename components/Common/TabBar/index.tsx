@@ -66,6 +66,33 @@ export default function Navbar() {
 					</div>
 				</button>
 				<button
+					className="flex h-full flex-1 flex-col items-center px-6 py-[7px]"
+					onClick={() => router.replace('/downloads')}
+				>
+					<div
+						className={`flex flex-col items-center gap-[7px] transition-colors duration-300 ease-in ${
+							pathname === '/downloads' ? 'text-system-blue-light dark:text-system-blue-dark' : ''
+						}`}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							strokeWidth={2}
+							stroke="currentColor"
+							className="h-[21px]"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+							/>
+						</svg>
+
+						<p className="text-[10px] font-[510]">Downloads</p>
+					</div>
+				</button>
+				<button
 					className="flex h-full flex-1 flex-col items-end px-6 py-[7px]"
 					onClick={() => router.replace('/services')}
 				>
