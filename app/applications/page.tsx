@@ -3,7 +3,7 @@
 import { GetApplications } from '@/app/actions';
 import Container from '@/components/Applications/Container';
 import Seperator from '@/components/Applications/Seperator';
-import NavigationBar from '@/components/Common/NavigationBar/Index';
+import NavigationBar from '@/components/Common/NavigationBar';
 import { Fragment } from 'react';
 import { useState, useEffect } from 'react';
 

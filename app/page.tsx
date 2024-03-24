@@ -3,7 +3,7 @@
 import { getActivityData } from '@/app/actions';
 import SessionCard from '@/components/Activity/SessionCard/SessionCard';
 import CenteredMessage from '@/components/Common/CenteredMessage';
-import NavigationBar from '@/components/Common/NavigationBar/Index';
+import NavigationBar from '@/components/Common/NavigationBar';
 import useSWR from 'swr';
 
 export default function SessionPage() {
