@@ -26,8 +26,10 @@ export default function InfiniteResults({
 	genreId = 0,
 }: InfiniteResultsProps) {
 	const [featuredMedia, setFeaturedMedia] = useState<MovieResult | TvResult>();
+	const [backdroploaded, setBackdropLoaded] = useState(false);
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const isVisable = useOnScreen(bottomRef);
+
 	const getKey = (pageIndex: number, previousPageData: Results) => {
 		// reached the end
 		if (previousPageData && previousPageData.page >= previousPageData.totalPages) return null;
@@ -85,7 +87,11 @@ export default function InfiniteResults({
 
 	if (results) {
 		return (
-			<div className="no-scrollbar relative flex h-full w-full flex-col overflow-auto">
+			<div
+				className={`no-scrollbar relative flex h-full w-full flex-col overflow-auto opacity-0 ${
+					backdroploaded || !showFeatured ? 'animate-fade opacity-100' : ''
+				}`}
+			>
 				{results.length > 0 && (
 					<div className="flex w-full flex-col items-center gap-4">
 						{featuredMedia && (
@@ -101,6 +107,7 @@ export default function InfiniteResults({
 									height={720}
 									className="absolute h-full w-full"
 									priority={true}
+									onLoad={() => setBackdropLoaded(true)}
 								/>
 								<p className="z-10 text-large-title-emphasized text-label-primary-dark">
 									{genreNameMap[genreId]}

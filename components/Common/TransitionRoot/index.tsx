@@ -26,10 +26,10 @@ export default function TransitionRoot({
 			<>
 				<div
 					style={{
-						transitionDuration: transitioning ? `${duration * 2}ms` : undefined,
+						transitionDuration: transitioning ? `${duration * 5}ms` : undefined,
 					}}
 					className={`h-full w-full translate-x-0 ${
-						transitioning ? '-translate-x-full transform-gpu transition-transform ease-out' : ''
+						transitioning ? '-translate-x-[100vw] transform-gpu transition-transform ease-out' : ''
 					}`}
 				>
 					{children}
@@ -40,7 +40,7 @@ export default function TransitionRoot({
 						transitionDuration: transitioning ? `${duration}ms` : undefined,
 					}}
 					className={`fixed left-0 top-0 z-30 h-full w-full transform-gpu bg-system-primary-light shadow-drop-lg dark:bg-system-primary-dark ${
-						transitioning ? 'translate-x-0 transition-transform ease-out' : 'translate-x-full'
+						transitioning ? 'translate-x-0 transition-transform ease-out' : 'translate-x-[100vw]'
 					}`}
 				/>
 			</>
