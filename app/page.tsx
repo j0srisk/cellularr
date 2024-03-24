@@ -12,26 +12,25 @@ export default function SessionPage() {
 		revalidateOnFocus: false,
 	});
 
-	if (activityData) {
-		return (
-			<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
-				<NavigationBar
-					title="Now Streaming"
-					subtitle={activityData.sessions.length + ' sessions found'}
-					className=""
-				/>
-				<div className="pb-nav-4 grid h-fit w-full gap-4 px-4 pt-0 md:grid-cols-3">
-					{activityData.sessions.length > 0 ? (
-						<>
-							{activityData.sessions.map((session) => (
-								<SessionCard key={session.session_key} session={session} />
-							))}
-						</>
-					) : (
-						<CenteredMessage text="No streams? 🤨" />
-					)}
-				</div>
+	return (
+		<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
+			<NavigationBar
+				title="Now Streaming"
+				subtitle={
+					activityData ? activityData.sessions.length + ' streams found' : '0 streams found'
+				}
+			/>
+			<div className="pb-nav-4 grid h-fit w-full gap-4 px-4 pt-0 md:grid-cols-3">
+				{activityData && activityData.sessions.length > 0 ? (
+					<>
+						{activityData.sessions.map((session) => (
+							<SessionCard key={session.session_key} session={session} />
+						))}
+					</>
+				) : (
+					<CenteredMessage text="No streams? 🤨" />
+				)}
 			</div>
-		);
-	}
+		</div>
+	);
 }
