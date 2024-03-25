@@ -307,29 +307,31 @@ export async function getDownloads() {
 
 	const downloadClients: DownloadClient[] = [];
 
+	const downloads: Download[] = [];
+
 	// Use map instead of forEach to create an array of promises
 	const clientPromises = yamlData.map(
 		async (clientData: { [key: string]: { [key: string]: any } }) => {
 			const clientName = Object.keys(clientData)[0];
 
 			if (clientData.type === 'deluge') {
-				const delugeClient = {
-					name: clientName,
-					type: 'deluge',
-					downloads: await getDelugeTorrents(clientData.url, clientData.password),
-				};
+				const delugeDownloads = await getDelugeTorrents(
+					clientData.url,
+					clientData.password,
+					clientName,
+				);
 
-				return delugeClient;
+				downloads.push(...delugeDownloads);
 			}
 
 			if (clientData.type === 'sabnzbd') {
-				const sabnzbdClient = {
-					name: clientName,
-					type: 'sabnzbd',
-					downloads: await getSabnzbdDownloads(clientData.url, clientData.key),
-				};
+				const sabnzbdDownloads = await getSabnzbdDownloads(
+					clientData.url,
+					clientData.key,
+					clientName,
+				);
 
-				return sabnzbdClient;
+				downloads.push(...sabnzbdDownloads);
 			}
 
 			return null;
@@ -344,10 +346,10 @@ export async function getDownloads() {
 		.filter((client) => client !== null)
 		.forEach((client) => downloadClients.push(client));
 
-	return downloadClients;
+	return downloads;
 }
 
-export async function getDelugeTorrents(url: string, password: string) {
+export async function getDelugeTorrents(url: string, password: string, clientName: string) {
 	const delugeClient = deluge(url, password);
 
 	const data = await delugeClient.request('web.update_ui', [
@@ -366,30 +368,52 @@ export async function getDelugeTorrents(url: string, password: string) {
 
 	const downloads: Download[] = Object.entries(data.result.torrents).map(([id, torrent]) => ({
 		id,
+		client: {
+			name: clientName,
+			type: 'deluge',
+		},
 		progress: torrent.progress,
 		state: torrent.state,
 		name: torrent.name,
 		size: torrent.total_wanted,
 		downloaded: torrent.total_wanted - torrent.total_remaining,
+		remaining: torrent.total_remaining,
 		uploadSpeed: torrent.upload_payload_rate,
 		downloadSpeed: torrent.download_payload_rate,
+		eta:
+			torrent.download_payload_rate > 0
+				? Math.round((torrent.total_remaining / torrent.download_payload_rate) * 1000)
+				: Infinity,
 	}));
 
 	return downloads;
 }
 
-export async function getSabnzbdDownloads(url: string, key: string) {
+export async function getSabnzbdDownloads(url: string, key: string, clientName: string) {
 	const sabnzbdClient = sabnzbd(url, key);
 	const data = await sabnzbdClient.mode('queue');
 
 	const downloads: Download[] = data.queue.slots.map((slot) => ({
 		id: slot.nzo_id,
+		client: {
+			name: clientName,
+			type: 'sabnzbd',
+		},
 		progress: ((parseFloat(slot.mb) - parseFloat(slot.mbleft)) / parseFloat(slot.mb)) * 100,
 		state: slot.status,
 		name: slot.filename,
-		size: parseFloat(slot.mb) * 1024 * 1024,
-		downloaded: (parseFloat(slot.mb) - parseFloat(slot.mbleft)) * 1024 * 1024,
-		downloadSpeed: slot.index === 0 ? parseFloat(data.queue.kbpersec) * 1024 : 0,
+		size: Math.round(parseFloat(slot.mb) * 1024 * 1024),
+		downloaded: Math.round((parseFloat(slot.mb) - parseFloat(slot.mbleft)) * 1024 * 1024),
+		remaining: Math.round(parseFloat(slot.mbleft) * 1024 * 1024),
+		downloadSpeed: slot.index === 0 ? Math.round(parseFloat(data.queue.kbpersec) * 1024) : 0,
+		eta:
+			slot.index === 0 && parseFloat(data.queue.kbpersec) > 0
+				? Math.round(
+						(Math.round(parseFloat(slot.mbleft) * 1024 * 1024) /
+							Math.round(parseFloat(data.queue.kbpersec) * 1024)) *
+							1000,
+					)
+				: Infinity,
 	}));
 
 	return downloads;

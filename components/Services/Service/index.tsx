@@ -10,7 +10,7 @@ export default function ServiceCard({ service }: { service: Service }) {
 	return (
 		<Card
 			key={service.name}
-			className={`group flex flex-row items-center gap-4 rounded-lg p-3 ${
+			className={`group flex flex-row items-center gap-4 rounded-lg p-4 ${
 				service.href ? 'cursor-pointer' : ''
 			}`}
 			onClick={service.href ? () => router.push(service.href!) : undefined}

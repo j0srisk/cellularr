@@ -27,6 +27,15 @@ export function formatDuration(durationInMinutes: number | null) {
 	if (durationInMinutes === null) {
 		return null;
 	}
+
+	if (durationInMinutes === Infinity) {
+		return '∞ mins';
+	}
+
+	if (durationInMinutes < 1) {
+		return '< 1 min';
+	}
+
 	const hours = Math.floor(durationInMinutes / 60);
 	const minutes = durationInMinutes % 60;
 
@@ -37,6 +46,35 @@ export function formatDuration(durationInMinutes: number | null) {
 		return minutes + minuteString;
 	} else if (minutes === 0) {
 		return hours + hourString;
+	}
+
+	return hours + hourString + ' ' + minutes + minuteString;
+}
+
+export function formatDurationSeconds(durationInSeconds: number) {
+	if (durationInSeconds === Infinity) {
+		return '∞ secs';
+	}
+
+	if (durationInSeconds < 1) {
+		return '< 1 sec';
+	}
+
+	const hours = Math.floor(durationInSeconds / 3600);
+	const minutes = Math.floor((durationInSeconds % 3600) / 60);
+	const seconds = durationInSeconds % 60;
+
+	let hourString = hours === 1 ? ' hr' : ' hrs';
+	let minuteString = minutes === 1 ? ' min' : ' mins';
+	let secondString = seconds === 1 ? ' sec' : ' secs';
+
+	if (hours === 0) {
+		if (minutes === 0) {
+			return seconds + secondString;
+		}
+		return minutes + minuteString + ' ' + seconds + secondString;
+	} else if (minutes === 0) {
+		return hours + hourString + ' ' + seconds + secondString;
 	}
 
 	return hours + hourString + ' ' + minutes + minuteString;

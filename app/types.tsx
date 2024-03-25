@@ -57,17 +57,19 @@ export type Service = {
 
 export type DownloadClient = {
 	name: string;
-	type: string;
-	downloads: Download[];
+	type: 'deluge' | 'sabnzbd';
 };
 
 export type Download = {
 	id: string;
+	client: DownloadClient;
 	progress: number;
 	state: string;
 	name: string;
 	size: number;
 	downloaded: number;
+	remaining: number;
 	uploadSpeed?: number;
 	downloadSpeed: number;
+	eta: number;
 };
