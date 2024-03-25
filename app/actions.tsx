@@ -2,7 +2,16 @@
 
 import { demoApplications } from '@/app/config/demoData';
 import demoData from '@/app/demoData.json';
-import { MediaType, YamlData, ServiceSection, Service, Torrent, TorrentClient } from '@/app/types';
+import {
+	MediaType,
+	YamlData,
+	ServiceSection,
+	Service,
+	Torrent,
+	TorrentClient,
+	Download,
+	DownloadClient,
+} from '@/app/types';
 import deluge from '@/services/deluge';
 import overseerr from '@/services/overseerr/overseerr';
 import { Collection } from '@/services/overseerr/types/collection';
@@ -15,6 +24,7 @@ import { Sonarr, SonarrSettings } from '@/services/overseerr/types/sonarr';
 import { TvDetails } from '@/services/overseerr/types/tv';
 import { Users } from '@/services/overseerr/types/user';
 import { User } from '@/services/overseerr/types/user';
+import sabnzbd from '@/services/sabnzbd';
 import tautulli from '@/services/tautulli/tautulli';
 import { ActivityData } from '@/services/tautulli/types/activity';
 import { Location } from '@/services/tautulli/types/location';
@@ -291,28 +301,70 @@ export async function getServices() {
 	return serviceSections;
 }
 
-export async function getDelugeTorrents() {
-	await deluge.sendJsonRpcRequest('http://192.168.1.93:8112/json', 'auth.login', ['deluge']);
+export async function getDownloads() {
+	const yamlFile = await fs.readFile(process.cwd() + '/config/clients.yaml', 'utf8');
+	const yamlData: YamlData[] = parse(yamlFile);
 
-	const { data, error } = await deluge.sendJsonRpcRequest(
-		'http://192.168.1.93:8112/json',
-		'web.update_ui',
-		[
-			[
-				'queue',
-				'name',
-				'total_wanted',
-				'state',
-				'progress',
-				'download_payload_rate',
-				'upload_payload_rate',
-				'total_remaining',
-			],
-			{},
-		],
+	const downloadClients: DownloadClient[] = [];
+
+	// Use map instead of forEach to create an array of promises
+	const clientPromises = yamlData.map(
+		async (clientData: { [key: string]: { [key: string]: any } }) => {
+			const clientName = Object.keys(clientData)[0];
+
+			if (clientData.type === 'deluge') {
+				const delugeClient = {
+					name: clientName,
+					type: 'deluge',
+					downloads: await getDelugeTorrents(clientData.url, clientData.password),
+				};
+
+				return delugeClient;
+			}
+
+			if (clientData.type === 'sabnzbd') {
+				const sabnzbdClient = {
+					name: clientName,
+					type: 'sabnzbd',
+					downloads: await getSabnzbdDownloads(clientData.url, clientData.key),
+				};
+
+				return sabnzbdClient;
+			}
+
+			return null;
+		},
 	);
 
-	const torrents: Torrent[] = Object.entries(data.torrents).map(([id, torrent]) => ({
+	// Wait for all promises to resolve using Promise.all()
+	const resolvedClients = await Promise.all(clientPromises);
+
+	// Filter out null values and add resolved clients to downloadClients array
+	resolvedClients
+		.filter((client) => client !== null)
+		.forEach((client) => downloadClients.push(client));
+
+	return downloadClients;
+}
+
+export async function getDelugeTorrents(url: string, password: string) {
+	const delugeClient = deluge(url, password);
+
+	const data = await delugeClient.request('web.update_ui', [
+		[
+			'queue',
+			'name',
+			'total_wanted',
+			'state',
+			'progress',
+			'download_payload_rate',
+			'upload_payload_rate',
+			'total_remaining',
+		],
+		{},
+	]);
+
+	const downloads: Download[] = Object.entries(data.result.torrents).map(([id, torrent]) => ({
 		id,
 		progress: torrent.progress,
 		state: torrent.state,
@@ -323,14 +375,22 @@ export async function getDelugeTorrents() {
 		downloadSpeed: torrent.download_payload_rate,
 	}));
 
-	const delugeClient: TorrentClient = {
-		name: 'Deluge',
-		torrents: torrents,
-	};
+	return downloads;
+}
 
-	const torrentClients: TorrentClient[] = [delugeClient];
+export async function getSabnzbdDownloads(url: string, key: string) {
+	const sabnzbdClient = sabnzbd(url, key);
+	const data = await sabnzbdClient.mode('queue');
 
-	console.log(delugeClient);
+	const downloads: Download[] = data.queue.slots.map((slot) => ({
+		id: slot.nzo_id,
+		progress: ((parseFloat(slot.mb) - parseFloat(slot.mbleft)) / parseFloat(slot.mb)) * 100,
+		state: slot.status,
+		name: slot.filename,
+		size: parseFloat(slot.mb) * 1024 * 1024,
+		downloaded: (parseFloat(slot.mb) - parseFloat(slot.mbleft)) * 1024 * 1024,
+		downloadSpeed: slot.index === 0 ? parseFloat(data.queue.kbpersec) * 1024 : 0,
+	}));
 
-	return torrentClients;
+	return downloads;
 }

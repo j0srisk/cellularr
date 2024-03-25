@@ -1,78 +1,71 @@
-import { JSONRPCClient, JSONRPCErrorException } from 'json-rpc-2.0';
-import 'server-only';
-
-let _session_id = {};
-
-export async function sendJsonRpcRequest(url: string, method: string, params: any) {
-	const headers = {
-		'content-type': 'application/json',
-		accept: 'application/json',
-	};
-
-	const client: JSONRPCClient = new JSONRPCClient(async (rpcRequest) => {
-		const body = JSON.stringify(rpcRequest);
-		const httpRequestParams = {
-			method: 'POST',
-			headers,
-			body,
+const deluge = (url: string, password: string) => ({
+	url: url + '/json',
+	password: password,
+	session_id: null as string | null,
+	auth: async function () {
+		const headers = {
+			'Content-Type': 'application/json',
+			accept: 'application/json',
 		};
 
+		const body = JSON.stringify({
+			jsonrpc: '2.0',
+			id: 1,
+			method: 'auth.login',
+			params: [this.password],
+		});
+
 		const options: RequestInit = {
-			headers: {
-				'Content-Type': 'application/json',
-				Cookie: _session_id.toString(),
-			} as HeadersInit,
+			headers: headers,
 			method: 'POST',
 			body: body,
 			cache: 'no-cache',
 		};
 
-		const response = await fetch(url, options);
+		const response = await fetch(this.url, options);
 
-		if (response.headers.get('set-cookie')) {
-			const session_id = response.headers.get('set-cookie')?.split(';')[0];
+		if (response.headers.has('set-cookie')) {
+			const session_id = response.headers.get('set-cookie')?.split(';')[0].split('=')[1];
 			if (session_id) {
-				_session_id = session_id;
+				this.session_id = session_id;
 			}
 		}
-
-		const status = response.status;
-		const data = await response.json();
-
-		if (status === 200) {
-			// in order to get access to the underlying error object in the JSON response
-			// you must set `result` equal to undefined
-			if (data.error && data.result === null) {
-				data.result = undefined;
-			}
-			return client.receive(data);
+	},
+	request: async function (method: string, params: any) {
+		if (!this.session_id) {
+			await this.auth();
 		}
 
-		return Promise.reject(data?.error ? data : new Error(data.toString()));
-	});
-
-	try {
-		const response = await client.request(method, params);
-		return {
-			data: response,
-			error: null,
+		const headers = {
+			'Content-Type': 'application/json',
+			accept: 'application/json',
+			Cookie: `_session_id=${this.session_id}`,
 		};
-	} catch (e: any) {
-		if (e instanceof JSONRPCErrorException) {
-			return {
-				data: null,
-				error: e.toObject(),
-			};
+
+		const body = JSON.stringify({
+			jsonrpc: '2.0',
+			id: 1,
+			method: method,
+			params: params,
+		});
+
+		const options: RequestInit = {
+			headers: headers,
+			method: 'POST',
+			body: body,
+			cache: 'no-cache',
+		};
+
+		const response = await fetch(this.url, options);
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
 		}
-		return {
-			data: null,
-			error: { code: 2, message: e.toString() },
-		};
-	}
-}
 
-const deluge = {
-	sendJsonRpcRequest: sendJsonRpcRequest,
-};
+		const json = await response.json();
+
+		return json;
+	},
+});
 
 export default deluge;

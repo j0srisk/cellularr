@@ -1,0 +1,29 @@
+- Deluge:
+  type: deluge
+  url: http://192.168.1.93:8112
+  password: deluge
+
+- Deluge Dupe:
+  type: deluge
+  url: http://192.168.1.93:8112
+  password: deluge
+
+- Deluge Dupe 2:
+  type: deluge
+  url: http://192.168.1.93:8112
+  password: deluge
+
+- Deluge Dupe 3:
+  type: deluge
+  url: http://192.168.1.93:8112
+  password: deluge
+
+- Deluge Dupe 4:
+  type: deluge
+  url: http://192.168.1.93:8112
+  password: deluge
+
+- SABnzbd:
+  type: sabnzbd
+  url: http://192.168.1.93:8088
+  key: 2efde2f1e86e4abcb02ae46723d876b7

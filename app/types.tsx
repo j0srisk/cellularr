@@ -55,18 +55,19 @@ export type Service = {
 	href: string;
 };
 
-export type TorrentClient = {
+export type DownloadClient = {
 	name: string;
-	torrents: Torrent[];
+	type: string;
+	downloads: Download[];
 };
 
-export type Torrent = {
+export type Download = {
 	id: string;
 	progress: number;
 	state: string;
 	name: string;
 	size: number;
 	downloaded: number;
-	uploadSpeed: number;
+	uploadSpeed?: number;
 	downloadSpeed: number;
 };
