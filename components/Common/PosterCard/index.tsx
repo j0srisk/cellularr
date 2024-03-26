@@ -37,7 +37,7 @@ export default function PosterCard({
 	return (
 		<Card
 			className={twMerge([
-				'group relative flex aspect-[1/1.5] w-full flex-shrink-0 flex-grow-0 items-center justify-center hover:cursor-pointer',
+				'group relative flex aspect-[1/1.5] h-full w-full flex-shrink-0 flex-grow-0 items-center justify-center hover:cursor-pointer',
 				className,
 			])}
 			href={href}
@@ -50,7 +50,7 @@ export default function PosterCard({
 						alt={title}
 						fill={true}
 						sizes="33vw"
-						className="object-cover"
+						className="h-full w-full object-cover"
 						priority={true}
 						onLoad={() => setLoaded(true)}
 					/>

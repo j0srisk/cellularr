@@ -29,7 +29,7 @@ export default function Card({
 		//rounded-[13px]
 		<div
 			className={twMerge([
-				`relative flex flex-col overflow-hidden rounded-lg border-none border-fill-tetiary-light bg-system-secondary-light dark:border-fill-tetiary-dark dark:bg-system-secondary-dark`,
+				`relative flex flex-col overflow-hidden rounded-xl border-none border-fill-tetiary-light bg-system-primary-light dark:border-fill-tetiary-dark dark:bg-system-primary-dark-elevated`,
 				className,
 			])}
 			onClick={href ? handleOnClick : onClick}

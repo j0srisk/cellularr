@@ -46,7 +46,7 @@ export default function SessionCard({ session }: { session: Session }) {
 
 	if (mediaDetails) {
 		return (
-			<Card className="shadow-drop-xs">
+			<Card className="shadow-drop-sm">
 				{mediaType !== MediaType.MUSIC && (
 					<Image
 						src={backdropUrl + mediaDetails.backdropPath}
@@ -66,7 +66,7 @@ export default function SessionCard({ session }: { session: Session }) {
 								id={parseInt(tmdbId)}
 								posterPath={mediaDetails.posterPath}
 								mediaType={mediaType}
-								className="h-full w-14 rounded-[5px] border-none shadow-none"
+								className="h-full w-14 rounded-[4px] border-none shadow-drop-xs"
 							/>
 						)}
 						<div className="flex h-fit w-full flex-col justify-between">
@@ -81,7 +81,7 @@ export default function SessionCard({ session }: { session: Session }) {
 							{mediaType === MediaType.TV && (
 								<>
 									<p className="text-title-2-emphasized">{session.grandparent_title}</p>
-									<p className="hidden text-footnote text-label-secondary-light dark:text-label-secondary-dark">
+									<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
 										{session.title}
 									</p>
 									<p className="text-footnote text-label-secondary-light dark:text-label-secondary-dark">
@@ -121,7 +121,7 @@ export default function SessionCard({ session }: { session: Session }) {
 							</p>
 						</div>
 						{location && (
-							<div className="flex hidden items-center gap-1">
+							<div className="hidden items-center gap-1">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 24 24"

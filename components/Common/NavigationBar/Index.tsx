@@ -16,9 +16,7 @@ export default function NavigationBar({
 	onBack,
 }: HeaderProps) {
 	return (
-		<div
-			className={twMerge(`pt-safe bg-nav sticky top-0 z-30 flex w-full flex-col px-4`, className)}
-		>
+		<div className={twMerge(`pt-safe bg-nav flex w-full flex-col px-4`, className)}>
 			{onBack && (
 				<div className="flex w-full items-center justify-start py-[11px]">
 					<button
@@ -40,7 +38,6 @@ export default function NavigationBar({
 					</button>
 				</div>
 			)}
-
 			<div className="flex w-full flex-col items-center justify-center pb-[8px] pt-[3px]">
 				<p className="w-full truncate text-large-title-emphasized">{title}</p>
 				{subtitle && (

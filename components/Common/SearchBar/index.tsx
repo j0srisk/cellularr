@@ -2,12 +2,19 @@ type SearchBarProps = {
 	value: string | '';
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onBlur?: () => void;
+	onFocus?: () => void;
 	clearFunction?: () => void;
 };
 
-export default function SearchBar({ value, onChange, onBlur, clearFunction }: SearchBarProps) {
+export default function SearchBar({
+	value,
+	onChange,
+	onBlur,
+	onFocus,
+	clearFunction,
+}: SearchBarProps) {
 	return (
-		<div className="flex h-9 w-full flex-shrink-0 items-center gap-2 rounded-lg bg-fill-tetiary-light px-2 dark:bg-fill-tetiary-dark">
+		<div className="flex h-9 w-full items-center gap-2 rounded-lg bg-fill-tetiary-light px-2 dark:bg-fill-tetiary-dark">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -28,6 +35,7 @@ export default function SearchBar({ value, onChange, onBlur, clearFunction }: Se
 				placeholder="Search Movies & TV"
 				value={value}
 				onChange={onChange}
+				onFocus={onFocus}
 				onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
 					if (e.key === 'Enter') {
 						e.preventDefault();

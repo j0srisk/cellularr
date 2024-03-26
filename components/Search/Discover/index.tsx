@@ -3,8 +3,9 @@ import { MediaType } from '@/app/types';
 import GenreCard from '@/components/Search/GenreCard';
 import Genres from '@/components/Search/Genres';
 import useSWR from 'swr';
+import { twMerge } from 'tailwind-merge';
 
-export default function Discover() {
+export default function Discover({ className }: { className?: string }) {
 	const { data: trending, isLoading: trendingLoading } = useSWR(
 		['trending', 1, 'en'],
 		() => getTrending('trending', 1),
@@ -21,7 +22,7 @@ export default function Discover() {
 
 	if (!trendingLoading || !moviesLoading || !tvLoading) {
 		return (
-			<div className="flex w-full flex-col gap-3 px-4">
+			<div className={twMerge('flex w-full flex-col gap-3 px-4', className)}>
 				{trending && trending.results[4].mediaType !== 'person' && (
 					<>
 						<p className="text-title-3-emphasized">Discover</p>

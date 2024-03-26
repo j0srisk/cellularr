@@ -3,6 +3,7 @@
 import { getDownloads } from '@/app/actions';
 import Card from '@/components/Common/Card';
 import NavigationBar from '@/components/Common/NavigationBar';
+import SafetyBar from '@/components/Common/SafetyBar';
 import Section from '@/components/Common/Section';
 import DownloadCard from '@/components/Downloads/DownloadCard';
 import useSWR from 'swr';
@@ -23,8 +24,9 @@ export default function DownloadsPage() {
 
 	return (
 		<div className="no-scrollbar flex h-full w-full flex-col overflow-auto">
+			<SafetyBar />
 			<NavigationBar title="Downloads" subtitle={downloadCount + ' active downloads'} />
-			<div className="pb-nav-4 flex h-fit w-full flex-col gap-4 px-4 pt-0">
+			<div className="pb-nav-4 flex h-fit w-full flex-col gap-4 px-4 pt-2">
 				{downloads && downloads.length > 0 && (
 					<>
 						{downloads.map((download) => (

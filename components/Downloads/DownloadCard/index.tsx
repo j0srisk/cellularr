@@ -4,7 +4,7 @@ import Card from '@/components/Common/Card';
 
 export default function DownloadCard({ download }: { download: Download }) {
 	return (
-		<Card key={download.name} className="flex w-full gap-3 p-4">
+		<Card key={download.name} className="flex w-full gap-3 p-4 shadow-drop-sm">
 			<div className="flex w-full flex-col">
 				<p className="w-full truncate text-start text-title-2-emphasized">{download.name}</p>
 				<p className="truncate text-footnote text-label-secondary-light dark:text-label-secondary-dark">

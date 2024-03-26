@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-	--Materials-Thick---Dark:                                            
+	--Materials-Thick---Dark:                                             
 ;
 }
 
@@ -51,6 +51,10 @@
 
 	.bg-nav {
 		@apply bg-system-primary-light/75 bg-blend-hard-light backdrop-blur-[25px] dark:bg-system-primary-dark/75;
+	}
+
+	.top-safe {
+		top: env(safe-area-inset-top);
 	}
 
 	.shadow-apple {
